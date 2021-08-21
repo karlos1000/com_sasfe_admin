@@ -1,0 +1,1 @@
+ALTER TABLE `#__sasfe_datos_generales` ADD `obsoleto` CHAR(1) NOT NULL DEFAULT '0' ;

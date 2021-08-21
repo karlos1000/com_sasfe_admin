@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5.0" method="upgrade">
+             
+        <name>COM_SASFE</name>        
+        <creationDate>Agosto 2014</creationDate>
+        <author>Framelova</author>
+        <authorEmail>soporte@framelova.com</authorEmail>
+        <authorUrl>http://www.framelova.com</authorUrl>
+        <copyright>Copyright Info</copyright>
+        <license>License Info</license>        
+        <version>1.0</version>                        
+        <description>COM_SASFE_DESCRIPTION</description>
+        
+        <install> 
+                <sql>
+                        <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+                </sql>
+        </install>
+         <uninstall> 
+                <sql>
+                        <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+                </sql>
+        </uninstall>
+        <update> 
+                <schemas>
+                        <schemapath type="mysql">sql/updates/mysql</schemapath>
+                </schemas>
+        </update>
+ 		
+        <!-- Site Main File Copy Section -->
+        <files folder="site">
+                <filename>index.html</filename>
+                <filename>sasfe.php</filename>
+                <filename>controller.php</filename>
+                <folder>views</folder>
+                <folder>models</folder>
+                <folder>language</folder>
+				<folder>controllers</folder>
+				<folder>helpers</folder>				
+        </files>
+        <media destination="com_sasfe" folder="media">
+                <filename>index.html</filename>
+                <folder>images</folder>
+                <folder>css</folder>
+                <folder>js</folder>
+				<folder>upload_files</folder>	
+        </media>
+        <administration>
+                <!-- Administration Menu Section -->
+                <menu img="../media/com_sasfe/images/icono_menu.png">COM_SASFE_MENU</menu>                                                             
+                <files folder="admin">
+                        <!-- Admin Main File Copy Section -->
+                        <filename>index.html</filename>
+                        <filename>sasfe.php</filename>
+                        <filename>controller.php</filename>
+					    <filename>config.xml</filename>
+                        <!-- SQL files section -->
+                        <folder>sql</folder>
+                        <!-- tables files section -->
+                        <folder>tables</folder>
+                        <!-- models files section -->
+                        <folder>models</folder>
+                        <!-- views files section -->
+                        <folder>views</folder>
+                        <!-- controllers files section -->
+                        <folder>controllers</folder>
+                        <!-- Common extras files -->
+                        <folder>common</folder>
+						<!-- helpers section -->						
+                        <folder>helpers</folder>
+                </files>
+                <languages folder="admin">
+                        <language tag="en-GB">language/en-GB/en-GB.com_sasfe.ini</language>
+                        <language tag="en-GB">language/en-GB/en-GB.com_sasfe.sys.ini</language>
+                </languages>
+        </administration>
+ 
+</extension>
