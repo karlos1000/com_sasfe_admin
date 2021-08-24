@@ -1,4 +1,5 @@
 # Deshabilitar archivos zip, rar, config
 common/
+views/prospectolectura
 *.rar
 *.zip
