@@ -1,4 +1,4 @@
-JQ(document).ready(function(){   
+JQ(document).ready(function(){
 	console.log(JQ("#estatusId").val());
 	/*
 	if(JQ("#estatusId").val() == 2){
@@ -10,23 +10,23 @@ JQ(document).ready(function(){
 		document.getElementById("filter_estatus").Index=3;
 	}
 	*/
-	JQ('.button-delete').attr('onclick','').unbind('click');                                          
+	JQ('.button-delete').attr('onclick','').unbind('click');
 	JQ('.button-delete').click(function(){
 	   if (document.adminForm.boxchecked.value==0){
            alert('Please first make a selection from the list');
        }else{
        	   	var r = confirm("Esta seguro de borrar los registros seleccionados");
-			if(r==true) {				
+			if(r==true) {
 				Joomla.submitbutton('prospectos.borrarProsRepetidos');
 			}else{
 				return false;
 			}
-       }  
+       }
 	});
 
-    // Reemplazar evento onclick        
+    // Reemplazar evento onclick
    //  JQ('#toolbar-delete a').attr('onclick','').unbind('click');
-   //  JQ('#toolbar-delete a').click(function(){                                  
+   //  JQ('#toolbar-delete a').click(function(){
    //     if (document.adminForm.boxchecked.value==0){
    //         alert('Please first make a selection from the list');
    //     }else{
@@ -36,12 +36,12 @@ JQ(document).ready(function(){
 			// 	Joomla.submitbutton('prospectos.borrarProsRepetidos');
 			// }
    //         // var r=confirm('No es posible eliminar el elemento, al hacerlo se borrara los deparatamentos vinculados, ¿Realmente estás seguro?');
-   //         // if (r==true){                                            
+   //         // if (r==true){
    //         //     Joomla.submitbutton('catfraccionamientos.delete');
-   //         // }else{                                                          
+   //         // }else{
    //         //     return false;
-   //         // }                
-   //     }                                          
+   //         // }
+   //     }
    //  });
 
 	//Para los eventos
@@ -49,7 +49,7 @@ JQ(document).ready(function(){
         var v = JQ(this).val();
         var value = (v == 1) ? '0' : '1';
         JQ('#ev_optrecordatorio').val(value);
-        JQ('#ev_tiempo').val("");        
+        JQ('#ev_tiempo').val("");
 
         if(parseInt(value)==1){
         	JQ('#cont_ev_tiempo').show();
@@ -61,7 +61,7 @@ JQ(document).ready(function(){
     });
 
 	// JQ('#popup_agregarevento').css('display','none');
-	JQ(".selProspecto").click(function(){		
+	JQ(".selProspecto").click(function(){
 		JQ('#popup_agregarevento').css('position','fixed');
 
 		JQ("#ev_idPros").val(0);
@@ -71,15 +71,15 @@ JQ(document).ready(function(){
 		JQ("#ev_optrecordatorio").val(0);
 		JQ('#cont_ev_tiempo').hide();
     	JQ('#ev_tiempo').removeClass("required");
-	});	
+	});
 	JQ("#form_agregar_evento").validate({
-        submitHandler: function(form) {         	        	
+        submitHandler: function(form) {
         	showLoading("#btn_agregarevento"); //mostrar loading
         	form.submit();
     	}
     });
-		
-	//Fecha    
+
+	//Fecha
     JQ("#ev_fecha_linea").datepicker({
       	  showOn: "button",
 	      buttonImage: JQ("#rutaCalendario").val(),
@@ -90,12 +90,12 @@ JQ(document).ready(function(){
 	      //maxDate: "0Y",
 	      minDate: "0Y",
 	      yearRange: "-100:+1",
-	      onSelect: function(dateText, inst){	        
+	      onSelect: function(dateText, inst){
 	        JQ("#ev_fecha").val(JQ(this).val());
-	      }	      
+	      }
 	});
-    
-   //horas	    
+
+   //horas
     JQ('input#ev_hora').timepicker({
 		//timeFormat: 'h:mm p',
 		timeFormat: 'H:mm',
@@ -110,11 +110,11 @@ JQ(document).ready(function(){
 	});
 
 	//Para la asignacion
-	JQ(".selAsignar").click(function(){		
+	JQ(".selAsignar").click(function(){
 		JQ('#popup_asignar').css('position','fixed');
 		JQ('#arrIdPros').val(""); //limpiar hidden
 		JQ("#asig_agtventas").val("");
-		
+
 		if (document.adminForm.boxchecked.value==0){
            alert('Please first make a selection from the list');
            return false;
@@ -122,16 +122,16 @@ JQ(document).ready(function(){
 	        var searchIDs = JQ('input:checked').map(function(){
 	      		return JQ(this).val();
 		    });
-		    JQ('#arrIdPros').val(searchIDs.get().join(",")); //agregar ids seleccionados 		    
+		    JQ('#arrIdPros').val(searchIDs.get().join(",")); //agregar ids seleccionados
 		}
 	});
 	JQ("#form_asignarprospecto").validate({
-        submitHandler: function(form) {         	        	
+        submitHandler: function(form) {
         	showLoading("#btn_asignar"); //mostrar loading
         	form.submit();
     	}
     });
-    JQ(".selAsigAgteVentasLink").click(function(){		
+    JQ(".selAsigAgteVentasLink").click(function(){
 		JQ('#popup_asignar').css('position','fixed');
 		JQ('#arrIdPros').val(""); //limpiar hidden
 		JQ("#asig_agtventas").val("");
@@ -142,26 +142,26 @@ JQ(document).ready(function(){
 	});
 
 	//Para agregar el comentario
-    JQ(".selProspectoCom").click(function(){		
-		JQ('#popup_comentario').css('position','fixed');		
+    JQ(".selProspectoCom").click(function(){
+		JQ('#popup_comentario').css('position','fixed');
 		JQ("#com_idPros").val(0);
 		JQ("#com_idPros").val(JQ(this).attr("idPros"));
 		JQ('#form_agregar_comentario')[0].reset();
-	});	
+	});
 	JQ("#form_agregar_comentario").validate({
-        submitHandler: function(form) {         	        	
+        submitHandler: function(form) {
         	//setLoading($(form).attr('id'));
         	form.submit();
     	}
     });
-	       
+
 
 	//Para la asignacion de gerentes de venta (lo hace prospeccion)
 	JQ(".selAsignarGteVentas").click(function(){
 		JQ('#popup_asignargteventas').css('position','fixed');
 		JQ('#arrIdProsGteV').val(""); //limpiar hidden
 		JQ("#asiggtev_gteventas").val("");
-		
+
 		if (document.adminForm.boxchecked.value==0){
            alert('Please first make a selection from the list');
            return false;
@@ -170,20 +170,20 @@ JQ(document).ready(function(){
 	      		return JQ(this).val();
 		    });
 		    JQ('#arrIdProsGteV').val(searchIDs.get().join(",")); //agregar ids gte ventas seleccionados
-		}		
+		}
 	});
 	JQ(".selAsigGteVentasLink").click(function(){
 		JQ('#popup_asignargteventas').css('position','fixed');
 		JQ('#arrIdProsGteV').val(""); //limpiar hidden
 		JQ("#asiggtev_gteventas").val("");
-		
+
 		//Resetear input cheched
 		JQ('input:checked').prop('checked', false);
-		document.adminForm.boxchecked.value = 0;		
+		document.adminForm.boxchecked.value = 0;
 	    JQ('#arrIdProsGteV').val(JQ(this).attr("idPros")); //agregar id seleccionado
 	});
 	JQ("#form_asignargteventas").validate({
-        submitHandler: function(form) {         	        	
+        submitHandler: function(form) {
         	showLoading("#btn_asignargteventas"); //mostrar loading
         	form.submit();
     	}
@@ -196,17 +196,17 @@ JQ(document).ready(function(){
 		JQ('#arrRepetidoId').val(""); //limpiar hidden
 		JQ("#rep_usuario").val("");
 		JQ("#rep_comentario").val("");
-		
+
 		// var searchIDs = JQ('input:checked').map(function(){
   // 			return JQ(this).val();
 	 //    });
 	 //    if(searchIDs.get().length>0){
-	 //    	JQ('#arrRepetidoId').val(searchIDs.get().join(",")); //agregar ids gte ventas seleccionados	
+	 //    	JQ('#arrRepetidoId').val(searchIDs.get().join(",")); //agregar ids gte ventas seleccionados
 	 //    }else{
 		//    alert('Please first make a selection from the list');
   //          return false;
-	 //   	}	
-	
+	 //   	}
+
 		if (document.adminForm.boxchecked.value==0){
            alert('Please first make a selection from the list');
            return false;
@@ -215,10 +215,10 @@ JQ(document).ready(function(){
 	      		return JQ(this).val();
 		    });
 		    JQ('#arrRepetidoId').val(searchIDs.get().join(",")); //agregar ids gte ventas seleccionados
-		}		
+		}
 	});
 	JQ("#form_rep_prospecto_repetido").validate({
-        submitHandler: function(form) {         	        	
+        submitHandler: function(form) {
         	showLoading("#btn_validar_prospecto_repetido"); //mostrar loading
         	form.submit();
     	}
@@ -230,15 +230,15 @@ JQ(document).ready(function(){
 		if(r==true) {
 			JQ("#borrar_prosp").val(idPros);
 			Joomla.submitbutton('prospectos.borrarProsRepetidos');
-		}    	
+		}
     });
     //Marcar como valido desde un enlace
     JQ(".selValidarProspectoRepetidoLink").click(function(){
 		JQ('#popup_validar_prospecto_repetido').css('position','fixed');
 		JQ('#arrRepetidoId').val(""); //limpiar hidden
 		JQ("#rep_usuario").val("");
-		JQ("#rep_comentario").val("");		
-		
+		JQ("#rep_comentario").val("");
+
 		valIdAgteVenta = parseInt(JQ(this).attr("idAgteVenta"));
 		if(valIdAgteVenta == 0){
 			JQ('#arrRepetidoId').val(JQ(this).attr("idPros")); //agregar ids seleccionados
@@ -249,11 +249,11 @@ JQ(document).ready(function(){
 			JQ('#rep_usuario').val(parseInt(JQ(this).attr("idAgteVenta"))); //setear el idDato del catalogo de datos
 			//JQ('#rep_usuario').attr('disabled', true);
 			JQ('#addHiddenUser').html('<input type="hidden" name="rep_usuario" value="'+valIdAgteVenta+'" />');
-		}	    
+		}
 	});
 
 
-	//Filtro puntos hasta    
+	//Filtro puntos hasta
     JQ("#filter_puntoshasta").datepicker({
           showOn: "button",
           buttonImage: JQ("#rutaCalendario").val(),
@@ -263,11 +263,11 @@ JQ(document).ready(function(){
           changeYear: true,
           // maxDate: "0Y",
           minDate: "-10Y",
-          yearRange: "-10:+1",   
-          defaultDate: JQ("#filter_puntoshasta").val(),      
-          onSelect: function(dateText, inst){ 
-            JQ("#filter_puntoshasta").val(JQ(this).val());        
-          }  
+          yearRange: "-10:+1",
+          defaultDate: JQ("#filter_puntoshasta").val(),
+          onSelect: function(dateText, inst){
+            JQ("#filter_puntoshasta").val(JQ(this).val());
+          }
     });
     JQ("#limpiarFiltros").click(function(){
       JQ("#filter_search").val("");
@@ -279,48 +279,49 @@ JQ(document).ready(function(){
       JQ("#filter_apellidos").val("");
       JQ("#filter_rfc").val("");
       JQ("#filter_cel").val("");
-      this.form.submit();      
-    });    
-    JQ("input#filter_montocto1").keyup(function(e){    	
-    	JQ(this).val(format(JQ(this).val()));    	
+      JQ("#filter_gerentes").val(""); //Imp. 23/08/21, Carlos
+      this.form.submit();
     });
-    JQ("input#filter_montocto2").keyup(function(e){    	
+    JQ("input#filter_montocto1").keyup(function(e){
+    	JQ(this).val(format(JQ(this).val()));
+    });
+    JQ("input#filter_montocto2").keyup(function(e){
     	JQ(this).val(format(JQ(this).val()));
     });
 
  //    // Try it yourself clicky demo:
-	// var $demoValue = JQ('#filter_montocto1'),	    
+	// var $demoValue = JQ('#filter_montocto1'),
 	//     $demoResult = JQ('#filter_montocto1');
 
 	// // $demoValue.bind('keydown keyup keypress focus blur paste change', function() {
-	// $demoValue.bind('keydown keyup keypress paste change', function() {		
+	// $demoValue.bind('keydown keyup keypress paste change', function() {
  // 	    result = accounting.formatMoney(
  // 	    	$demoValue.val(),
  // 	    	"",
  // 	    	2,
  // 	    );
  // 	    // console.log(result);
- // 	    setTimeout(function(){ $demoResult.val(result); }, 1000);		
+ // 	    setTimeout(function(){ $demoResult.val(result); }, 1000);
 	// });
 
 
 	//Proteger un prospecto
-	// setTimeout(function(){ 
-		// JQ('input:checkbox').addClass("checkPorVencer"); 
+	// setTimeout(function(){
+		// JQ('input:checkbox').addClass("checkPorVencer");
 		// JQ(document).find('input:checkbox').addClass('checkPorVencer');
-	// }, 500);	
-	JQ('input:checkbox').click(function(){		
+	// }, 500);
+	JQ('input:checkbox').click(function(){
 		textfechaAsig = JQ.trim(JQ(this).parent().parent().find("td.fechaAsig").html());
 		console.log(textfechaAsig);
 		if(textfechaAsig==""){
 			JQ("#idPorVencer").val(1);
-		}		
+		}
 	});
-	JQ(".selProtegerPros").click(function(){		
+	JQ(".selProtegerPros").click(function(){
 		JQ('#popup_protegerpros').css('position','fixed');
 		JQ('#arrIdProsProt').val(""); //limpiar hidden
-		JQ("#prot_tiempo").val("");		
-				
+		JQ("#prot_tiempo").val("");
+
 		if (document.adminForm.boxchecked.value==0){
 		   JQ("#idPorVencer").val(0);
            alert('Please first make a selection from the list');
@@ -335,8 +336,8 @@ JQ(document).ready(function(){
 	    	}else{
 	    		alert('No es posible proteger el(los) prospecto(s) seleccionado(s) porque alguno no tiene aún el agente de ventas asociado.');
            		return false;
-	    	}	       
-		}		
+	    	}
+		}
 	});
 	JQ("#form_protegerpros").validate({
         submitHandler: function(form) {
@@ -346,20 +347,20 @@ JQ(document).ready(function(){
     });
 
 
-	//Tootip para la columna comentario	
+	//Tootip para la columna comentario
     JQ('[data-toggle="tooltip"]').tooltip();
-    //Inicio para descargar prospectos por rango de fechas    
+    //Inicio para descargar prospectos por rango de fechas
     JQ(".selDescargaProspectos").click(function(){
 		JQ('#popup_descargaprospectos').css('position','fixed');
 	});
     JQ("#form_descargaprospectos").validate({
-        submitHandler: function(form) {        	        	        
+        submitHandler: function(form) {
         	showLoading("#btn_descargaprospectos"); //mostrar loading
         	form.submit();
-        	setTimeout(function(){ 
+        	setTimeout(function(){
         		jQuery('#popup_descargaprospectos').modal('hide');
         		JQ("#cont_btn_descargaprospectos").html('<button type="submit" class="btn btn-small button-new btn-success" id="btn_descargaprospectos">Aceptar</button>');
-        	}, 1000);        	
+        	}, 1000);
     	}
     });
     //Fecha del
@@ -372,10 +373,10 @@ JQ(document).ready(function(){
           changeYear: true,
           // maxDate: "0Y",
           minDate: "-10Y",
-          yearRange: "-10:+1",   
-          defaultDate: JQ("#descargaProsp_del").val(),      
-          onSelect: function(dateText, inst){ 
-            JQ("#descargaProsp_del").val(JQ(this).val());        
+          yearRange: "-10:+1",
+          defaultDate: JQ("#descargaProsp_del").val(),
+          onSelect: function(dateText, inst){
+            JQ("#descargaProsp_del").val(JQ(this).val());
           }
     });
     //Fecha Hasta
@@ -388,17 +389,17 @@ JQ(document).ready(function(){
           changeYear: true,
           // maxDate: "0Y",
           minDate: "-10Y",
-          yearRange: "-10:+1",   
-          defaultDate: JQ("#descargaProsp_hasta").val(),      
-          onSelect: function(dateText, inst){ 
-            JQ("#descargaProsp_hasta").val(JQ(this).val());        
+          yearRange: "-10:+1",
+          defaultDate: JQ("#descargaProsp_hasta").val(),
+          onSelect: function(dateText, inst){
+            JQ("#descargaProsp_hasta").val(JQ(this).val());
           }
     });
     //Fin para descargar prospectos por rango de fechas
-    //Cambiar opcion del menu segun el grupo y dependiendo si el estatus esta vacio para ser aplicado    
+    //Cambiar opcion del menu segun el grupo y dependiendo si el estatus esta vacio para ser aplicado
     if(JQ("#hidd_checkestatus").val() != null){
 	 	hidd_checkestatus = parseInt(JQ("#hidd_checkestatus").val());
-	 	hidd_grp = JQ("#hidd_grp").val(); 
+	 	hidd_grp = JQ("#hidd_grp").val();
 	 	if(hidd_checkestatus==0){
 	 	  //Si es prospectador cambia a por asignar
 	 	  if(hidd_grp!=""){
@@ -410,6 +411,31 @@ JQ(document).ready(function(){
 	 	  }
 	 	}
 	}
+
+	// Imp. 23/08/21, Carlos, Obt. los agentes dependiendo de la seleccion de los gerentes
+	if(typeof JQ('#filter_gerentes').val() != 'undefined'){
+	    JQ("#filter_gerentes").change(function (){
+	    	let valSel = parseInt(JQ(this).val());
+	    	let html = "";
+	    	JQ("#filter_asesores").html("");
+	    	let arrTest = [];
+	    	console.log(valSel);
+
+	      	// console.log(arrJsonAsesores);
+
+	      	html += `<option value="" selected="selected">Gerentes (Todos)</option>`;
+	      	JQ.each(arrJsonAsesores, function(i,v) {
+			    if(parseInt(v.usuarioIdGteJoomla)==valSel){
+	      			html += `<option value="${v.usuarioIdJoomla}">${v.nombre}</option>`;
+	      			// arrTest[i] = v;
+	      		}
+			});
+			// console.log(arrTest);
+			JQ("#filter_asesores").html(html);
+			JQ("#filter_asesores").val("");
+	  	});
+	}
+
  });
 
 
@@ -435,7 +461,7 @@ var format = function(num){
 
 //Metodo para mostrar loading al presionar sobre el boton enviar de formulario
 function showLoading(target){
-  var loading = JQ('#loading_img').val(); //obtener imagen del loading    
+  var loading = JQ('#loading_img').val(); //obtener imagen del loading
   addInfo = JQ(target).parent();
   addInfo.html('<div class="addInfo" style="display:inline-block;">'+loading+'</div>'); //Agregar loading
   JQ(target).hide();
