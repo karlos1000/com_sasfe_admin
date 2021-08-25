@@ -96,6 +96,8 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
                     <?php echo JHtml::_('select.options', JHtml::_('modules.opcionGerentesProspectos'), 'value', 'text', $opcionGerentes, true);?>
                 </select>
             </div>
+            <?php } ?>
+            <?php if(in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups) || in_array("11", $this->groups)){ ?>
             <div class="filter-search btn-group pull-left">
                 <label for="filter_asesores" class="element-invisible"><?php echo JText::_('Gerentes');?></label>
                 <select name="filter_asesores" id="filter_asesores" class="hasTooltip" title="<?php echo JHtml::tooltipText('Agentes V.'); ?>" style="width:170px;">
@@ -392,6 +394,18 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
         <input type="hidden" name="vista_eventos" value="0" />
         <?php }elseif(in_array("11", $this->groups)){ ?>
         <input type="hidden" name="vista_eventos" value="1" />
+        <?php } ?>
+
+        <!-- En caso de ser gerentes -->
+        <?php if(in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups)){
+                $f_gerentes_id = (isset($_POST["filter_gerentes"]))?$_POST["filter_gerentes"]:0;
+                $f_asesores_id = (isset($_POST["filter_asesores"]))?$_POST["filter_asesores"]:0;
+         ?>
+            <input type="hidden" name="f_gerentes_id" id="f_gerentes_id" value="<?php echo $f_gerentes_id; ?>" />
+            <input type="hidden" name="f_asesores_id" id="f_asesores_id" value="<?php echo $f_asesores_id; ?>" />
+        <?php } ?>
+        <?php if(in_array("19", $this->groups) || in_array("11", $this->groups)){ ?>
+            <!-- <input type="hidden" name="f_gerentes_id" id="f_gerentes_id" value="<?php echo $this->user->id; ?>" /> -->
         <?php } ?>
     </div>
 
@@ -703,6 +717,7 @@ foreach ($this->ColAsesores as $elem) {
 
 // echo "<pre>";
 // print_r($this->ColAsesores);
+// print_r($_POST);
 // echo "</pre>";
 ?>
 

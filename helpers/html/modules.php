@@ -417,44 +417,37 @@ abstract class JHtmlModules
     // Imp. 23/08/21, Carlos, Para el filtro de mostrar Asesores de ventas en prospectos (solo ocurre en el caso Super Admin, direccion, redes)
     static public function opcionAsesoresProspectos(){
         $userC = JFactory::getUser();
+        $groups = JAccess::getGroupsByUser($userC->id, false);
         $options = array();
         $db = JFactory::getDbo();
-        // $idGteVentas = $userC->id;
-        $options[] = JHtml::_('select.option', '', "Gerentes (Todos)");
-
         $tbl_users = $db->getPrefix().'users';
         $tbl_user_usergroup_map = $db->getPrefix().'user_usergroup_map';
+        $tbl_sasfe_datos_catalogos = $db->getPrefix().'sasfe_datos_catalogos';
 
-        $query = "
-                 SELECT a.* FROM $tbl_users AS a
-                 LEFT JOIN $tbl_user_usergroup_map AS b ON b.user_id=a.id
-                 WHERE b.group_id=11
-                 ORDER BY name ASC
-               ";
-
-        // $query = "SELECT DISTINCT gteVentasId FROM #__sasfe_datos_contactos ";
-        // echo $query;
-        // exit();
-        $db->setQuery($query);
-        $db->query();
-        $rows = $db->loadObjectList();
-
-        foreach($rows as $item){
-            $options[] = JHtml::_('select.option', $item->id, $item->name);
+        $queryIdGteVentas = "";
+        // if(in_array("19", $groups) || in_array("11", $groups)){
+        if(in_array("11", $groups)){
+            $queryIdGteVentas = ' AND usuarioIdGteJoomla= '.$userC->id;
         }
 
-        // foreach($rows as $item){
-        //     if($item->gteVentasId!=""){
-        //       $queryUser = "SELECT * FROM #__users WHERE id=".$item->gteVentasId;
-        //       $db->setQuery($queryUser);
-        //       $db->query();
-        //       $row = $db->loadObject();
+        $options[] = JHtml::_('select.option', '', "Agentes (Todos)");
+        // Solo obtener aquellos asesores del propio gerente
+        if($queryIdGteVentas!=""){
+            $query = "
+                SELECT * FROM $tbl_sasfe_datos_catalogos
+                WHERE catalogoId=3 AND activo='1' AND nombre !='' AND usuarioIdJoomla IS NOT NULL $queryIdGteVentas
+                ORDER BY nombre ASC
+               ";
+            // echo $query;
+            // exit();
+            $db->setQuery($query);
+            $db->query();
+            $rows = $db->loadObjectList();
 
-        //       if($item->gteVentasId>0){
-        //         $options[] = JHtml::_('select.option', $item->gteVentasId, $row->name);
-        //       }
-        //     }
-        // }
+            foreach($rows as $item){
+                $options[] = JHtml::_('select.option', $item->usuarioIdJoomla, $item->nombre);
+            }
+        }
 
         return $options;
     }

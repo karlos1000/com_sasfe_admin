@@ -69,6 +69,10 @@ class SasfeModelProspectos extends JModelList{
             $gerente = $this->getUserStateFromRequest($this->context.'.filter.opcionGerentes', 'filter_gerentes');
             $this->setState('filter.opcionGerentes', $gerente);
 
+            // Buscar por asesores
+            $asesor = $this->getUserStateFromRequest($this->context.'.filter.opcionAsesores', 'filter_asesores');
+            $this->setState('filter.opcionAsesores', $gerente);
+
 	        // $idEstatus = $this->getUserStateFromRequest($this->context.'.filter.opcionEstatusProspecto', 'filter_estatus2');
             // $this->setState('filter.opcionEstatusProspecto', $idEstatus);
 
@@ -112,11 +116,12 @@ class SasfeModelProspectos extends JModelList{
                 $idTipoCto = $this->getState('filter.opcionTipoCreditos'); //Buscar por el tipo de credito
                 $estatus = $this->getState('filter.opcionEstatus'); //Buscar por estatus
                 $gerente = $this->getState('filter.opcionGerentes'); //Buscar por gerente, Imp. 23/08/21, Carlos
+                $asesor = $this->getState('filter.opcionAsesores'); //Buscar por asesor, Imp. 24/08/21, Carlos
 
                 // $idEstatus = $this->getState('filter.opcionEstatusProspecto'); //Buscar por el estatus personalizados
                 $this->layout = JRequest::getVar('layout'); //obtiene el nombre del layout
                 $opcFiltro = false;
-                if( $search!="" || $apellidos!="" || $rfc!="" || $celular!="" || $montocto1!="" || $montocto2!="" || $puntoshasta!="" || $idTipoCto!="" || ($estatus!="" && $estatus>0) || ($gerente!="" && $gerente>0) ){
+                if( $search!="" || $apellidos!="" || $rfc!="" || $celular!="" || $montocto1!="" || $montocto2!="" || $puntoshasta!="" || $idTipoCto!="" || ($estatus!="" && $estatus>0) || ($gerente!="" && $gerente>0) || ($asesor!="" && $asesor>0) ){
                     $opcFiltro = true;
                 }
                 // echo "opcFiltro: ".$opcFiltro.'<br/>';
@@ -206,6 +211,13 @@ class SasfeModelProspectos extends JModelList{
                 $idGerenteVentas = "";
                 if($gerente!=""){
                     $idGerenteVentas = " AND a.gteVentasId=".$gerente." ";
+                }
+                // Finaliza filtro de gerentes
+
+                // Imp. 24/08/21, Carlos => Inicia filtro de asesores
+                $idAsesorVentas = "";
+                if($asesor!=""){
+                    $idAsesorVentas = " AND a.agtVentasId=".$asesor." ";
                 }
                 // Finaliza filtro de gerentes
 
@@ -319,7 +331,7 @@ class SasfeModelProspectos extends JModelList{
                     }
                     // Redes
                     elseif(in_array("20", $this->groups)){
-                        echo "REDES con Filtro";
+                        // echo "REDES con Filtro";
                         // $queryOpt .= ' AND a.idRepDir=1 '.$queryDuplicado;
                         $queryOpt .= ' AND (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
                     }
@@ -374,9 +386,9 @@ class SasfeModelProspectos extends JModelList{
                         SELECT a.*, b.nombre as tipoCredito
                         FROM #__sasfe_datos_prospectos as a
                         LEFT JOIN #__sasfe_datos_catalogos as b ON b.idDato=a.tipoCreditoId
-                        $queryOpt  $montosCtoQuery  $tipoCtoQuery  $fechaPHastaQuery $queryProcesar $queryIdAgtV $tipoEstatus $idGerenteVentas
+                        $queryOpt  $montosCtoQuery  $tipoCtoQuery  $fechaPHastaQuery $queryProcesar $queryIdAgtV $tipoEstatus $idGerenteVentas $idAsesorVentas
                       ";
-                echo $query;
+                // echo $query;
 
                 $db->setQuery($query);
                 $db->query();

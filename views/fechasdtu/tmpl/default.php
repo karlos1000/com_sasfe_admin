@@ -9,15 +9,15 @@ JHTML::_('behavior.modal');
 JHTML::_('behavior.formvalidation');
 
 
-include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolAjax' . DIRECTORY_SEPARATOR . 'koolajax.php';                                                      
-include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolGrid' . DIRECTORY_SEPARATOR . 'koolgrid.php';            
-include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolCalendar' . DIRECTORY_SEPARATOR . 'koolcalendar.php';                   
+include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolAjax' . DIRECTORY_SEPARATOR . 'koolajax.php';
+include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolGrid' . DIRECTORY_SEPARATOR . 'koolgrid.php';
+include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolCalendar' . DIRECTORY_SEPARATOR . 'koolcalendar.php';
 include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolGrid' . DIRECTORY_SEPARATOR . 'ext'. DIRECTORY_SEPARATOR .'datasources'. DIRECTORY_SEPARATOR .'MySQLiDataSource.php';
 $dateC = date("d/m/Y"); //fecha actual
 JViewLegacy::loadHelper('sasfehp');
 $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
 
-?> 
+?>
 <div>
     <span>Nota filtro grid.</span>
     <ul>
@@ -29,14 +29,62 @@ $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
 </div>
 <br/>
 
-<form action="<?php echo JRoute::_('index.php?option=com_sasfe&task=fechasdtu');?>" method="post" id="adminForm" name="adminForm">         
-    <?php     
+<div class="cont_btn_fechadtu">
+    <a href="#" data-toggle="modal" data-target="#popup_fechadtu" class="btn btn-small button-apply btn-success" id="btnSelFecha" >Seleccionar Fecha</a>
+</div>
+<hr>
+
+<form action="<?php echo JRoute::_('index.php?option=com_sasfe&task=fechasdtu');?>" method="post" id="adminForm" name="adminForm">
+    <?php
         echo $koolajax->Render();
-        echo $grid->Render();   
-    ?>          
-    <input type="hidden" name="task" value="horarios" />                    
-    <?php echo JHtml::_('form.token'); ?>                
+        echo $grid->Render();
+    ?>
+    <input type="hidden" name="task" value="horarios" />
+    <?php echo JHtml::_('form.token'); ?>
 </form>
 
 <br/>
 <br/>
+
+
+<!-- Modal fechas DTU-->
+<div class="modal fade" id="popup_fechadtu" role="dialog" style="width:500px;height:400px;position:relative !important;display:none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Evento para prospecto</h4>
+          </div>
+          <div class="modal-body cont_form_popup">
+            <form id="form_agregar_evento" class="form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=fechasdtu&task=fechasdtu.dtuFechasMasivo'); ?>" method="post">
+
+                <div class="control-group ctrgr_popup">
+                    <div class="control-label">
+                        <label for="fecha_dtu">Fecha:</label>
+                    </div>
+                    <div class="controls">
+                        <div id="fecha_dtu_linea" style="display:inline-block;"></div>
+                        <!-- <input type="hidden" name="fecha_dtu" id="fecha_dtu" value="<?php echo $timeZone->fechaF2; ?>" /> -->
+                        <input type="hidden" name="fecha_dtu" id="fecha_dtu" value="" />
+                    </div>
+                </div>
+                <!-- <div class="control-group ctrgr_popup">
+                    <div class="control-label">
+                        <label for="ev_comentario">Comentario:</label>
+                    </div>
+                    <div class="controls">
+                        <textarea name="ev_comentario" id="ev_comentario" class="form-control required" style="min-width:90%;"></textarea>
+                    </div>
+                </div> -->
+
+                <div>
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_agregarevento">Aceptar Fechas DTU</button>
+                </div>
+
+                <!-- <input type="hidden" name="ev_idPros" id="ev_idPros" value="0" />
+                <input type="hidden" name="edit_evpros" value="0" /> -->
+            </form>
+          </div>
+      </div>
+    </div>
+</div>

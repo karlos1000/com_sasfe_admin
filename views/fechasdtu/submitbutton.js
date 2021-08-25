@@ -1,86 +1,28 @@
 JQ(document).ready(function(){
-	console.log(JQ("#estatusId").val());
-	/*
-	if(JQ("#estatusId").val() == 2){
-		document.getElementById("filter_estatus").selectedIndex=2;
-		JQ("#filter_estatus option[value=]").hide();
-		JQ("#filter_estatus option[value=0]").hide();
-		JQ("#filter_estatus option[value=2]").hide();
-	}else if(JQ("#estatusId").val() == 1){
-		document.getElementById("filter_estatus").Index=3;
-	}
-	*/
-	JQ('.button-delete').attr('onclick','').unbind('click');
-	JQ('.button-delete').click(function(){
-	   if (document.adminForm.boxchecked.value==0){
-           alert('Please first make a selection from the list');
-       }else{
-       	   	var r = confirm("Esta seguro de borrar los registros seleccionados");
-			if(r==true) {
-				Joomla.submitbutton('prospectos.borrarProsRepetidos');
-			}else{
-				return false;
-			}
-       }
-	});
+	console.log("listo");
 
-    // Reemplazar evento onclick
-   //  JQ('#toolbar-delete a').attr('onclick','').unbind('click');
-   //  JQ('#toolbar-delete a').click(function(){
-   //     if (document.adminForm.boxchecked.value==0){
-   //         alert('Please first make a selection from the list');
-   //     }else{
-   //     	   	var r = confirm("Esta seguro de borrar los registros seleccionados");
-			// if(r==true) {
-			// 	JQ("#borrar_prosp").val(idPros);
-			// 	Joomla.submitbutton('prospectos.borrarProsRepetidos');
-			// }
-   //         // var r=confirm('No es posible eliminar el elemento, al hacerlo se borrara los deparatamentos vinculados, ¿Realmente estás seguro?');
-   //         // if (r==true){
-   //         //     Joomla.submitbutton('catfraccionamientos.delete');
-   //         // }else{
-   //         //     return false;
-   //         // }
-   //     }
-   //  });
+	// JQ('#popup_fechadtu').css('display','none');
+	JQ("#btnSelFecha").click(function(){
+		JQ('#popup_fechadtu').css('position','fixed');
 
-	//Para los eventos
-	JQ('input[name=\"ev_optrecordatorio\"]').click(function() {
-        var v = JQ(this).val();
-        var value = (v == 1) ? '0' : '1';
-        JQ('#ev_optrecordatorio').val(value);
-        JQ('#ev_tiempo').val("");
-
-        if(parseInt(value)==1){
-        	JQ('#cont_ev_tiempo').show();
-        	JQ('#ev_tiempo').addClass("required");
-        }else{
-        	JQ('#cont_ev_tiempo').hide();
-        	JQ('#ev_tiempo').removeClass("required");
-        }
-    });
-
-	// JQ('#popup_agregarevento').css('display','none');
-	JQ(".selProspecto").click(function(){
-		JQ('#popup_agregarevento').css('position','fixed');
-
-		JQ("#ev_idPros").val(0);
+		/*JQ("#ev_idPros").val(0);
 		JQ("#ev_idPros").val(JQ(this).attr("idPros"));
 
 		JQ('#form_agregar_evento')[0].reset();
 		JQ("#ev_optrecordatorio").val(0);
 		JQ('#cont_ev_tiempo').hide();
-    	JQ('#ev_tiempo').removeClass("required");
+    	JQ('#ev_tiempo').removeClass("required");*/
 	});
-	JQ("#form_agregar_evento").validate({
+	/*JQ("#form_agregar_evento").validate({
         submitHandler: function(form) {
         	showLoading("#btn_agregarevento"); //mostrar loading
         	form.submit();
     	}
-    });
+    });*/
+
 
 	//Fecha
-    JQ("#ev_fecha_linea").datepicker({
+    JQ("#fecha_dtu_linea").datepicker({
       	  showOn: "button",
 	      buttonImage: JQ("#rutaCalendario").val(),
 	      buttonImageOnly: true,
@@ -91,10 +33,11 @@ JQ(document).ready(function(){
 	      minDate: "0Y",
 	      yearRange: "-100:+1",
 	      onSelect: function(dateText, inst){
-	        JQ("#ev_fecha").val(JQ(this).val());
+	        JQ("#fecha_dtu").val(JQ(this).val());
 	      }
 	});
 
+    /*
    //horas
     JQ('input#ev_hora').timepicker({
 		//timeFormat: 'h:mm p',
@@ -197,16 +140,6 @@ JQ(document).ready(function(){
 		JQ("#rep_usuario").val("");
 		JQ("#rep_comentario").val("");
 
-		// var searchIDs = JQ('input:checked').map(function(){
-  // 			return JQ(this).val();
-	 //    });
-	 //    if(searchIDs.get().length>0){
-	 //    	JQ('#arrRepetidoId').val(searchIDs.get().join(",")); //agregar ids gte ventas seleccionados
-	 //    }else{
-		//    alert('Please first make a selection from the list');
-  //          return false;
-	 //   	}
-
 		if (document.adminForm.boxchecked.value==0){
            alert('Please first make a selection from the list');
            return false;
@@ -290,27 +223,6 @@ JQ(document).ready(function(){
     	JQ(this).val(format(JQ(this).val()));
     });
 
- //    // Try it yourself clicky demo:
-	// var $demoValue = JQ('#filter_montocto1'),
-	//     $demoResult = JQ('#filter_montocto1');
-
-	// // $demoValue.bind('keydown keyup keypress focus blur paste change', function() {
-	// $demoValue.bind('keydown keyup keypress paste change', function() {
- // 	    result = accounting.formatMoney(
- // 	    	$demoValue.val(),
- // 	    	"",
- // 	    	2,
- // 	    );
- // 	    // console.log(result);
- // 	    setTimeout(function(){ $demoResult.val(result); }, 1000);
-	// });
-
-
-	//Proteger un prospecto
-	// setTimeout(function(){
-		// JQ('input:checkbox').addClass("checkPorVencer");
-		// JQ(document).find('input:checkbox').addClass('checkPorVencer');
-	// }, 500);
 	JQ('input:checkbox').click(function(){
 		textfechaAsig = JQ.trim(JQ(this).parent().parent().find("td.fechaAsig").html());
 		console.log(textfechaAsig);
@@ -427,8 +339,8 @@ JQ(document).ready(function(){
 	if(idGteVentas>0){
 		selectorAsesores(idGteVentas);
 	}
-
- });
+	*/
+});
 
 
 var format = function(num){
@@ -457,36 +369,4 @@ function showLoading(target){
   addInfo = JQ(target).parent();
   addInfo.html('<div class="addInfo" style="display:inline-block;">'+loading+'</div>'); //Agregar loading
   JQ(target).hide();
-}
-
-
-// Imp. 24/08/21, Carga de asesores o agentes
-function selectorAsesores(idGteVentas){
-	console.log(idGteVentas);
-	// console.log(arrJsonAsesores);
-	// let arrTest = [];
-	JQ("#filter_asesores").html("");
-	let asesorTemp = (JQ("#f_asesores_id").val()!="")?parseInt(JQ("#f_asesores_id").val()):0;
-	let exiteAsesor = false;
-	console.log("asesor", asesorTemp);
-
-	let html = "";
-  	html += `<option value="" selected="selected">Agentes (Todos)</option>`;
-  	JQ.each(arrJsonAsesores, function(i,v) {
-	    if(parseInt(v.usuarioIdGteJoomla)==idGteVentas){
-  			html += `<option value="${v.usuarioIdJoomla}">${v.nombre}</option>`;
-  			// arrTest[i] = v;
-
-  			// Comprobar si existe el asesor
-  			if(asesorTemp>0 && v.usuarioIdJoomla==asesorTemp){
-  				exiteAsesor = true;
-  			}
-  		}
-	});
-  	// console.log("exiteAsesor", exiteAsesor);
-
-	// console.log(arrTest);
-	JQ("#filter_asesores").html(html);
-	JQ("#filter_asesores").val( (exiteAsesor)?JQ("#f_asesores_id").val():"" );
-	// JQ("#filter_asesores").val("");
 }
