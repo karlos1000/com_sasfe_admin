@@ -5,22 +5,35 @@ jimport('joomla.application.component.controllerform');
 
 class SasfeControllerFechasdtu extends JControllerForm {
 
-    function cancel()
+    function cancel($key = NULL)
     {
         $this->setRedirect( 'index.php?option=com_sasfe');
     }
 
 
     function dtuFechasMasivo(){
-         // Check for request forgeries
-	    // JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-    	// $model = JModelLegacy::getInstance('prospectos', 'SasfeModel');
-    	// $idsProspectos = JRequest::getVar('cid', array(), '', 'array');
+        require_once(JPATH_COMPONENT.'/helpers/sasfehp.php' );
+        $arrDateTime = SasfehpHelper::obtDateTimeZone();
+        $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
+        $fecha = JRequest::getVar('fecha_dtu');
+        $idsDatoGeneral = JRequest::getVar('idsDatoGeneral');
+        $idFracc = JRequest::getVar('idFracc');
 
-    	echo "<pre>";
-    	print_r($_POST);
-    	echo "</pre>";
-    	exit();
+        if($idsDatoGeneral!=""){
+           $resp = $modelGM->ActBatchFechasDTU(SasfehpHelper::conversionFecha($fecha), $idsDatoGeneral);
+           if($resp){
+                $this->setRedirect( 'index.php?option=com_sasfe&view=fechasdtu&idFracc='.$idFracc, "La(s) fecha(s) DTU se han actualizado correctamente.");
+           }else{
+                $this->setRedirect( 'index.php?option=com_sasfe&view=fechasdtu&idFracc='.$idFracc, "La(s) fecha(s) DTU no fueron actualizado(s).");
+           }
+        }else{
+            $this->setRedirect( 'index.php?option=com_sasfe&view=fechasdtu&idFracc='.$idFracc, "La(s) fecha(s) DTU no fueron actualizado(s).");
+        }
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "</pre>";
+        // exit();
     }
 }
 

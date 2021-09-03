@@ -1242,6 +1242,26 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
         return $ds;
     }
 
+    /*
+     * Imp. 03/09/21, Carlos, Cambio de fechas DTU en batch
+     */
+    public function ActBatchFechasDTU($fecha, $ids){
+        $db = JFactory::getDbo();
+        $tbl_sasfe_datos_generales = $db->getPrefix().'sasfe_datos_generales';
+
+        $query = "UPDATE $tbl_sasfe_datos_generales SET fechaDTU='$fecha'
+                    WHERE idDatoGeneral IN ($ids)
+                 ";
+        // echo $query; exit;
+        $db->setQuery($query);
+        $db->query();
+        $row = $db->getAffectedRows();
+        $result = ($row>0) ? 1 : 0;
+
+        return $result;
+    }
+
+
     /***
      * Obtiene el nombre de fraccionamiento por su id
      */

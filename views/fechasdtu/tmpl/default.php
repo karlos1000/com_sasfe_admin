@@ -18,6 +18,12 @@ JViewLegacy::loadHelper('sasfehp');
 $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
 
 ?>
+<style>
+    .cont_btn_seleccionar{
+        width: 65%;
+        text-align: right;
+    }
+</style>
 <div>
     <span>Nota filtro grid.</span>
     <ul>
@@ -28,9 +34,22 @@ $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
     </ul>
 </div>
 <br/>
+<div>
+    <span><strong>Nota selecci&oacute;n multiple.</strong></span>
+    <ul>
+        <li>Puede utilizar el bot&oacute;n "Seleccionar todo" para chequear los registros que se encuentre en la vista o simplemente<br/> ir seleccionando una por uno, para seleccionar mas registros use el contro de tama&ntilde;o de p&aacute;gina.</li>
+        <li>Despu&eacute;s presionar sobre el bot&oacute;n "Seleccionar Fecha", escoger una y aceptar.</li>
+    </ul>
+</div>
+<br/>
 
 <div class="cont_btn_fechadtu">
     <a href="#" data-toggle="modal" data-target="#popup_fechadtu" class="btn btn-small button-apply btn-success" id="btnSelFecha" >Seleccionar Fecha</a>
+</div>
+<br>
+<div class="cont_btn_seleccionar">
+    <input class="btn btn-warning" id="btnSeleccionarTodo" type="button" value="Seleccionar todo" />
+    <input class="btn btn-warning" id="btnDeseleccionarTodo" type="button" value="Deseleccionar todo" style="display:none;" />
 </div>
 <hr>
 
@@ -48,15 +67,20 @@ $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
 
 
 <!-- Modal fechas DTU-->
+<?php
+$dateByZone = new DateTime("now", new DateTimeZone('America/Mexico_City') );
+$fecha = $dateByZone->format('Y-m-d'); //fecha
+?>
 <div class="modal fade" id="popup_fechadtu" role="dialog" style="width:500px;height:400px;position:relative !important;display:none;">
     <div class="modal-dialog">
       <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Evento para prospecto</h4>
+              <h4 class="modal-title">Seleccionar fecha DTU</h4>
           </div>
           <div class="modal-body cont_form_popup">
-            <form id="form_agregar_evento" class="form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=fechasdtu&task=fechasdtu.dtuFechasMasivo'); ?>" method="post">
+            <!-- <form id="form_agregar_evento" class="form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=fechasdtu&task=fechasdtu.dtuFechasMasivo'); ?>" method="post"> -->
+                <form id="form_agregar_evento" class="form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=fechasdtu&task=fechasdtu.dtuFechasMasivo'); ?>" method="post">
 
                 <div class="control-group ctrgr_popup">
                     <div class="control-label">
@@ -64,8 +88,7 @@ $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
                     </div>
                     <div class="controls">
                         <div id="fecha_dtu_linea" style="display:inline-block;"></div>
-                        <!-- <input type="hidden" name="fecha_dtu" id="fecha_dtu" value="<?php echo $timeZone->fechaF2; ?>" /> -->
-                        <input type="hidden" name="fecha_dtu" id="fecha_dtu" value="" />
+                        <input type="hidden" name="fecha_dtu" id="fecha_dtu" value="<?php echo $fecha; ?>" />
                     </div>
                 </div>
                 <!-- <div class="control-group ctrgr_popup">
@@ -78,11 +101,12 @@ $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
                 </div> -->
 
                 <div>
-                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_agregarevento">Aceptar Fechas DTU</button>
+                    <button type="button" class="btn btn-small button-new btn-success" id="btn_cambiarfechasdtu">Aceptar Fechas DTU</button>
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_cambiarfechasdtu_hid" style="display:none;">Aceptar Fechas DTU</button>
                 </div>
 
-                <!-- <input type="hidden" name="ev_idPros" id="ev_idPros" value="0" />
-                <input type="hidden" name="edit_evpros" value="0" /> -->
+                <input type="hidden" name="idsDatoGeneral" id="idsDatoGeneral" value="" />
+                <input type="hidden" name="idFracc" value="<?php echo $this->idFracc;?>" />
             </form>
           </div>
       </div>
