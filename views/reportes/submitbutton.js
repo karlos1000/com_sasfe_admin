@@ -9,38 +9,38 @@ JQ(document).ready(function(){
      }
    },500);
 
-        //Reemplazar evento onclick        
+        //Reemplazar evento onclick
         JQ('#toolbar-delete a').attr('onclick','').unbind('click');
-        JQ('#toolbar-delete a').click(function(){                                  
+        JQ('#toolbar-delete a').click(function(){
             if (document.adminForm.boxchecked.value==0){
                 alert('Please first make a selection from the list');
-            }else{ 
+            }else{
                 var r=confirm('No es posible eliminar el elemento, al hacerlo se borrara los deparatamentos vinculados, ¿Realmente estás seguro?');
-                if (r==true){                                            
+                if (r==true){
                     Joomla.submitbutton('catfraccionamientos.delete');
-                }else{                                                          
+                }else{
                     return false;
-                }                
-            }                                          
+                }
+            }
          });
-                  
+
     JQ('#btn_exportar').click(function (){
         if(JQ("#adminForm").valid()){
-            Joomla.submitbutton('reportes.reporteGral');   
+            Joomla.submitbutton('reportes.reporteGral');
         }
-        // if(JQ("#fracc").val()!=''){       
-        //     Joomla.submitbutton('reportes.reporteGral');   
+        // if(JQ("#fracc").val()!=''){
+        //     Joomla.submitbutton('reportes.reporteGral');
         // }
     });
 
-    JQ('.button-cancel').click(function (){            
+    JQ('.button-cancel').click(function (){
           var controles = ['input', 'select', 'textarea'];
           JQ(controles).each(function(index, val){
             JQ(val).removeClass('required');
             JQ(val).removeAttr("required");
           });
-          Joomla.submitbutton('reportes.cancel');          
-    }); 
+          Joomla.submitbutton('reportes.cancel');
+    });
 
 
     //exportar el reporte de los prospectos
@@ -48,9 +48,25 @@ JQ(document).ready(function(){
         JQ("#fracc").removeClass("required");
         JQ("#fracc").removeAttr("required");
         if(JQ("#adminForm").valid()){
-            Joomla.submitbutton('reportes.reporteProspecto');
+            // Joomla.submitbutton('reportes.reporteProspecto');
+            // Joomla.submitbutton('reportes.reporteProspectoPantalla');
             JQ("#fracc").addClass("required");
+
+            // Imp. 08/09/21 Carlos, Cargar en pantalla el resultado del reporte de productividad
+            let params = {
+              filter_fechaDel: JQ('#filter_fechaDel').val(),
+              filter_fechaAl: JQ('#filter_fechaAl').val(),
+              usuarioIdGteVenta: JQ('#usuarioIdGteVenta').val(),
+              asig_agtventas: JQ('#asig_agtventas').val(),
+              asig_fuente: JQ('#asig_fuente').val(),
+            };
+            fAjax('reporteProspectoPantalla', params);
         }
+    });
+
+    // Imp. 08/09/21, Carlos
+    JQ("#btnVerRptProductividad").click(function(){
+      JQ('#popup_rpt_productividad').css('position','fixed');
     });
 
     //Fecha del
@@ -63,11 +79,11 @@ JQ(document).ready(function(){
           changeYear: true,
           // maxDate: "0Y",
           minDate: "-10Y",
-          yearRange: "-10:+1",   
-          defaultDate: JQ("#filter_fechaDel").val(),      
-          onSelect: function(dateText, inst){ 
-            JQ("#filter_fechaDel").val(JQ(this).val());        
-          }  
+          yearRange: "-10:+1",
+          defaultDate: JQ("#filter_fechaDel").val(),
+          onSelect: function(dateText, inst){
+            JQ("#filter_fechaDel").val(JQ(this).val());
+          }
     });
     //Fecha al
     JQ("#filter_fechaAl").datepicker({
@@ -79,13 +95,13 @@ JQ(document).ready(function(){
           changeYear: true,
           //maxDate: "0Y",
           minDate: "-10Y",
-          yearRange: "-10:+1",   
-          defaultDate: JQ("#filter_fechaAl").val(),      
-          onSelect: function(dateText, inst){ 
-            JQ("#filter_fechaAl").val(JQ(this).val());        
-          }  
+          yearRange: "-10:+1",
+          defaultDate: JQ("#filter_fechaAl").val(),
+          onSelect: function(dateText, inst){
+            JQ("#filter_fechaAl").val(JQ(this).val());
+          }
     });
-            
+
     //Para el campo de
     JQ('input[name=\"asig_fuente\"]').click(function() {
         var v = JQ(this).val();
@@ -208,3 +224,28 @@ JQ(document).ready(function(){
 
 
  });
+
+
+//Imp. 08/09/21, Carlos Metodo que se implemento para pasar los parametros por ajax
+function fAjax(ctr, data){
+  var path = JQ('#path').val()+ctr;
+  // var loading = JQ('#loading_img').val();
+  JQ.ajax({
+    type: 'POST',
+    url: path,
+    data: data,
+    beforeSend: function(){
+      // JQ('#transmitter').html(loading);
+    },
+    success: function(html){
+        var result = JQ(html).find('response').html();
+        console.log(result);
+        JQ('#transmitter').html(result);
+        JQ("#btnVerRptProductividad").trigger("click");
+        // JQ('ul#ul_transmitter li').click(function(){
+        //     var css = JQ(this).attr('class');
+        //     (css == 'list') ? JQ(this).removeClass('list') : JQ(this).addClass('list');
+        // });
+    }
+  });
+}

@@ -2048,6 +2048,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
       $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
       $tbl_sasfe_users = $db->getPrefix().'users';
       $tbl_sasfe_movimientosprospecto = $db->getPrefix().'sasfe_movimientosprospecto';
+      $tbl_sasfe_tipo_eventos = $db->getPrefix().'sasfe_tipo_eventos'; //Imp. 08/09/21, Carlos
       $suma = 0; //Sumas la diferencia de dias entre la fecha de asignacion al agente y la fecha de cierre o cuando ya se asigno el departamento definitivamente
 
       // prospectos adquiridos, prospConvertidos, prospNoprocedido
@@ -2058,7 +2059,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
           AND ( CAST(fechaAlta AS date)>='".$fechaDel."' AND CAST(fechaAlta AS date)<='".$fechaAl."' )
         GROUP BY agtVentasId ORDER BY agtVentasId
         ";
-      // echo $query1.'<br/>';
+      // echo $query1.'<br/>'; //exit();
       $db->setQuery($query1);
       $db->query();
       $rows1 = (array)$db->loadObject();
@@ -2120,6 +2121,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
         WHERE agtVentasId IS NOT NULL AND idNoProcesados IS NULL AND fechaDptoAsignado IS NULL AND agtVentasId=$agtVentasId
         AND ( CAST(fechaAlta AS date)>='".$fechaDel."' AND CAST(fechaAlta AS date)<='".$fechaAl."' )
         ";
+      // echo $query2.'<br/>'; exit();
       $db->setQuery($query2);
       $db->query();
       $rows2 = $db->loadObject();
@@ -2160,6 +2162,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
             AND ( CAST(fechaAlta AS date)>='".$fechaDel."' AND CAST(fechaAlta AS date)<='".$fechaAl."' )
             ORDER BY agtVentasId
           ";
+        // echo $query4.'<br/>'; //exit();
         $db->setQuery($query4);
         $db->query();
         $rows4 = $db->loadObject();
@@ -2170,6 +2173,11 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
         $rows1["ptcEventosCumplidos"]=0;
         $rows1["ptcEventosNoCumplidos"]=0;
         $rows1["eventosxdia"]=0;
+        // $rows1["eventosCumplidosDet"]=array(); //Imp. 08/09/21
+        // $rows1["eventosNoCumplidosDet"]=array(); //Imp. 08/09/21
+        $rows1["idsDatosProspectos"]=''; //Imp. 08/09/21
+        $rows1["fechaDel"]=''; //Imp. 08/09/21
+        $rows1["fechaAl"]=''; //Imp. 08/09/21
         if(count((array)$rows4)>0 && $rows4->idDatoProspecto!=""){
           //# de eventos programados, # de eventos cumplidos
           $query5 = "
@@ -2178,7 +2186,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
             WHERE opcionId=1 AND datoProspectoId IN ($rows4->idDatoProspecto)
             AND ( CAST(fechaHora AS date)>='".$fechaDel."' AND CAST(fechaHora AS date)<='".$fechaAl."' )
           ";
-          // echo $query5.'<br/>';
+          // echo $query5.'<br/>'; //exit();
           $db->setQuery($query5);
           $db->query();
           $rows5 = $db->loadObject();
@@ -2208,6 +2216,47 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
               $rows1["eventosNoCumplidos"]=$rows6->eventosNoCumplidos;
               $rows1["ptcEventosNoCumplidos"]=@round(($rows6->eventosNoCumplidos/$rows5->eventosProgramados)*100, 2);
             }
+
+            /*// Imp. 08/09/21, Agregar detalle del evento
+            // Eventos cumplidos
+              $query7 = "
+                SELECT a.*, b.tipoEvento, CONCAT(c.nombre, ' ', c.aPaterno, ' ', c.aManterno) as prospecto, c.RFC
+                FROM $tbl_sasfe_movimientosprospecto AS a
+                LEFT JOIN $tbl_sasfe_tipo_eventos AS b ON b.idTipoEvento=a.tipoEventoId
+                LEFT JOIN $tbl_sasfe_datos_prospectos AS c ON c.idDatoProspecto=a.datoProspectoId
+                WHERE a.opcionId=1 AND a.atendido IS NOT NULL AND a.datoProspectoId IN ($rows4->idDatoProspecto)
+                AND ( CAST(a.fechaHora AS date)>='".$fechaDel."' AND CAST(a.fechaHora AS date)<='".$fechaAl."' )
+              ";
+              // echo $query7.'<br/>'; //exit();
+              $db->setQuery($query7);
+              $db->query();
+              $rows7 = $db->loadObjectList();
+
+              if(count((array)$rows7)>0){
+                $rows1["eventosCumplidosDet"]=$rows7;
+              }
+
+              // Eventos cumplidos
+              $query8 = "
+                SELECT a.*, b.tipoEvento, CONCAT(c.nombre, ' ', c.aPaterno, ' ', c.aManterno) as prospecto, c.RFC
+                FROM $tbl_sasfe_movimientosprospecto AS a
+                LEFT JOIN $tbl_sasfe_tipo_eventos AS b ON b.idTipoEvento=a.tipoEventoId
+                LEFT JOIN $tbl_sasfe_datos_prospectos AS c ON c.idDatoProspecto=a.datoProspectoId
+                WHERE a.opcionId=1 AND a.atendido IS NULL AND a.datoProspectoId IN ($rows4->idDatoProspecto)
+                AND ( CAST(a.fechaHora AS date)>='".$fechaDel."' AND CAST(a.fechaHora AS date)<='".$fechaAl."' )
+              ";
+              // echo $query8.'<br/>'; //exit();
+              $db->setQuery($query8);
+              $db->query();
+              $rows8 = $db->loadObjectList();
+
+              if(count((array)$rows8)>0){
+                $rows1["eventosNoCumplidosDet"]=$rows8;
+              }*/
+              //Imp. 08/09/21
+              $rows1["idsDatosProspectos"]=$rows4->idDatoProspecto;
+              $rows1["fechaDel"]=$fechaDel;
+              $rows1["fechaAl"]=$fechaAl;
           }
         }
       }
@@ -2215,6 +2264,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
       // echo "<pre>";
       // print_r($rows1);
       // echo "</pre>";
+      // exit();
 
       return $rows1;
     }

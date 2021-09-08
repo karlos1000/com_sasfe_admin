@@ -211,7 +211,8 @@ $fechaAl = $timeZone->fechaF2; //define fecha al
         <input type="hidden" name="boxchecked" value="0" />
         <?php echo JHtml::_('form.token'); ?>
         <input type="hidden" id="rutaCalendario" value="<?php echo JURI::root().'media/com_sasfe/images/calendar.gif'; ?>" />
-        <input type="hidden" name="usuarioIdGteVenta" value="<?php echo $gteVentasId; ?>" />
+        <input type="hidden" name="usuarioIdGteVenta" id="usuarioIdGteVenta" value="<?php echo $gteVentasId; ?>" />
+        <input type="hidden" id="path" value="index.php?option=com_sasfe&task=reportes." />
     </div>
 </form>
 
@@ -237,3 +238,22 @@ JQ(document).ready(function(){
   arrColAsesoresXGte = '<?php echo json_encode($arrColAsesoresXGte); ?>';
 });
 </script>
+
+
+<!-- Imp. 08/09/21, Mostrar el reporte deproductividad en patalla -->
+<a href="#" data-toggle="modal" data-target="#popup_rpt_productividad" class="btn btn-small button-apply btn-success" id="btnVerRptProductividad" style="display:none;">Abrir reporte en pantalla</a>
+<div class="modal fade" id="popup_rpt_productividad" role="dialog" style="width:1200px;height:800px;position:relative !important; display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Indices de productividad</h4>
+            </div>
+            <div class="modal-body cont_form_popup">
+                <form id="form_agregar_evento" class="form-horizontal" method="post">
+                    <div id="transmitter"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
