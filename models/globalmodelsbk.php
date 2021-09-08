@@ -1232,7 +1232,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
                      WHERE c.idFraccionamiento IN ($idFracc) AND esHistorico=0 AND esReasignado=0 AND obsoleto=0
                      ORDER BY b.idDepartamento
                  ";
-        $queryUp = "UPDATE $tbl_sasfe_datos_generales SET fechaDTU='@fechaDTU'
+        $queryUp = "UPDATE $tbl_sasfe_datos_generales SET fechaDTU='@fechaDTU', DTU='1'
                     WHERE idDatoGeneral = @idDatoGeneral
                    ";
         // echo $query;
@@ -1249,7 +1249,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
         $db = JFactory::getDbo();
         $tbl_sasfe_datos_generales = $db->getPrefix().'sasfe_datos_generales';
 
-        $query = "UPDATE $tbl_sasfe_datos_generales SET fechaDTU='$fecha'
+        $query = "UPDATE $tbl_sasfe_datos_generales SET fechaDTU='$fecha', DTU='1'
                     WHERE idDatoGeneral IN ($ids)
                  ";
         // echo $query; exit;

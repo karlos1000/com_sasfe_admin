@@ -70,7 +70,7 @@ class SasfeControllerDepartamento extends JControllerForm {
         $id_Fracc = JRequest::getVar('id_Fracc');
         $id_dato = JRequest::getVar('id_DatoGral');
         $id_Dpt = JRequest::getVar('id_Dpt');
-        $dtu_dg = JRequest::getVar('dtu_dg');
+        // $dtu_dg = JRequest::getVar('dtu_dg');
         $fApartado = (JRequest::getVar('fApartado')) ? "'". $modelGM->convertDateToMysql(JRequest::getVar('fApartado')) ."'" : 'NULL';
         $fInsc = (JRequest::getVar('fInsc')) ? "'". $modelGM->convertDateToMysql(JRequest::getVar('fInsc')) ."'" : 'NULL';
         $fCierre = (JRequest::getVar('fCierre')) ? "'". $modelGM->convertDateToMysql(JRequest::getVar('fCierre')) ."'" : 'NULL';
@@ -87,6 +87,7 @@ class SasfeControllerDepartamento extends JControllerForm {
         $fEntrega = (JRequest::getVar('fEntrega')) ? "'". $modelGM->convertDateToMysql(JRequest::getVar('fEntrega')) ."'" : 'NULL';
         $fReprog = (JRequest::getVar('fReprog')) ? "'". $modelGM->convertDateToMysql(JRequest::getVar('fReprog')) ."'" : 'NULL';
         $fdtu = (JRequest::getVar('fdtu')) ? "'". $modelGM->convertDateToMysql(JRequest::getVar('fdtu')) ."'" : 'NULL';
+        $dtu_dg = ($fdtu!="NULL")?1:0; //Imp. 07/09/21, Carlos, Se ajusta segun la fecha dtu
 
 
         if($param==0){$historico = 0;}

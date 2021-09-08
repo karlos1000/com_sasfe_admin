@@ -325,6 +325,8 @@ $fdtu->id="fdtu";
 $fdtu->Localization->Load($calLangueaje);
 $fdtu->Init();
 $fdtu->Value = ($fechaDTU!='') ? $fechaDTU : '';
+$fdtu->ClientEvents["OnSelect"] = "dtuOnSelect"; //Imp. 07/09/21, Carlos
+
 
 //Fecha de nacimiento
 $fNacimiento = new KoolDatePicker("fNacimiento"); 
@@ -522,7 +524,8 @@ $kts->addTab("root","postventa","Post Venta","javascript:showPage(\"pag_postvent
                             <label for="dtu_dg">DTU:</label>                
                             </div>
                             <div class="controls">
-                                <select id="dtu_dg" name="dtu_dg" <?php echo ($this->permisos["dg_dtu"]["edit"]==1) ? '' : 'disabled'; ?> style="width:25%;">                  
+                                <!-- <select id="dtu_dg" name="dtu_dg" <?php echo ($this->permisos["dg_dtu"]["edit"]==1) ? '' : 'disabled'; ?> style="width:25%;">                   -->
+                                    <select id="dtu_dg" name="dtu_dg" <?php echo ($this->permisos["dg_dtu"]["edit"]==1) ? 'disabled' : 'disabled'; ?> style="width:25%;">                  
                                 <option <?php echo ($DTU==1)?'selected':''; ?> value="1">Si</option>                                
                                 <option <?php echo ($DTU==0)?'selected':''; ?> value="0">No</option>                                
                             </select>               
