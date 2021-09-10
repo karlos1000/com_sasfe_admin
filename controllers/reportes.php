@@ -757,6 +757,8 @@ set_time_limit(0);
         $agtVentasId = $_POST['asig_agtventas'];
         $colDatosReporte = array();
         $campofuente = (isset($_POST['asig_fuente']) && $_POST['asig_fuente']!="") ?$_POST['asig_fuente']: 0; //asig_fuente = captado en
+        $msg = "";
+        $resp = false;
 
         //buscar en la tabla de datos catalogo el id del agente usuarioIdJoomla
         //Para esto ya se debde de haber agregado el usuario de joomla correspondiente de lo contrario marcaria un error
@@ -782,11 +784,11 @@ set_time_limit(0);
                     $colDatosReporte[] = $resDatosRep;
                 }
                 else{
-                    $msg = "No es posible exportar el reporte ya que el agente de ventas seleccionado no cuenta con estad&iacute;stica suficiente.";
+                    $msg = "No es posible exportar el reporte ya que el agente de ventas seleccionado no cuenta con estadistica suficiente.";
                     // $this->setRedirect( 'index.php?option=com_sasfe&view=reportes',$msg);
                 }
             }else{
-                $msg = "No es posible exportar el reporte ya que el agente de ventas seleccionado aun no esta asociado a un usuario de joomla en el cat&aacute;logo de Agentes de venta.";
+                $msg = "No es posible exportar el reporte ya que el agente de ventas seleccionado aun no esta asociado a un usuario de joomla en el catalogo de Agentes de venta.";
                 // $this->setRedirect( 'index.php?option=com_sasfe&view=reportes',$msg);
             }
         }else{
@@ -828,30 +830,98 @@ set_time_limit(0);
             }
         }
 
-        $html = "";
-        if(count($colDatosReporte)>0){
-            $nombreArchivo = "rptProspectos_".$arrDateTime->fecha."_".$arrDateTime->hora;
-            if($campofuente==1){
-                $ctrGralPdf->pdfReporteProspectosPorFuente($colDatosReporte, $nombreArchivo, $fechaDel, $fechaAl, $difDias);
-            }else{
-                // $ctrGralPdf->pdfReporteProspectos($colDatosReporte, $nombreArchivo, JRequest::getVar('filter_fechaDel'), JRequest::getVar('filter_fechaAl'), $difDias);
-                $html = $ctrGralPdf->pdfReporteProspectosHtml($colDatosReporte, $nombreArchivo, $fechaDel, $fechaAl, $difDias);
-            }
-        }else{
-            $msg = "No es posible exportar el reporte ya que el agente de ventas seleccionado no cuenta con estad&iacute;stica suficiente.";
-            $this->setRedirect( 'index.php?option=com_sasfe&view=reportes',$msg);
-        }
         // echo "<pre>";
-        // // print_r($agenteDatosCat);
         // print_r($colDatosReporte);
+        // // print_r($_POST);
         // echo "</pre>";
         // exit();
 
-        $html .= '<response>';
-            // $html .= json_encode(array("html"=>$html));
-            $html .= $html;
-        $html .= '</response>';
-        echo $html;
+        // Limpiar NAN
+        if(count($colDatosReporte)>0){
+            $resp = true;
+
+            if($campofuente==1){
+                foreach($colDatosReporte as $arrDato) {
+                    foreach($arrDato as $key=>$elem) {
+                        $arrDato[$key]->prospAdquiridos = self::checkIsNAN($elem->prospAdquiridos);
+                        $arrDato[$key]->prospectosxdia = self::checkIsNAN($elem->prospectosxdia);
+                        $arrDato[$key]->prospNoprocedido = self::checkIsNAN($elem->prospNoprocedido);
+                        $arrDato[$key]->ptcRechazados = self::checkIsNAN($elem->ptcRechazados);
+                        $arrDato[$key]->prospConvertidos = self::checkIsNAN($elem->prospConvertidos);
+                        $arrDato[$key]->ptcConversion = self::checkIsNAN($elem->ptcConversion);
+                        $arrDato[$key]->velocidadConversionDias = self::checkIsNAN($elem->velocidadConversionDias);
+                        $arrDato[$key]->eventosProgramados = self::checkIsNAN($elem->eventosProgramados);
+                        $arrDato[$key]->eventosCumplidos = self::checkIsNAN($elem->eventosCumplidos);
+                        $arrDato[$key]->ptcEventosCumplidos = self::checkIsNAN($elem->ptcEventosCumplidos);
+                        $arrDato[$key]->eventosNoCumplidos = self::checkIsNAN($elem->eventosNoCumplidos);
+                        $arrDato[$key]->ptcEventosNoCumplidos = self::checkIsNAN($elem->ptcEventosNoCumplidos);
+                        $arrDato[$key]->eventosxdia = self::checkIsNAN($elem->eventosxdia);
+                    }
+                }
+            }else{
+                foreach ($colDatosReporte as $key=>$elem) {
+                    $colDatosReporte[$key]->prospAdquiridos = self::checkIsNAN($elem->prospAdquiridos);
+                    $colDatosReporte[$key]->prospConvertidos = self::checkIsNAN($elem->prospConvertidos);
+                    $colDatosReporte[$key]->prospNoprocedido = self::checkIsNAN($elem->prospNoprocedido);
+                    $colDatosReporte[$key]->ptcRechazados = self::checkIsNAN($elem->ptcRechazados);
+                    $colDatosReporte[$key]->ptcConversion = self::checkIsNAN($elem->ptcConversion);
+                    $colDatosReporte[$key]->prospectosxdia = self::checkIsNAN($elem->prospectosxdia);
+                    $colDatosReporte[$key]->velocidadConversionDias = self::checkIsNAN($elem->velocidadConversionDias);
+                    $colDatosReporte[$key]->prospEnProceso = self::checkIsNAN($elem->prospEnProceso);
+                    $colDatosReporte[$key]->prosPrompordia = self::checkIsNAN($elem->prosPrompordia);
+                    $colDatosReporte[$key]->eventosProgramados = self::checkIsNAN($elem->eventosProgramados);
+                    $colDatosReporte[$key]->eventosCumplidos = self::checkIsNAN($elem->eventosCumplidos);
+                    $colDatosReporte[$key]->eventosNoCumplidos = self::checkIsNAN($elem->eventosNoCumplidos);
+                    $colDatosReporte[$key]->ptcEventosCumplidos = self::checkIsNAN($elem->ptcEventosCumplidos);
+                    $colDatosReporte[$key]->ptcEventosNoCumplidos = self::checkIsNAN($elem->ptcEventosNoCumplidos);
+                    $colDatosReporte[$key]->eventosxdia = self::checkIsNAN($elem->eventosxdia);
+                }
+            }
+        }
+
+        $arr = array("result"=>$resp, "fechaDel"=>$_POST['filter_fechaDel'], "fechaAl"=>$_POST['filter_fechaAl'], "difDias"=>$difDias,
+                     "fechaActual"=>$ctrGralPdf->fechaActual(), "colDatosReporte"=>$colDatosReporte, "msg"=>$msg
+                 );
+        ob_end_clean();
+        header('Content-Type: application/json');
+        echo json_encode($arr);
+        exit();
+    }
+
+    // Imp. 09/09/21, Carlos, Ver detalles de los eventos por prospecto
+    public function detalleEvento(){
+        jimport('joomla.filesystem.file');
+        require_once(JPATH_COMPONENT.'/helpers/sasfehp.php' );
+        require_once(JPATH_COMPONENT.'/controllers/generarpdfs.php');
+        $ctrGralPdf = new SasfeControllerGenerarpdfs();
+        //leer el modelo correspondiente
+        $model = JModelLegacy::getInstance('Prospecto', 'SasfeModel');
+        $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
+        $arrDateTime = SasfehpHelper::obtDateTimeZone();
+        $fechaDel = SasfehpHelper::conversionFecha($_POST['fechaDel']);
+        $fechaAl = SasfehpHelper::conversionFecha($_POST['fechaAl']);
+        $idsDatosProspectos = (isset($_POST['idsDatosProspectos']) && $_POST['idsDatosProspectos']!="") ?$_POST['idsDatosProspectos']: "";
+        $tipoEvento = (isset($_POST['tipoEvento'])) ?$_POST['tipoEvento']: 0;
+        $resp = false;
+        $msg = "No existen detalles de eventos.";
+        // print_r($_POST);
+        // exit();
+
+        $colDetalles = $modelGM->detalleEventoProspectosDB($tipoEvento, $fechaDel, $fechaAl, $idsDatosProspectos);
+        if(count($colDetalles)>0){
+            $resp = true;
+            $msg = "";
+        }
+        $arr = array("result"=>$resp, "colDetalles"=>$colDetalles, "msg"=>$msg);
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        echo json_encode($arr);
+        exit();
+    }
+
+    private function checkIsNAN($elem){
+       return is_nan($elem)?0:$elem;
     }
 
     /**

@@ -115,7 +115,7 @@ $fechaAl = $timeZone->fechaF2; //define fecha al
         </div>
         <div class="control-group">
             <div class="control-label">
-                <button type="button" id="btn_exportarProsp" style="width:190px;">Exportar reporte prospecto</button>
+                <button type="button" id="btn_exportarProsp" style="width:190px;">Ver reporte prospecto</button>
             </div>
         </div>
         <?php } ?>
@@ -239,10 +239,20 @@ JQ(document).ready(function(){
 });
 </script>
 
-
+<style type="text/css">
+    .modal-body{
+        width: 90% !important;
+        height: 800px !important;
+        overflow: scroll;
+    }
+    /*.modal-content{
+        height: 650px !important;
+        overflow: scroll;
+    }*/
+</style>
 <!-- Imp. 08/09/21, Mostrar el reporte deproductividad en patalla -->
 <a href="#" data-toggle="modal" data-target="#popup_rpt_productividad" class="btn btn-small button-apply btn-success" id="btnVerRptProductividad" style="display:none;">Abrir reporte en pantalla</a>
-<div class="modal fade" id="popup_rpt_productividad" role="dialog" style="width:1200px;height:800px;position:relative !important; display:none;">
+<div class="modal fade" id="popup_rpt_productividad" role="dialog" style="width:1200px;height:600px;position:relative !important; display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -251,7 +261,26 @@ JQ(document).ready(function(){
             </div>
             <div class="modal-body cont_form_popup">
                 <form id="form_agregar_evento" class="form-horizontal" method="post">
-                    <div id="transmitter"></div>
+                    <div><a href="javascript:void(0)" class="btn btn-small button-apply btn-success" id="btnPdfRptProductividad">Descargar Reporte</a></div><br>
+                    <div id="cont_tabla_productividad"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Imp. 09/09/21, Mostrar detalle de eventos de prospectos -->
+<a href="#" data-toggle="modal" data-target="#popup_detalle_evento" class="btn btn-small button-apply btn-success" id="btnVerDetalleEvento" style="display:none;">Abrir reporte en pantalla</a>
+<div class="modal fade" id="popup_detalle_evento" role="dialog" style="width:1200px;height:600px;position:relative !important; display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Detalle evento(s)</h4>
+            </div>
+            <div class="modal-body cont_form_popup">
+                <form id="form_detalle_evento" class="form-horizontal" method="post">
+                    <div id="cont_tabla_detalle_evento"></div>
                 </form>
             </div>
         </div>

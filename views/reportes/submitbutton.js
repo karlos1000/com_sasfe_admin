@@ -48,25 +48,48 @@ JQ(document).ready(function(){
         JQ("#fracc").removeClass("required");
         JQ("#fracc").removeAttr("required");
         if(JQ("#adminForm").valid()){
-            // Joomla.submitbutton('reportes.reporteProspecto');
-            // Joomla.submitbutton('reportes.reporteProspectoPantalla');
-            JQ("#fracc").addClass("required");
+          // Joomla.submitbutton('reportes.reporteProspecto');
+          JQ("#fracc").addClass("required");
 
-            // Imp. 08/09/21 Carlos, Cargar en pantalla el resultado del reporte de productividad
-            let params = {
-              filter_fechaDel: JQ('#filter_fechaDel').val(),
-              filter_fechaAl: JQ('#filter_fechaAl').val(),
-              usuarioIdGteVenta: JQ('#usuarioIdGteVenta').val(),
-              asig_agtventas: JQ('#asig_agtventas').val(),
-              asig_fuente: JQ('#asig_fuente').val(),
-            };
-            fAjax('reporteProspectoPantalla', params);
+          // Imp. 08/09/21 Carlos, Cargar en pantalla el resultado del reporte de productividad
+          let params = {
+            filter_fechaDel: JQ('#filter_fechaDel').val(),
+            filter_fechaAl: JQ('#filter_fechaAl').val(),
+            usuarioIdGteVenta: JQ('#usuarioIdGteVenta').val(),
+            asig_agtventas: JQ('#asig_agtventas').val(),
+            asig_fuente: JQ('#asig_fuente').val(),
+          };
+          // console.log(params);
+
+          JQ("#btn_exportarProsp").attr("disabled", "disabled");
+          fAjax("reporteProspectoPantalla", params, function(data){
+            JQ("#btn_exportarProsp").removeAttr("disabled");
+            // console.log(data);
+            if(data.result){
+              document.getElementById('btnVerRptProductividad').click();
+              mostrarRptProductividad(params.asig_fuente, data);
+            }else{
+              alert(data.msg);
+            }
+          });
         }
+    });
+
+    //exportar el reporte de los prospectos
+    JQ('#btnPdfRptProductividad').click(function (){
+      JQ("#fracc").removeClass("required");
+      JQ("#fracc").removeAttr("required");
+      document.getElementById('btnVerRptProductividad').click();
+      Joomla.submitbutton('reportes.reporteProspecto');
     });
 
     // Imp. 08/09/21, Carlos
     JQ("#btnVerRptProductividad").click(function(){
       JQ('#popup_rpt_productividad').css('position','fixed');
+    });
+    // Imp. 09/09/21, Carlos
+    JQ("#btnVerDetalleEvento").click(function(){
+      JQ('#popup_detalle_evento').css('position','fixed');
     });
 
     //Fecha del
@@ -226,8 +249,181 @@ JQ(document).ready(function(){
  });
 
 
+// Imp. 09/09/21
+function mostrarRptProductividad(fuente, data){
+  let html = `
+    <div>
+        <h5>Del ${data.fechaDel} Al ${data.fechaAl}, D&iacute;as del periodo ${data.difDias} a ${data.fechaActual}</h5>
+    </div>
+  `;
+
+  if(parseInt(fuente)>0){ //Por fuente
+    console.log(data);
+    html = `
+      <table cellspacing="0" cellpadding="2" border="1" width="945">
+        <tr>
+          <td width="139" rowspan="2"></td>
+          <td width="248" colspan="4">Prospectos</td>
+          <td width="186" colspan="3">Ventas</td>
+          <td width="372" colspan="6">Seguimientos</td>
+        </tr>
+        <tr>
+          <td width="62"># Prospectos</td>
+          <td width="62"># de Prospectos x d&iacute;a</td>
+          <td width="62"># de Prospectos rechazados</td>
+          <td width="62">% de Prospectos rechazados</td>
+          <td width="62"># de prospectos convertidos</td>
+          <td width="62">% de conversion</td>
+          <td width="62">Velocidad de conversion d&iacute;as</td>
+          <td width="62"># de eventos programados</td>
+          <td width="62"># de eventos cumplidos</td>
+          <td width="62">% de eventos cumplidos</td>
+          <td width="62"># de eventos no cumplidos</td>
+          <td width="62">% de eventos no cumplidos</td>
+          <td width="62">Prom de eventos diarios</td>
+        </tr>
+      `;
+      JQ.each(data.colDatosReporte, function (ii, ee) {
+        // console.log(e);
+        JQ.each(ee, function (i, e) { //Setea el nombre del agente de ventas
+          html += `<tr>
+                    <td colspan="13"><br/><b>${e.nombreAgenteV}</b></td>
+                  </tr>
+          `;
+          return false;
+        });
+        JQ.each(ee, function (i, e) {
+          html += `
+              <tr style="text-align:right;">
+                <td width="139" style="text-align:left;">${e.tipoCaptado}</td>
+                <td width="62">${e.prospAdquiridos}</td>
+                <td width="62">${e.prospectosxdia}</td>
+                <td width="62">${e.prospNoprocedido}</td>
+                <td width="62">${e.ptcRechazados} %</td>
+                <td width="62">${e.prospConvertidos}</td>
+                <td width="62">${e.ptcConversion} %</td>
+                <td width="62">${e.velocidadConversionDias}</td>
+                <td width="62">${e.eventosProgramados}</td>
+                <td width="62"><a href="javascript:void(0);" onclick="verDetalleEventos(1, '${data.fechaDel}', '${data.fechaAl}', '${e.idsDatosProspectos}');">${e.eventosCumplidos}</a></td>
+                <td width="62">${e.ptcEventosCumplidos} %</td>
+                <td width="62"><a href="javascript:void(0);" onclick="verDetalleEventos(2, '${data.fechaDel}', '${data.fechaAl}', '${e.idsDatosProspectos}');">${e.eventosNoCumplidos}</a></td>
+                <td width="62">${e.ptcEventosNoCumplidos} %</td>
+                <td width="62">${e.eventosxdia}</td>
+              </tr>
+          `;
+        });
+      });
+      html += `</table>`;
+  }else{
+    html += `
+      <table cellspacing="0" cellpadding="2" border="1" width="945">
+          <tr>
+            <td width="" rowspan="2"></td>
+            <td width="248" colspan="4">Prospectos</td>
+            <td width="186" colspan="3">Ventas</td>
+            <td width="372" colspan="6">Seguimientos</td>
+          </tr>
+          <tr>
+            <td width="62"># Prospectos</td>
+            <td width="62"># de Prospectos x d&iacute;a</td>
+            <td width="62"># de Prospectos rechazados</td>
+            <td width="62">% de Prospectos rechazados</td>
+            <td width="62"># de prospectos convertidos</td>
+            <td width="62">% de conversion</td>
+            <td width="62">Velocidad de conversion d&iacute;as</td>
+            <td width="62"># de eventos programados</td>
+            <td width="62"># de eventos cumplidos</td>
+            <td width="62">% de eventos cumplidos</td>
+            <td width="62"># de eventos no cumplidos</td>
+            <td width="62">% de eventos no cumplidos</td>
+            <td width="62">Prom de eventos diarios</td>
+          </tr>`;
+          JQ.each(data.colDatosReporte, function (i, e) {
+            // console.log(e);
+            html += `
+              <tr style="text-align:right;">
+                  <td width="" style="text-align:left;">${e.nombreAgenteV}</td>
+                  <td width="62" style="font-size:12px;">${e.prospAdquiridos}</td>
+                  <td width="62" style="font-size:12px;">${e.prospectosxdia}</td>
+                  <td width="62" style="font-size:12px;">${e.prospNoprocedido}</td>
+                  <td width="62" style="font-size:12px;">${e.ptcRechazados}%</td>
+                  <td width="62" style="font-size:12px;">${e.prospConvertidos}</td>
+                  <td width="62" style="font-size:12px;">${e.ptcConversion}%</td>
+                  <td width="62" style="font-size:12px;">${e.velocidadConversionDias}</td>
+                  <td width="62" style="font-size:12px;">${e.eventosProgramados}</td>
+                  <td width="62" style="font-size:12px;"><a href="javascript:void(0);" onclick="verDetalleEventos(1, '${data.fechaDel}', '${data.fechaAl}', '${e.idsDatosProspectos}');">${e.eventosCumplidos}</a></td>
+                  <td width="62" style="font-size:12px;">${e.ptcEventosCumplidos} %</td>
+                  <td width="62" style="font-size:12px;"><a href="javascript:void(0);" onclick="verDetalleEventos(2, '${data.fechaDel}', '${data.fechaAl}', '${e.idsDatosProspectos}');">${e.eventosNoCumplidos}</a></td>
+                  <td width="62" style="font-size:12px;">${e.ptcEventosNoCumplidos} %</td>
+                  <td width="62" style="font-size:12px;">${e.eventosxdia}</td>
+                </tr>
+            `;
+          });
+    html += `</table>`;
+  }
+
+  JQ("#cont_tabla_productividad").html(html);
+}
+
+// Imp. 09/09/21
+function verDetalleEventos(tipoEvento, fechaDel, fechaAl, idsDatosProspectos){
+  let params = {
+    tipoEvento:tipoEvento,
+    fechaDel: fechaDel,
+    fechaAl: fechaAl,
+    idsDatosProspectos: idsDatosProspectos,
+  };
+  // console.log(params);
+
+  fAjax("detalleEvento", params, function(data){
+    // console.log(data);
+    if(data.result){
+      document.getElementById('btnVerDetalleEvento').click();
+      mostrarDetalleEvento(data.colDetalles);
+    }else{
+      alert(data.msg);
+    }
+  });
+}
+
+// Imp. 09/09/21
+function mostrarDetalleEvento(data){
+  /*<table cellspacing="0" cellpadding="2" border="0">
+        <tr>
+          <td  style="text-align:left;">Del ${data.fechaDel} Al ${data.fechaAl}, D&iacute;as del periodo ${data.difDias}</td>
+          <td  style="text-align:right;">Fecha: ${data.fechaActual}</td>
+        </tr>
+    </table>*/
+  let html = '';
+  html = `
+      <table cellspacing="0" cellpadding="2" border="1" width="945">
+        <tr>
+          <td>Prospecto</td>
+          <td>RFC</td>
+          <td>Tipo Evento</td>
+          <td>Fecha</td>
+          <td>Comentario</td>
+        </tr>`;
+          JQ.each(data, function (i, e) {
+            // console.log(e);
+            html += `
+                <tr>
+                  <td>${e.prospecto}</td>
+                  <td>${e.RFC}</td>
+                  <td>${e.tipoEvento}</td>
+                  <td>${e.fechaHora}</td>
+                  <td>${e.comentario}</td>
+                </tr>
+            `;
+          });
+  html += `</table>`;
+
+  JQ("#cont_tabla_detalle_evento").html(html);
+}
+
+
 //Imp. 08/09/21, Carlos Metodo que se implemento para pasar los parametros por ajax
-function fAjax(ctr, data){
+function fAjax(ctr, data, response){
   var path = JQ('#path').val()+ctr;
   // var loading = JQ('#loading_img').val();
   JQ.ajax({
@@ -238,14 +434,7 @@ function fAjax(ctr, data){
       // JQ('#transmitter').html(loading);
     },
     success: function(html){
-        var result = JQ(html).find('response').html();
-        console.log(result);
-        JQ('#transmitter').html(result);
-        JQ("#btnVerRptProductividad").trigger("click");
-        // JQ('ul#ul_transmitter li').click(function(){
-        //     var css = JQ(this).attr('class');
-        //     (css == 'list') ? JQ(this).removeClass('list') : JQ(this).addClass('list');
-        // });
+      response(html);
     }
   });
 }
