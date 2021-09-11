@@ -877,6 +877,8 @@ set_time_limit(0);
                     $colDatosReporte[$key]->eventosxdia = self::checkIsNAN($elem->eventosxdia);
                 }
             }
+        }else{
+            $msg = "No es posible exportar el reporte, no existe estadistica.";
         }
 
         $arr = array("result"=>$resp, "fechaDel"=>$_POST['filter_fechaDel'], "fechaAl"=>$_POST['filter_fechaAl'], "difDias"=>$difDias,

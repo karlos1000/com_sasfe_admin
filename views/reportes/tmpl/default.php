@@ -23,6 +23,11 @@ if(in_array("11", $this->groups)){
 }
 $fechaDel = SasfehpHelper::diasPrevPos(7, $timeZone->fecha, "prev");//define fecha del
 $fechaAl = $timeZone->fechaF2; //define fecha al
+
+// echo "<pre>";
+// print_r($colUsrGtesVentas);
+// print_r($colAsesores);
+// echo "</pre>";
 ?>
 <form class="form-validate form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=reportes'); ?>" method="post" name="adminForm" id="adminForm">
 
@@ -65,7 +70,6 @@ $fechaAl = $timeZone->fechaF2; //define fecha al
         </div>
 
         <!-- gerentes de ventas -->
-        <!--
         <div class="control-group">
             <div class="control-label">
                 <label for="usuarioIdGteVenta">Gerente Venta:</label>
@@ -85,22 +89,25 @@ $fechaAl = $timeZone->fechaF2; //define fecha al
                     ?>
                 </select>
                 <?php if($gteVentasId!=""){ ?>
-                <input type="hidden" name="usuarioIdGteVenta" value="<?php echo $gteVentasId; ?>" />
+                    <input type="hidden" name="usuarioIdGteVenta" id="usuarioIdGteVenta" value="<?php echo $gteVentasId; ?>" />
                 <?php } ?>
             </div>
         </div>
-        -->
+
         <div class="control-group">
             <div class="control-label">
                 <label for="asig_agtventas">Agente Venta:</label>
             </div>
             <div class="controls">
-                <select name="asig_agtventas" id="asig_agtventas" class="required">
+                <!-- <select name="asig_agtventas" id="asig_agtventas" class="required"> -->
+                <select name="asig_agtventas" id="asig_agtventas">
                     <option value="0">--Todos--</option>
                     <?php
-                    foreach ($colAsesores as $itemAse) {
-                        echo '<option value="' . $itemAse->idDato . '">' . $itemAse->nombre . '</option>';
-                    }
+                        if($gteVentasId!=""){
+                            foreach ($colAsesores as $itemAse) {
+                                echo '<option value="' . $itemAse->idDato . '">' . $itemAse->nombre . '</option>';
+                            }
+                        }
                     ?>
                 </select>
             </div>
@@ -211,7 +218,6 @@ $fechaAl = $timeZone->fechaF2; //define fecha al
         <input type="hidden" name="boxchecked" value="0" />
         <?php echo JHtml::_('form.token'); ?>
         <input type="hidden" id="rutaCalendario" value="<?php echo JURI::root().'media/com_sasfe/images/calendar.gif'; ?>" />
-        <input type="hidden" name="usuarioIdGteVenta" id="usuarioIdGteVenta" value="<?php echo $gteVentasId; ?>" />
         <input type="hidden" id="path" value="index.php?option=com_sasfe&task=reportes." />
     </div>
 </form>
@@ -230,6 +236,12 @@ foreach ($colUsrGtesVentas as $key=>$elemGte) {
     }
     $arrColAsesoresXGte[$elemGte->id] = $colAsesorTmp;
 }
+
+// $colAsesores2 = SasfehpHelper::obtColAsesoresAgtVentaXIdGteVentas(307);
+// echo "<pre>";
+// print_r($arrColAsesoresXGte);
+// print_r($colAsesores2);
+// echo "</pre>";
 ?>
 
 <script>

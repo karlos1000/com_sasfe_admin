@@ -42,9 +42,32 @@ JQ(document).ready(function(){
           Joomla.submitbutton('reportes.cancel');
     });
 
+    // Imp. 10/09/21, Carlos, Cargar el selector de agentes de venta por id de gerentes de ventas
+    // Obtener valor de gerente de ventas y agregar selector de asesores
+    JQ('#usuarioIdGteVenta').change(function (){
+      //Obtener valor del gerente de ventas
+      let idGteVenta = JQ(this).val();
+      console.log(idGteVenta);
+      // return false;
+
+      if(idGteVenta>0){
+        //obtener los datos para crear opciones
+          let colAsesoresXGteTmp = JSON.parse(arrColAsesoresXGte);
+          console.log(colAsesoresXGteTmp[idGteVenta]);
+          let option = '';
+          option += '<option value="">--Todos--</option>';
+          JQ.each(colAsesoresXGteTmp[idGteVenta], function (ii, elem) {
+            option += '<option value="'+elem.idDato+'">'+elem.nombre+'</option>';
+          });
+          JQ("#asig_agtventas").html(option);
+      }else{
+        JQ("#asig_agtventas").html('<option value="0">--Todos--</option>');
+      }
+    });
 
     //exportar el reporte de los prospectos
     JQ('#btn_exportarProsp').click(function (){
+        JQ("#usuarioIdGteVenta").addClass("required");
         JQ("#fracc").removeClass("required");
         JQ("#fracc").removeAttr("required");
         if(JQ("#adminForm").valid()){
@@ -59,7 +82,8 @@ JQ(document).ready(function(){
             asig_agtventas: JQ('#asig_agtventas').val(),
             asig_fuente: JQ('#asig_fuente').val(),
           };
-          // console.log(params);
+          console.log(params);
+          // return false;
 
           JQ("#btn_exportarProsp").attr("disabled", "disabled");
           fAjax("reporteProspectoPantalla", params, function(data){
@@ -216,6 +240,8 @@ JQ(document).ready(function(){
         JQ("#asig_agtventas").removeClass("required");
         JQ("#asig_agtventas").removeAttr("required");
         JQ("#nombreGteJoomlaVentas").addClass("required");
+        JQ("#usuarioIdGteVenta").removeAttr("required");
+        JQ("#usuarioIdGteVenta").removeClass("required");
 
         if(JQ("#adminForm").valid()){
             Joomla.submitbutton('reportes.detalleAccionesContactos');
@@ -225,6 +251,7 @@ JQ(document).ready(function(){
 
     // Obtener valor de gerente de ventas y agregar selector de asesores
     JQ('#nombreGteJoomlaVentas').click(function (){
+    // JQ('#nombreGteJoomlaVentas').change(function (){
       //Obtener valor del gerente de ventas
       let idGteVenta = JQ(this).val();
 

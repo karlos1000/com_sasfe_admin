@@ -34,17 +34,17 @@ defined('_JEXEC') or die('Restricted Access');
            <h2>Cat&aacute;logos / Reportes / Log de accesos</h2>
            <?php } ?>-->
 
-           <?php if( in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups) ){ ?>
+           <?php if( in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("11", $this->groups) || in_array("20", $this->groups) ){ ?>
            <h2>Cat&aacute;logos / Reportes / Log de accesos</h2>
            <?php }else{ ?>
-                <?php if( in_array("11", $this->groups) || in_array("12", $this->groups) || in_array("13", $this->groups) || in_array("14", $this->groups) || in_array("15", $this->groups) ){ ?>
+                <?php if( in_array("12", $this->groups) || in_array("13", $this->groups) || in_array("14", $this->groups) || in_array("15", $this->groups) ){ ?>
                 <h2>Cat&aacute;logos / Log de accesos</h2>
                 <?php } ?>
            <?php } ?>
 
 
            <!--?php if(in_array("10", $this->groups) || in_array("8", $this->groups) || in_array("12", $this->groups) || in_array("13", $this->groups) || in_array("14", $this->groups) || in_array("15", $this->groups) || in_array("11", $this->groups) || in_array("20", $this->groups)){ ?>-->
-           <?php if( in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups) ){ ?>
+           <?php if( in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("11", $this->groups) || in_array("20", $this->groups)){ ?>
            <!--<h2>Cat&aacute;logos y Reporte</h2>-->
            <div class="icon-wrapper">
                 <div class="icon">
