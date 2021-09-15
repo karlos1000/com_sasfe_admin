@@ -1420,8 +1420,14 @@ set_time_limit(0);
         $arrDateTime = SasfehpHelper::obtDateTimeZone();
         $fechaDel = SasfehpHelper::conversionFecha(JRequest::getVar('filter_fechaDelCF'));
         $fechaAl = SasfehpHelper::conversionFecha(JRequest::getVar('filter_fechaAlCF'));
+
+        // Imp. 14/09/21, Carlos
+        $idGteVenta = (JRequest::getVar('usuarioIdGteVenta3')!="")?JRequest::getVar('usuarioIdGteVenta3'):0;
+        $idAgtventas = (JRequest::getVar('asig_agtventas3')!="")?JRequest::getVar('asig_agtventas3'):0;
+
         //Obtener los registros
-        $arrDatosExportar = SasfehpHelper::obtDatosParaReportesContactosPorFuente($fechaDel, $fechaAl);
+        $arrDatosExportar = SasfehpHelper::obtDatosParaReportesContactosPorFuente($fechaDel, $fechaAl, $idGteVenta, $idAgtventas);
+        // exit();
 
         if(count($arrDatosExportar)>0){
            //Inicio de la creacion del reporte xls
@@ -1461,6 +1467,16 @@ set_time_limit(0);
                      // $datosProspectador = ($fila->altaProspectadorId!="") ?(array)SasfehpHelper::obtInfoUsuariosJoomla($fila->altaProspectadorId) :array();
                      // $datosAsesor = ($fila->agtVentasId!="") ?(array)SasfehpHelper::obtInfoUsuariosJoomla($fila->agtVentasId) :array();
 
+                    // Imp. 14/09/21, Carlos, Obt. el tipo captado
+                    $fuente = "";
+                    if($fila->fuente!="" && $fila->fuente>0){
+                        $datoTipoCaptado = SasfehpHelper::obtTipoCaptado(trim((int)$fila->fuente));
+                        if($datoTipoCaptado->idTipoCaptado){
+                            $fuente = $datoTipoCaptado->tipoCaptado;
+                        }
+                    }
+                    // echo " fuente: ".$fila->fuente."<br/>";
+
                      $objPHPExcel->setActiveSheetIndex(0)
                             ->setCellValue('A'.$i,  SasfehpHelper::conversionFechaF2($fila->fechaAlta))
                             ->setCellValue('B'.$i,  $fila->gteVentas)
@@ -1468,7 +1484,7 @@ set_time_limit(0);
                             ->setCellValue('D'.$i,  $fila->nombre.' '.$fila->aPaterno.' '.$fila->aMaterno)
                             ->setCellValue('E'.$i,  $fila->email)
                             ->setCellValue('F'.$i,  $fila->telefono)
-                            ->setCellValue('G'.$i,  $fila->fuente)
+                            ->setCellValue('G'.$i,  $fuente)
                             ->setCellValue('H'.$i,  $fila->estatus)
                             ->setCellValue('I'.$i,  $fila->fraccionamiento)
                             ->setCellValue('J'.$i,  ($fila->fechaContacto)?SasfehpHelper::conversionFechaF2($fila->fechaContacto):"")
@@ -1477,6 +1493,7 @@ set_time_limit(0);
                     $i++;
                 }
             }
+            // exit();
             //Fin recorrido de informacion para imprimirla en cada celda
             //Inicio estilos
             $estiloTituloColumnas = array(

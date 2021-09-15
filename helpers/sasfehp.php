@@ -2427,9 +2427,9 @@ class SasfehpHelper
   /***
    * Obtener datos para exportar el reporte de contactos por FUENTE
   */
-  public static function obtDatosParaReportesContactosPorFuente($fechaDel, $fechaAl){
+  public static function obtDatosParaReportesContactosPorFuente($fechaDel, $fechaAl, $idGteVenta, $idAgtventas){
      $model = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
-     $colRes =  $model->obtDatosParaReportesContactosPorFuenteDB($fechaDel, $fechaAl);
+     $colRes =  $model->obtDatosParaReportesContactosPorFuenteDB($fechaDel, $fechaAl, $idGteVenta, $idAgtventas);
      return $colRes;
   }
 

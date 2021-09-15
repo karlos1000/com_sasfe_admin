@@ -78,6 +78,8 @@ class  SasfeViewReportes extends JViewLegacy
             $document->addScript(JURI::root().'media/com_sasfe/js/jquery-ui.js');
             $document->addScript(JURI::root().'media/com_sasfe/js/spanish_datapicker.js');
             $document->addScript(JURI::root().'media/com_sasfe/js/function.js');
+            $document->addStyleSheet(JURI::root().'media/com_sasfe/css/alertify.min.css');
+            $document->addScript(JURI::root().'media/com_sasfe/js/alertify.js');
             $document->addScript(JURI::root().'administrator/components/com_sasfe/views/reportes/submitbutton.js');
         }
 }

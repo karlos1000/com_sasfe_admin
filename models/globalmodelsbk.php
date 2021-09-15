@@ -1799,11 +1799,19 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
        $idsAllDpts = implode(',', $rowsDpts);
        // echo $idsAllDpts."<br/><br/><br/>";
        if($idsAllDpts!=""){
+          // $queryInfoGral = "
+          //           SELECT DISTINCT departamentoId, esReasignado, obsoleto
+          //           FROM $tbl_sasfe_datos_generales
+          //           WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0
+          //          ";
+          // Imp. 14/09/21, Carlos, Solo obtendra aquellos con DTU encendido
           $queryInfoGral = "
                     SELECT DISTINCT departamentoId, esReasignado, obsoleto
                     FROM $tbl_sasfe_datos_generales
                     WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0
+                    AND DTU!='' AND DTU>0 AND fechaDTU!=''
                    ";
+          // echo $queryInfoGral."<br/>"; exit();
 
           $db->setQuery($queryInfoGral);
           $db->query();
@@ -3213,11 +3221,21 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
   /***
    * Obtener datos para exportar el reporte de contactos por FUENTE
   */
-  public function obtDatosParaReportesContactosPorFuenteDB($fechaDel, $fechaAl){
+  public function obtDatosParaReportesContactosPorFuenteDB($fechaDel, $fechaAl, $idGteVenta, $idAgtventas){
     $db = JFactory::getDbo();
     $tbl_sasfe_datos_contactos = $db->getPrefix().'sasfe_datos_contactos';
     $tbl_sasfe_fraccionamientos = $db->getPrefix().'sasfe_fraccionamientos';
     $tbl_users1 = $db->getPrefix().'users';
+
+    // Imp. 14/09/21, Carlos
+    $queryGte = "";
+    if($idGteVenta>0){
+      $queryGte = " AND gteVentasId=".$idGteVenta." ";
+    }
+    $queryAgt = "";
+    if($idAgtventas>0){
+      $queryAgt = " AND agtVentasId=".$idAgtventas." ";
+    }
 
     $query = "
       SELECT a.*, b.nombre as fraccionamiento, c.name as gteVentas, d.name as agtVentas,
@@ -3229,11 +3247,12 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
       LEFT JOIN $tbl_sasfe_fraccionamientos as b ON b.idFraccionamiento=a.desarrolloId
       LEFT JOIN $tbl_users1 as c ON c.id=a.gteVentasId
       LEFT JOIN $tbl_users1 as d ON d.id=a.agtVentasId
-      WHERE ( CAST(a.fechaAlta AS date)>='".$fechaDel."' AND CAST(a.fechaAlta AS date)<='".$fechaAl."' )
+      WHERE ( CAST(a.fechaAlta AS date)>='".$fechaDel."' AND CAST(a.fechaAlta AS date)<='".$fechaAl."' ) $queryGte $queryAgt
       ORDER BY a.fuente
       ";
 
       // echo $query."<br/>";
+      // exit();
       $db->setQuery($query);
       $db->query();
       $result = $db->loadObjectList();

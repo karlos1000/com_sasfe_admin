@@ -148,6 +148,47 @@ $fechaAl = $timeZone->fechaF2; //define fecha al
             ?>
             <div class="control-group">
                 <div class="control-label">
+                    <label for="usuarioIdGteVenta3">Gerente Venta:</label>
+                </div>
+                <div class="controls">
+                    <select id="usuarioIdGteVenta3" name="usuarioIdGteVenta3" <?php echo ($gteVentasId!="")?"disabled":""; ?>>
+                        <option value="">--Seleccione--</option>
+                        <?php
+                        foreach ($colUsrGtesVentas as $itemUVenta) {
+                            if ($gteVentasId == $itemUVenta->id)
+                                $sel = 'selected';
+                            else
+                                $sel = '';
+
+                            echo '<option '.$sel.' value="' . $itemUVenta->id . '">' . $itemUVenta->name . '</option>';
+                        }
+                        ?>
+                    </select>
+                    <?php if($gteVentasId!=""){ ?>
+                        <input type="hidden" name="usuarioIdGteVenta3" id="usuarioIdGteVenta3" value="<?php echo $gteVentasId; ?>" />
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+                    <label for="asig_agtventas3">Agente Venta:</label>
+                </div>
+                <div class="controls">
+                    <select name="asig_agtventas3" id="asig_agtventas3">
+                        <option value="0">--Todos--</option>
+                        <?php
+                            if($gteVentasId!=""){
+                                foreach ($colAsesores as $itemAse) {
+                                    echo '<option value="' . $itemAse->usuarioIdJoomla . '">' . $itemAse->nombre . '</option>';
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
                     <button type="button" id="btn_exportarContactosFuente" style="width:190px;">Exportar reporte contactos</button>
                 </div>
             </div>
@@ -254,8 +295,9 @@ JQ(document).ready(function(){
 <style type="text/css">
     .modal-body{
         width: 90% !important;
-        height: 800px !important;
         overflow: scroll;
+        max-height: 670px;
+        height: 670px !important;
     }
     /*.modal-content{
         height: 650px !important;
@@ -263,8 +305,9 @@ JQ(document).ready(function(){
     }*/
 </style>
 <!-- Imp. 08/09/21, Mostrar el reporte deproductividad en patalla -->
-<a href="#" data-toggle="modal" data-target="#popup_rpt_productividad" class="btn btn-small button-apply btn-success" id="btnVerRptProductividad" style="display:none;">Abrir reporte en pantalla</a>
-<div class="modal fade" id="popup_rpt_productividad" role="dialog" style="width:1200px;height:600px;position:relative !important; display:none;">
+<a href="#" data-toggle="modal" data-target="#popup_rpt_productividad" data-backdrop="static" data-keyboard="false" class="btn btn-small button-apply btn-success" id="btnVerRptProductividad" style="display:none;">Abrir reporte en pantalla</a>
+<!-- <div class="modal fade" id="popup_rpt_productividad" role="dialog" style="width:1200px;height:600px;position:relative !important; display:none;"> -->
+<div class="modal fade" id="popup_rpt_productividad" role="dialog" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -282,8 +325,9 @@ JQ(document).ready(function(){
 </div>
 
 <!-- Imp. 09/09/21, Mostrar detalle de eventos de prospectos -->
-<a href="#" data-toggle="modal" data-target="#popup_detalle_evento" class="btn btn-small button-apply btn-success" id="btnVerDetalleEvento" style="display:none;">Abrir reporte en pantalla</a>
-<div class="modal fade" id="popup_detalle_evento" role="dialog" style="width:1200px;height:600px;position:relative !important; display:none;">
+<a href="#" data-toggle="modal" data-target="#popup_detalle_evento" data-backdrop="static" data-keyboard="false" class="btn btn-small button-apply btn-success" id="btnVerDetalleEvento" style="display:none;">Abrir reporte en pantalla</a>
+<!-- <div class="modal fade" id="popup_detalle_evento" role="dialog" style="width:1200px;height:600px;position:relative !important; display:none;"> -->
+<div class="modal fade" id="popup_detalle_evento" role="dialog" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

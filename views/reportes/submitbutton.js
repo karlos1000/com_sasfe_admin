@@ -70,7 +70,11 @@ JQ(document).ready(function(){
         JQ("#usuarioIdGteVenta").addClass("required");
         JQ("#fracc").removeClass("required");
         JQ("#fracc").removeAttr("required");
+        JQ("#usuarioIdGteVenta3").removeClass("required");
+        JQ("#usuarioIdGteVenta3").removeAttr("required");
+
         if(JQ("#adminForm").valid()){
+          alertify.success("Generando reporte, esto puede tardar algunos minutos, esper&eacute; por favor.");
           // Joomla.submitbutton('reportes.reporteProspecto');
           JQ("#fracc").addClass("required");
 
@@ -191,9 +195,37 @@ JQ(document).ready(function(){
             JQ("#filter_fechaAlCF").val(JQ(this).val());
           }
     });
+
+    // Imp. 14/09/21, Carlos, Cargar el selector de agentes de venta por id de gerentes de ventas
+    // Obtener valor de gerente de ventas y agregar selector de asesores
+    JQ('#usuarioIdGteVenta3').change(function (){
+      //Obtener valor del gerente de ventas
+      let idGteVenta = JQ(this).val();
+      console.log(idGteVenta);
+      // return false;
+
+      if(idGteVenta>0){
+        //obtener los datos para crear opciones
+          let colAsesoresXGteTmp = JSON.parse(arrColAsesoresXGte);
+          console.log(colAsesoresXGteTmp[idGteVenta]);
+          let option = '';
+          option += '<option value="">--Todos--</option>';
+          JQ.each(colAsesoresXGteTmp[idGteVenta], function (ii, elem) {
+            option += '<option value="'+elem.usuarioIdJoomla+'">'+elem.nombre+'</option>';
+          });
+          JQ("#asig_agtventas3").html(option);
+      }else{
+        JQ("#asig_agtventas3").html('<option value="0">--Todos--</option>');
+      }
+    });
+
     JQ('#btn_exportarContactosFuente').click(function (){
         JQ("#fracc").removeClass("required");
         JQ("#fracc").removeAttr("required");
+        JQ("#usuarioIdGteVenta3").addClass("required");
+        JQ("#usuarioIdGteVenta").removeAttr("required");
+        JQ("#usuarioIdGteVenta").removeClass("required");
+
         if(JQ("#adminForm").valid()){
             Joomla.submitbutton('reportes.contactosFuente');
             JQ("#fracc").addClass("required");
@@ -278,16 +310,28 @@ JQ(document).ready(function(){
 
 // Imp. 09/09/21
 function mostrarRptProductividad(fuente, data){
+  // Imp. 14/09/21, Carlos Obtener el nombre del gerente y agente
+  let nombreGte = JQ("#usuarioIdGteVenta option:selected").text();
+  let nombreAgte = JQ("#asig_agtventas option:selected").text();
+  let htmlGteAgte = "";
+  if(nombreGte!=""){
+    htmlGteAgte = `Gerente: ${nombreGte} `;
+  }
+  // if(nombreAgte!="--Todos--"){
+  //   htmlGteAgte += ` - Agente: ${nombreAgte} `;
+  // }
+
   let html = `
     <div>
+        <h4>${htmlGteAgte}</h4>
         <h5>Del ${data.fechaDel} Al ${data.fechaAl}, D&iacute;as del periodo ${data.difDias} a ${data.fechaActual}</h5>
     </div>
   `;
 
   if(parseInt(fuente)>0){ //Por fuente
     console.log(data);
-    html = `
-      <table cellspacing="0" cellpadding="2" border="1" width="945">
+    html += `
+      <table cellspacing="0" cellpadding="2" border="1">
         <tr>
           <td width="139" rowspan="2"></td>
           <td width="248" colspan="4">Prospectos</td>
@@ -343,7 +387,7 @@ function mostrarRptProductividad(fuente, data){
       html += `</table>`;
   }else{
     html += `
-      <table cellspacing="0" cellpadding="2" border="1" width="945">
+      <table cellspacing="0" cellpadding="2" border="1">
           <tr>
             <td width="" rowspan="2"></td>
             <td width="248" colspan="4">Prospectos</td>
@@ -423,7 +467,7 @@ function mostrarDetalleEvento(data){
     </table>*/
   let html = '';
   html = `
-      <table cellspacing="0" cellpadding="2" border="1" width="945">
+      <table cellspacing="0" cellpadding="2" border="1">
         <tr>
           <td>Prospecto</td>
           <td>RFC</td>
