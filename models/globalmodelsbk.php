@@ -1797,27 +1797,27 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
        $rowsDpts = $db->loadColumn();
 
        $idsAllDpts = implode(',', $rowsDpts);
-       // echo $idsAllDpts."<br/><br/><br/>";
+       // echo $idsAllDpts."<br/><br/><br/>"; exit();
        if($idsAllDpts!=""){
           // $queryInfoGral = "
           //           SELECT DISTINCT departamentoId, esReasignado, obsoleto
           //           FROM $tbl_sasfe_datos_generales
           //           WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0
           //          ";
-          // Imp. 14/09/21, Carlos, Solo obtendra aquellos con DTU encendido
+          // Imp. 14/09/21, Carlos, Solo obtendra aquellos con DTU encendido y excluir aquellos los siguientes 400 (Apartado definitivo), 401 (Apartado provisional), 87 (Escriturado)
           $queryInfoGral = "
                     SELECT DISTINCT departamentoId, esReasignado, obsoleto
                     FROM $tbl_sasfe_datos_generales
                     WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0
                     AND DTU!='' AND DTU>0 AND fechaDTU!=''
+                    AND idEstatus NOT IN (400, 401, 87)
                    ";
           // echo $queryInfoGral."<br/>"; exit();
 
           $db->setQuery($queryInfoGral);
           $db->query();
           $rowsInfo_Gral = $db->loadObjectList();
-          // echo "<pre>"; print_r($rowsInfo_Gral); echo "</pre>";
-          // exit();
+          // echo "<pre>"; print_r($rowsInfo_Gral); echo "</pre>"; exit();
 
           $arrDptsFound = array();
           //Quitar todos los departamentos que existan en la primera lista
@@ -1827,18 +1827,22 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
                   $arrDptsFound[] = $item->departamentoId;
               }
           }
+          // echo implode(',', $arrDptsFound); exit();
 
+          // Obtener aquellos departamentos del primer arreglo (tabla departamentos) donde sean diferentes a los departamentos del segundo arreglo (tabla datos generales)
           if(count($arrDptsFound)>0){
               foreach($arrDptsFound as $item){
                    foreach($rowsDpts as $itemInt){
                        if($itemInt == $item){
-                           $index = array_search($itemInt, $rowsDpts);
+                           $index = array_search($itemInt, $rowsDpts); //Obtiene el indice del arreglo rowsDpts
                            // echo $index.'<br/>';
                            unset($rowsDpts[$index]);
                            break;
                        }
                    }
               }
+          }else{
+            return array();
           }
 
           $idsDptCurrent = implode(',', $rowsDpts);
