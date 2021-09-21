@@ -1090,7 +1090,7 @@ class SasfehpHelper
 
          $grid = new KoolGrid("depositosDptGrid");
          self::defineGridFechaDTU($grid, $ds);
-         self::defineColumnFechaDTU($grid, "idDatoGeneral", "Id", false, true, 1);                    
+         self::defineColumnFechaDTU($grid, "idDatoGeneral", "Id", false, true, 1);
          self::defineColumnFechaDTU($grid, "numero", "Departamento", true, true, 1);
          self::defineColumnFechaDTU($grid, "fechaDTU", "Fecha DTU", true, false, 1);
          self::defineColumnFechaDTU($grid, "fechaCierre", "Fecha Cierre", true, true, 1);
@@ -1130,6 +1130,7 @@ class SasfehpHelper
         $grid->AllowDeleting = true;
         $grid->AllowSorting = true;
         $grid->ColumnWrap = true;
+        // $grid->SingleColumnSorting = true;
         //$grid->CharSet = "utf8";
 
         //$grid->MasterTable->DataSource = $ds;
@@ -1166,6 +1167,7 @@ class SasfehpHelper
         elseif($name_field == 'numero'){
             $column = new gridboundcolumn();
             $column->AllowFiltering = true;
+            $column->Sort = 1;
         }
         else{
             $column = new gridboundcolumn();

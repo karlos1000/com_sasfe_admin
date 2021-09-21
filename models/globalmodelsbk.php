@@ -1222,6 +1222,9 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
         $tbl_sasfe_datos_clientes = $db->getPrefix().'sasfe_datos_clientes';
         $tbl_sasfe_datos_catalogos = $db->getPrefix().'sasfe_datos_catalogos';
 
+        // WHERE c.idFraccionamiento IN ($idFracc) AND esHistorico=0 AND esReasignado=0 AND obsoleto=0
+        // ORDER BY b.idDepartamento
+        // Imp. 21/09/21, Carlos, Se removio el filtro
         $query = "
                      SELECT a.idDatoGeneral, a.fechaDTU, a.fechaCierre, a.fechaApartado, b.numero, c.nombre as fraccionamiento, CONCAT(d.nombre,' ',d.aPaterno,' ',d.aManterno) as cliente, e.nombre as estatus
                      FROM $tbl_sasfe_datos_generales as a
@@ -1229,8 +1232,8 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
                      LEFT JOIN $tbl_sasfe_fraccionamientos as c ON c.idFraccionamiento = b.fraccionamientoId
                      LEFT JOIN $tbl_sasfe_datos_clientes as d ON d.datoGeneralId = a.idDatoGeneral
                      LEFT JOIN $tbl_sasfe_datos_catalogos as e ON e.idDato = a.idEstatus
-                     WHERE c.idFraccionamiento IN ($idFracc) AND esHistorico=0 AND esReasignado=0 AND obsoleto=0
-                     ORDER BY b.idDepartamento
+                     WHERE c.idFraccionamiento IN ($idFracc)
+                     ORDER BY b.numero ASC
                  ";
         $queryUp = "UPDATE $tbl_sasfe_datos_generales SET fechaDTU='@fechaDTU', DTU='1'
                     WHERE idDatoGeneral = @idDatoGeneral
