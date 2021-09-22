@@ -1808,11 +1808,11 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
           //           WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0
           //          ";
           // Imp. 14/09/21, Carlos, Solo obtendra aquellos con DTU encendido y excluir aquellos los siguientes 400 (Apartado definitivo), 401 (Apartado provisional), 87 (Escriturado)
+          // AND DTU!='' AND DTU>0 AND fechaDTU!=''
           $queryInfoGral = "
                     SELECT DISTINCT departamentoId, esReasignado, obsoleto
                     FROM $tbl_sasfe_datos_generales
                     WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0
-                    AND DTU!='' AND DTU>0 AND fechaDTU!=''
                     AND idEstatus NOT IN (400, 401, 87)
                    ";
           // echo $queryInfoGral."<br/>"; exit();
