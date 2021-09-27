@@ -1246,6 +1246,34 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
     }
 
     /*
+     * Imp. 27/09/21
+     * Obtener fechas todas las fechas dtu de la tabla datos_denerales
+     */
+    public function ObtTodasFechasDTU2($ds, $idFracc)
+    {
+        $db = JFactory::getDbo();
+        $tbl_sasfe_datos_generales = $db->getPrefix().'sasfe_datos_generales';
+        $tbl_sasfe_departamentos = $db->getPrefix().'sasfe_departamentos';
+        $tbl_sasfe_fraccionamientos = $db->getPrefix().'sasfe_fraccionamientos';
+        $tbl_sasfe_datos_clientes = $db->getPrefix().'sasfe_datos_clientes';
+        $tbl_sasfe_datos_catalogos = $db->getPrefix().'sasfe_datos_catalogos';
+
+        $query = "
+                  SELECT * FROM $tbl_sasfe_departamentos
+                  WHERE fraccionamientoId IN ($idFracc)
+                  ORDER BY numero ASC
+                 ";
+        $queryUp = "UPDATE $tbl_sasfe_departamentos SET fechaDTU='@fechaDTU'
+                    WHERE idDepartamento=@idDepartamento
+                   ";
+        // echo $query;
+         $ds->SelectCommand = $query;
+         $ds->UpdateCommand = $queryUp;
+
+        return $ds;
+    }
+
+    /*
      * Imp. 03/09/21, Carlos, Cambio de fechas DTU en batch
      */
     public function ActBatchFechasDTU($fecha, $ids){
@@ -1254,6 +1282,25 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
 
         $query = "UPDATE $tbl_sasfe_datos_generales SET fechaDTU='$fecha', DTU='1'
                     WHERE idDatoGeneral IN ($ids)
+                 ";
+        // echo $query; exit;
+        $db->setQuery($query);
+        $db->query();
+        $row = $db->getAffectedRows();
+        $result = ($row>0) ? 1 : 0;
+
+        return $result;
+    }
+
+    /*
+     * Imp. 27/09/21, Carlos, Cambio de fechas DTU en batch
+     */
+    public function ActBatchFechasDTU2($fecha, $ids){
+        $db = JFactory::getDbo();
+        $tbl_sasfe_departamentos = $db->getPrefix().'sasfe_departamentos';
+
+        $query = "UPDATE $tbl_sasfe_departamentos SET fechaDTU='$fecha'
+                  WHERE idDepartamento IN ($ids)
                  ";
         // echo $query; exit;
         $db->setQuery($query);

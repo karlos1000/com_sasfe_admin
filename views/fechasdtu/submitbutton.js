@@ -69,7 +69,7 @@ JQ(document).ready(function(){
 
       //comprobar si existe algun elemento por borrar
       if(arrIdsTmp.length>0){
-      	// console.log(arrIdsTmp);
+      	console.log(arrIdsTmp);
       	// alertify.error("No fue posible borrar el(los) registro(s), intente después");
       	JQ(".modal .close").click()
 

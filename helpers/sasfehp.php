@@ -1200,6 +1200,128 @@ class SasfehpHelper
     }
 
 
+    /*
+     * Imp. 27/09/21
+     * Grid para cambiar las fechas del dtu "Solo aplica para el director o super usuario"
+    */
+    public static function ObtTodasLasFechasDTU2($idFracc){
+        $config = new JConfig();
+        $host = $config->host;
+        $user = $config->user;
+        $pass = $config->password;
+        $db = $config->db;
+        $dbConn = mysqli_connect($host, $user, $pass, $db) or die("cannot connect");
+        mysqli_select_db($dbConn, $db) or die("cannot connect database");
+        $model = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
+
+        $ds = new MySQLiDataSource($dbConn);
+        $ds = $model->ObtTodasFechasDTU2($ds, $idFracc);
+
+         $grid = new KoolGrid("depositosDptGrid");
+         self::defineGridFechaDTU2($grid, $ds);
+         self::defineColumnFechaDTU2($grid, "idDepartamento", "Id", false, true, 1);
+         self::defineColumnFechaDTU2($grid, "numero", "Departamento", true, true, 1);
+         self::defineColumnFechaDTU2($grid, "fechaDTU", "Fecha DTU", true, false, 1);
+         self::defineColumnEditFechaDTU2($grid);
+
+         //Show Function Panel
+         $grid->MasterTable->ShowFunctionPanel = false;
+         //Insert Settings
+         $grid->MasterTable->InsertSettings->Mode = "Form";
+         $grid->MasterTable->EditSettings->Mode = "Form";
+         $grid->MasterTable->InsertSettings->ColumnNumber = 1;
+        //pocess grid
+        $grid->Process();
+        $dbConn->close();
+
+        return $grid;
+    }
+
+    public static function defineGridFechaDTU2($grid, $ds){
+        $base = JPATH_SITE.'/administrator/components/com_sasfe/common/KoolControls/KoolGrid/localization/es.xml';
+        $grid->scriptFolder = JURI::root().'administrator/components/com_sasfe/common/KoolControls/KoolGrid';
+        $grid->styleFolder="default";
+        $grid->Width = "800px";
+
+        //$grid->RowAlternative = true;
+        $grid->AjaxEnabled = true;
+        $grid->DataSource = $ds;
+        $grid->AjaxLoadingImage =  JURI::root().'administrator/components/com_sasfe/common/KoolControls/KoolAjax/loading/5.gif';
+        $grid->Localization->Load($base);
+
+        $grid->AllowInserting = true;
+        $grid->AllowEditing = true;
+        $grid->AllowDeleting = true;
+        $grid->AllowSorting = true;
+        $grid->ColumnWrap = true;
+        // $grid->SingleColumnSorting = true;
+        //$grid->CharSet = "utf8";
+
+        //$grid->MasterTable->DataSource = $ds;
+        $grid->MasterTable->AutoGenerateColumns = false;
+        $grid->AllowFiltering = false;
+        // $grid->FilterOptions  = array("No_Filter", "Equal", "Contain", "Start_With","End_With");
+        $grid->FilterOptions  = array("No_Filter", "Contain");
+        $grid->MasterTable->Pager = new GridPrevNextAndNumericPager();
+        $grid->MasterTable->Pager->ShowPageSize = true;
+        $grid->MasterTable->Pager->PageSizeOptions = "10,25,50,100,150";
+        //$grid->ClientSettings->ClientEvents["OnPageChange"] = "Handle_OnPageChange";
+        //$grid->ClientSettings->ClientEvents["OnGridCommit"] = "Handle_OnGridCommit";
+        $grid->ClientSettings->ClientEvents["OnRowConfirmEdit"] = "Handle_OnRowConfirmEdit";
+        $grid->ClientSettings->ClientEvents["OnRowDelete"] = "Handle_OnRowDelete";
+        $grid->ClientSettings->ClientEvents["OnConfirmInsert"] = "Handle_OnConfirmInsert";
+    }
+
+    public static function defineColumnFechaDTU2($grid,$name_field, $name_header, $visible=true, $read_only=false, $validator=0)
+    {
+        $calLangueaje = JPATH_SITE.'/administrator/components/com_sasfe/common/KoolControls/KoolCalendar/localization/es.xml';
+        $scrpFolder = JURI::base().'components/com_sasfe/common/KoolControls/KoolCalendar/';//JPATH_SITE.'/administrator/components/com_sasfe/common/KoolControls/KoolCalendar';
+        $model = JModelLegacy::getInstance('globalmodelsbk', 'SasfeModel');
+        $dateC = date("Y-m-d");
+
+        if($name_field == 'fechaDTU'){
+            $column = new GridDateTimeColumn();
+            $column->Picker = new KoolDatePicker();
+            $column->Picker->scriptFolder = $scrpFolder;
+            $column->Picker->Localization->Load($calLangueaje);
+            $column->Picker->styleFolder = "default";
+            $column->Picker->DateFormat = "Y-m-d";
+            $column->Picker->ShowToday = true;
+            $column->DefaultValue = $dateC;
+        }
+        elseif($name_field == 'numero'){
+            $column = new gridboundcolumn();
+            $column->AllowFiltering = true;
+            $column->Sort = 1;
+        }
+        else{
+            $column = new gridboundcolumn();
+        }
+
+        if($validator > 0){
+            $column->addvalidator(self::GetValidator($validator));
+        }
+        $column->DataField = $name_field;
+        $column->HeaderText = $name_header;
+        $column->ReadOnly = $read_only;
+        $column->Visible = $visible;
+        $grid->MasterTable->AddColumn($column);
+    }
+
+    public static function defineColumnEditFechaDTU2($grid)
+    {
+        $column = new GridCustomColumn();
+        $column->HeaderText = "Acciones";
+        $column->Align = "center";
+        $column->Width = "100px";
+        $column->ItemTemplate = '
+                                 <a class="kgrLinkEdit"{record_editable} onclick="grid_edit(this)" href="javascript:void 0" type="button">Editar</a>
+                                 <label class="contCheckbox">&nbsp;<input type="checkbox" idCheck="{idDepartamento}" value="0" class="selDelMul"><span class="checkmark"></span></label>
+                                ';
+        $grid->MasterTable->AddColumn($column);
+    }
+
+
     /***
     * Obtener los datos del fraccionamiento por su id
     */

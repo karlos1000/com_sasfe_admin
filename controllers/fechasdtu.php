@@ -16,11 +16,12 @@ class SasfeControllerFechasdtu extends JControllerForm {
         $arrDateTime = SasfehpHelper::obtDateTimeZone();
         $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
         $fecha = JRequest::getVar('fecha_dtu');
-        $idsDatoGeneral = JRequest::getVar('idsDatoGeneral');
+        $idsDatoGeneral = JRequest::getVar('idsDatoGeneral'); //Imp. 27/09/21, Se cambio por el id de los departamentos
         $idFracc = JRequest::getVar('idFracc');
 
         if($idsDatoGeneral!=""){
-           $resp = $modelGM->ActBatchFechasDTU(SasfehpHelper::conversionFecha($fecha), $idsDatoGeneral);
+           // $resp = $modelGM->ActBatchFechasDTU(SasfehpHelper::conversionFecha($fecha), $idsDatoGeneral);
+           $resp = $modelGM->ActBatchFechasDTU2(SasfehpHelper::conversionFecha($fecha), $idsDatoGeneral);
            if($resp){
                 $this->setRedirect( 'index.php?option=com_sasfe&view=fechasdtu&idFracc='.$idFracc, "La(s) fecha(s) DTU se han actualizado correctamente.");
            }else{

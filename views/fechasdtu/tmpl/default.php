@@ -15,7 +15,8 @@ include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTOR
 include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolGrid' . DIRECTORY_SEPARATOR . 'ext'. DIRECTORY_SEPARATOR .'datasources'. DIRECTORY_SEPARATOR .'MySQLiDataSource.php';
 $dateC = date("d/m/Y"); //fecha actual
 JViewLegacy::loadHelper('sasfehp');
-$grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
+// $grid = SasfehpHelper::ObtTodasLasFechasDTU($this->idFracc);
+$grid = SasfehpHelper::ObtTodasLasFechasDTU2($this->idFracc);
 
 ?>
 <style>
