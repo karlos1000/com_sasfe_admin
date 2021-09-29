@@ -6,6 +6,7 @@ INSERT INTO `#__sasfe_ctr_permisos_campos` (`campo`, `dirV`, `dirE`, `gVtaV`, `g
 
 ALTER TABLE `#__sasfe_departamentos` ADD `fechaDTU` DATE NULL DEFAULT NULL AFTER `idPrototipo`;
 ALTER TABLE `#__sasfe_departamentos` ADD KEY (fraccionamientoId);
+ALTER TABLE `#__sasfe_departamentos` ADD `ocupado` INT NULL DEFAULT '0' AFTER `fechaDTU`;
 
 #Remover
 SELECT a.departamentoId, c.idFraccionamiento, c.nombre, a.fechaDTU
