@@ -219,6 +219,8 @@ class SasfeControllerDepartamento extends JControllerForm {
                     $comentarioHist = "Se aparta definitivamente la propiedad ".$datosDpto[0]->numero." ".$datosDpto[0]->nombrefracc." el d&iacute;a ".$arrDateTime->fechaF2;
                     SasfehpHelper::salvarHistorialProspecto($datoProspectoId, 6, $comentarioHist, $arrDateTime->fechaHora);
 
+                    // Imp. 29/09/21, Carlos, Setear el departamento a ocupado en tabla departamentos
+                    SasfehpHelper::actDepartamentoOcupado($id_Dpt, 1);
 
                     //>>>Inicio de logica para notificar
                     //Obtener datos del prospecto por su id
@@ -292,6 +294,9 @@ class SasfeControllerDepartamento extends JControllerForm {
                     $motivo_liberar_dpto = (JRequest::getVar('motivo_liberar_dpto')) ? JRequest::getVar('motivo_liberar_dpto') : "NULL";
                     $model->updHistReasigObsoleto($id_Dpt);
                     $resReset = $modelProspecto->resetProspectadorPorIdProspecto($datoProspectoId); //Limpiar los campos departamentoId, fechaLimiteApartado por el id del prospectador
+
+                    // Imp. 29/09/21, Carlos, Setear el departamento a disponible en tabla departamentos
+                    SasfehpHelper::actDepartamentoOcupado($id_Dpt, 0);
 
                     //>>>Salvar el motivo de liberacion por mesa de control en el historial
                     //Obtener datos del departamento
@@ -888,6 +893,9 @@ class SasfeControllerDepartamento extends JControllerForm {
                             }
                         }
                         //>>>Fin de logica para notificar
+
+                    // Imp. 29/09/21, Carlos, Setear el departamento a ocupado en tabla departamentos
+                    SasfehpHelper::actDepartamentoOcupado($id_Dpt, 1);
                 }
                 $idDatoGral = $id;
             }

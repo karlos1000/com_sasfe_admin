@@ -177,6 +177,25 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
     }
 
     /***
+     * Imp. 29/09/21, Carlos => Obtiene informacion del departamento pr su id
+     */
+    public function obtInfoDptPorIdDB($idDpt){
+        $db = JFactory::getDbo();
+        $tbl_sasfe_departamentos = $db->getPrefix().'sasfe_departamentos';
+
+        $query = "
+                  SELECT * FROM $tbl_sasfe_departamentos WHERE idDepartamento=$idDpt
+                  LIMIT 0,1
+                 ";
+        // echo $query;
+        $db->setQuery($query);
+        $db->query();
+        $rows = $db->loadObject();
+
+        return $rows;
+    }
+
+    /***
      * Obtener todos los gerentes de ventas que esten activos
      */
     public function obtColElemPorIdCatalogoDB($idCatalogo){
@@ -1859,8 +1878,9 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
           $queryInfoGral = "
                     SELECT DISTINCT departamentoId, esReasignado, obsoleto
                     FROM $tbl_sasfe_datos_generales
-                    WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0
-                    AND idEstatus NOT IN (400, 401, 87)
+                    WHERE departamentoId IN ($idsAllDpts)
+                    AND esHistorico=0
+                    -- AND idEstatus NOT IN (400, 401, 87)
                    ";
           // echo $queryInfoGral."<br/>"; exit();
 
@@ -1965,6 +1985,151 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
           // print_r($rows);
           // echo "</pre>";
        }
+    }
+
+    // Imp. 29/09/21, Carlos Modificación
+    public function obtenerDepartamentosDisponiblesDB2($idFracc, $idProspectado, $idGteV)
+    {
+       $db = JFactory::getDbo();
+       $tbl_sasfe_departamentos = $db->getPrefix().'sasfe_departamentos';
+       $tbl_sasfe_datos_generales = $db->getPrefix().'sasfe_datos_generales';
+       $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
+       $tbl_sasfe_gerente_deptos = $db->getPrefix().'sasfe_gerente_deptos';
+
+       //obtener grupo
+       $this->userC = JFactory::getUser();
+       $this->groups = JAccess::getGroupsByUser($this->userC->id, false);
+       $rows = array();
+       // $queryDpts = "
+       //              SELECT idDepartamento, numero
+       //              FROM $tbl_sasfe_departamentos
+       //              WHERE fraccionamientoId IN ($idFracc)
+       //              AND ocupado=0 AND fechaDTU!=''
+       //            ";
+       $queryDpts = "
+                    SELECT GROUP_CONCAT(idDepartamento) AS idDepartamento
+                    FROM $tbl_sasfe_departamentos
+                    WHERE fraccionamientoId IN ($idFracc)
+                    AND ocupado=0 AND fechaDTU!=''
+                  ";
+       $db->setQuery($queryDpts);
+       $db->query();
+       $rowsDpts = $db->loadObject();
+       // print_r($rowsDpts);
+       // echo "es: ".$rowsDpts->idDepartamento ."<br/>";
+
+       if($rowsDpts->idDepartamento!= ""){
+          //obtener todos los departamentos asociados al gerente de ventas
+          $queryIdsDptosGteVentas = "SELECT * FROM $tbl_sasfe_gerente_deptos WHERE gteVentasId=$idGteV LIMIT 0,1";
+          $db->setQuery($queryIdsDptosGteVentas);
+          $db->query();
+          $idsDtosGteVentas = $db->loadObject(); //Estos ids son los que se van a mostrar para el usuario
+
+          if($idsDtosGteVentas->departamentosId!=""){
+            $arrIdsDtosGteVentas = explode(",", $idsDtosGteVentas->departamentosId);
+            $arridsDptCurrent = explode(",", $rowsDpts->idDepartamento);
+            $arrayDeptoDisponible = array();
+
+            //Obt. Departamentos que tiene permiso el gerente de ventas desde el catalogo deptos-gerentes
+            foreach($arrIdsDtosGteVentas as $idDepto){
+              if(in_array($idDepto, $arridsDptCurrent)){
+                 $arrayDeptoDisponible[] = $idDepto;
+              }
+            }
+
+            if(count($arrayDeptoDisponible)>0){
+              $idsDptCurrent = implode(",", $arrayDeptoDisponible); //Son todos los departamentos disponibles
+
+              //Obtener ids de los prospectos asignados anteriormente para ser excluidos
+              $queryIdsDptosPreasig = "SELECT GROUP_CONCAT(deptosPreasignaron) as deptosPreasignaron
+                                    FROM $tbl_sasfe_datos_prospectos WHERE idDatoProspecto=$idProspectado";
+              //echo $queryIdsDptosPreasig.'<br/>';
+              $db->setQuery($queryIdsDptosPreasig);
+              $db->query();
+              $idsDptosPreasig = $db->loadResult();
+              // echo "idsDptosPreasig: ". $idsDptosPreasig."<br/>";
+              $queryIdsDptos = "";
+
+              if($idsDptosPreasig!=""){
+                //Permitir ver para super usuario, direccion y gerentes de venta
+                if(!in_array("8", $this->groups) && !in_array("10", $this->groups) && !in_array("11", $this->groups)){
+                  $queryIdsDptos = " AND idDepartamento NOT IN ($idsDptosPreasig) ";
+                }
+                // else{
+                //   $queryIdsDptos = " AND idDepartamento NOT IN ($idsDptosPreasig) ";
+                // }
+              }
+              // Obt. informacioon de los departamentos por mostrar en la interfaz
+              $query = "SELECT *
+                            FROM $tbl_sasfe_departamentos
+                            WHERE fraccionamientoId=$idFracc AND idDepartamento IN ($idsDptCurrent) $queryIdsDptos
+                            ";
+              // echo $query.'<br/>';
+              // exit();
+              $db->setQuery($query);
+              $db->query();
+              $rows = $db->loadObjectList();
+              // print_r($rows);
+              if( count($rows)>0 ){
+                return $rows;
+              }
+            }
+          }
+       }
+
+       // echo "<pre>";
+       // print_r($rowsDpts);
+       // print_r($idsDtosGteVentas);
+       // print_r($idsDptCurrent);
+       // echo "</pre>";
+       // exit();
+    }
+
+    /***
+     * Imp. 29/09/21, Carlos, Setear departamento a ocupado
+    */
+    public function actDepartamentoOcupadoDB($idDepartamento, $opc){
+      $db = JFactory::getDbo();
+      $tbl_sasfe_departamentos = $db->getPrefix().'sasfe_departamentos';
+
+      $query = "UPDATE $tbl_sasfe_departamentos SET ocupado=$opc
+                WHERE idDepartamento=$idDepartamento
+               ";
+      $db->setQuery($query);
+      $db->query();
+      $rows = $db->loadObjectList();
+
+      return $rows;
+    }
+
+    /***
+     * Imp. 29/09/21, Carlos, Actualizar el estatus de la tabla sasfe_datos_generales
+    */
+    public function actEstatusPorDeptoProspectoDB($departamentoId, $idDatoProspecto){
+      $db = JFactory::getDbo();
+      $tbl_sasfe_departamentos = $db->getPrefix().'sasfe_departamentos';
+      $tbl_sasfe_datos_generales = $db->getPrefix().'sasfe_datos_generales';
+      $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
+      $tbl_sasfe_gerente_deptos = $db->getPrefix().'sasfe_gerente_deptos';
+
+      $query = "
+                SELECT GROUP_CONCAT(idDatoGeneral) AS idDatoGeneral FROM $tbl_sasfe_datos_generales
+                WHERE departamentoId=$departamentoId AND datoProspectoId=$idDatoProspecto
+              ";
+      // echo $query."<br/>"; exit();
+      $db->setQuery($query);
+      $db->query();
+      $idDatoGeneral = $db->loadResult();
+      // echo "idDatoGeneral: ".$idDatoGeneral."<br/>";
+      // exit();
+
+      if($idDatoGeneral!=""){
+        $query2 = "UPDATE $tbl_sasfe_datos_generales SET idEstatus='402'
+                  WHERE idDatoGeneral IN ($idDatoGeneral)
+                ";
+        $db->setQuery($query2);
+        $db->query();
+      }
     }
 
     /***

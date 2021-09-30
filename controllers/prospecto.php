@@ -730,6 +730,7 @@ class SasfeControllerProspecto extends JControllerForm {
 
         $respDB = SasfehpHelper::obtenerDepartamentosDisponibles(trim($_POST['idFracc']), trim($_POST['idProspectador']), trim($_POST['idGteV']));
         // echo "<pre>"; print_r($respDB); echo "</pre>";
+        // echo "<pre>"; print_r($_POST); echo "</pre>";
         // exit();
         if(count($respDB)>0){
             foreach($respDB as $elemDpto) {
@@ -828,6 +829,13 @@ class SasfeControllerProspecto extends JControllerForm {
             //Extra para saber a que pantalla redireccionar
             $_POST['opcRedireccion'] = $opcDatosProsp;
 
+            // Imp. 29/09/21, Carlos => Obtener la fecha dtu por el id del departamento
+            $datosDepto = SasfehpHelper::obtInfoDptPorId($departamentoId);
+            if(isset($datosDepto->idDepartamento) && $datosDepto->idDepartamento>0){
+                $fechaDTU = SasfehpHelper::conversionFechaF2($datosDepto->fechaDTU);
+                $_POST['fdtu'] = $fechaDTU;
+                $_POST['dtu_dg'] = 1;
+            }
 
             // echo "<pre>";
             // print_r($datosProspecto);
@@ -922,6 +930,12 @@ class SasfeControllerProspecto extends JControllerForm {
                 SasfehpHelper::salvarHistorialProspecto($idDatoProspecto, 3, $comentarioHist, $arrDateTime->fechaHora);
 
                 $msg = JText::sprintf('Se ha liberado correctamente el departamente/casa.');
+
+                // Imp. 29/09/21, Carlos, Setear el departamento a disponible en tabla departamentos
+                SasfehpHelper::actDepartamentoOcupado($departamentoId, 0);
+
+                //Actualizar el estatus de la tabla sasfe_datos_generales por el id del prospecto
+                SasfehpHelper::actEstatusPorDeptoProspecto($departamentoId, $idDatoProspecto);
             }else{
                 $msg = JText::sprintf('No es posible liberar el departamente/casa, intentar de nuevo.');
             }

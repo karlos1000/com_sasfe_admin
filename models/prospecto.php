@@ -1,65 +1,65 @@
 <?php
-/** 
+/**
  * fecha: 19-11-13
  * company: company
  * @author Karlos
  */
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
+defined('_JEXEC') or die('Restricted access');
 // import Joomla modelform library
 jimport('joomla.application.component.model');
 
 class SasfeModelProspecto extends JModelLegacy{
-        
+
         public function insertarProspecto($fechaAlta, $nombre, $aPaterno, $aManterno, $RFC, $fechaNac, $edad, $telefono, $celular, $genero,
-                                          $NSS, $montoCredito, $tipoCreditoId, $subsidio, $puntosHasta, $comentario, $empresa, $idTipoCaptado, $email, 
+                                          $NSS, $montoCredito, $tipoCreditoId, $subsidio, $puntosHasta, $comentario, $empresa, $idTipoCaptado, $email,
                                           $usuarioId, $gteProspeccionId, $gteVentasId, $prospectadorId, $agtVentasId, $estatusId,
                                           $rfcDuplicado, $periodoAsignacion, $fechaAsignacionAgt, $gerencias, $altaProspectadorId, $desarrolloId){
-           $db = JFactory::getDBO();                                        
-           $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';           
+           $db = JFactory::getDBO();
+           $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
            $fechaNac = ($fechaNac!="") ?"'".$fechaNac."'" :"NULL";
-           
+
            $query = "INSERT INTO $tbl_sasfe_datos_prospectos (
                                  fechaAlta, nombre, aPaterno, aManterno, RFC, fechaNac, edad, telefono, celular, genero,
-                                 NSS, montoCredito, tipoCreditoId, subsidio, puntosHasta, comentario, empresa, idTipoCaptado, email, 
+                                 NSS, montoCredito, tipoCreditoId, subsidio, puntosHasta, comentario, empresa, idTipoCaptado, email,
                                  usuarioId, gteProspeccionId, gteVentasId, prospectadorId, agtVentasId, estatusId,
                                  duplicado, periodoAsignacion, fechaAsignacionAgt, idRepDir, altaProspectadorId, desarrolloId
-                                 ) 
+                                 )
                           VALUES ('$fechaAlta', '$nombre', '$aPaterno', '$aManterno', '$RFC', $fechaNac, $edad, '$telefono', '$celular', '$genero',
-                                 '$NSS', $montoCredito, $tipoCreditoId, $subsidio, $puntosHasta, '$comentario', '$empresa', $idTipoCaptado, '$email', 
+                                 '$NSS', $montoCredito, $tipoCreditoId, $subsidio, $puntosHasta, '$comentario', '$empresa', $idTipoCaptado, '$email',
                                   $usuarioId, $gteProspeccionId, $gteVentasId, $prospectadorId, $agtVentasId, $estatusId,
-                                  $rfcDuplicado, $periodoAsignacion, $fechaAsignacionAgt, $gerencias, $altaProspectadorId, $desarrolloId  
+                                  $rfcDuplicado, $periodoAsignacion, $fechaAsignacionAgt, $gerencias, $altaProspectadorId, $desarrolloId
                                  )";
            // echo $query;
            // exit();
            $db->setQuery($query);
            $db->query();
-           $id = $db->insertid();                
-           
+           $id = $db->insertid();
+
            return $id;
        }
-                              
+
        public function actualizarProspecto($nombre, $aPaterno, $aManterno, $RFC, $fechaNac, $edad, $telefono, $celular, $genero,
-                                          $NSS, $montoCredito, $tipoCreditoId, $subsidio, $puntosHasta, $comentario, $empresa, $idTipoCaptado, $email, 
+                                          $NSS, $montoCredito, $tipoCreditoId, $subsidio, $puntosHasta, $comentario, $empresa, $idTipoCaptado, $email,
                                           $usuarioIdActualizacion, $gteProspeccionId, $gteVentasId, $prospectadorId, $agtVentasId, $estatusId,
                                           $rfcDuplicado, $periodoAsignacion, $fechaAsignacionAgt, $gerencias, $desarrolloId, $idDatoProspecto){
-           $db = JFactory::getDBO(); 
+           $db = JFactory::getDBO();
            $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
            $fechaNac = ($fechaNac!="") ?"'".$fechaNac."'" :"NULL";
-           
+
            $query = "UPDATE $tbl_sasfe_datos_prospectos SET nombre='$nombre', aPaterno='$aPaterno', aManterno='$aManterno', RFC='$RFC', fechaNac=$fechaNac, edad=$edad, telefono='$telefono', celular='$celular', genero='$genero',
-                                 NSS='$NSS', montoCredito=$montoCredito, tipoCreditoId=$tipoCreditoId, subsidio=$subsidio, puntosHasta=$puntosHasta, comentario='$comentario', empresa='$empresa', idTipoCaptado=$idTipoCaptado, email='$email', 
+                                 NSS='$NSS', montoCredito=$montoCredito, tipoCreditoId=$tipoCreditoId, subsidio=$subsidio, puntosHasta=$puntosHasta, comentario='$comentario', empresa='$empresa', idTipoCaptado=$idTipoCaptado, email='$email',
                                  usuarioIdActualizacion=$usuarioIdActualizacion, gteProspeccionId=$gteProspeccionId, gteVentasId=$gteVentasId, prospectadorId=$prospectadorId, agtVentasId=$agtVentasId, estatusId=$estatusId,
                                  duplicado=$rfcDuplicado, periodoAsignacion=$periodoAsignacion, fechaAsignacionAgt=$fechaAsignacionAgt, idRepDir=$gerencias, desarrolloId=$desarrolloId
                      WHERE idDatoProspecto=$idDatoProspecto ";
            // echo $query;
            // exit();
-           $db->setQuery($query);                     
-           $db->query();           
+           $db->setQuery($query);
+           $db->query();
        }
-       
-       public function obtenerDatosProspecto($idDatoProspecto){                                 
-           if($idDatoProspecto>0){            
+
+       public function obtenerDatosProspecto($idDatoProspecto){
+           if($idDatoProspecto>0){
             $db = JFactory::getDbo();
             $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
             $tbl_sasfe_departamentos = $db->getPrefix().'sasfe_departamentos';
@@ -68,10 +68,10 @@ class SasfeModelProspecto extends JModelLegacy{
             //             SELECT *
             //             FROM $tbl_sasfe_datos_prospectos
             //             WHERE idDatoProspecto=$idDatoProspecto
-            //           "; 
+            //           ";
 
             $query = "
-                      SELECT a.*, b.numero as numeroDpto, c.nombre as nFracc 
+                      SELECT a.*, b.numero as numeroDpto, c.nombre as nFracc
                       FROM $tbl_sasfe_datos_prospectos AS a
                       LEFT JOIN $tbl_sasfe_departamentos AS b ON b.idDepartamento=a.departamentoId
                       LEFT JOIN $tbl_sasfe_fraccionamientos AS c ON c.idFraccionamiento=b.fraccionamientoId
@@ -79,24 +79,24 @@ class SasfeModelProspecto extends JModelLegacy{
                     ";
             $db->setQuery($query);
             $db->query();
-            $rows = $db->loadObjectList();             
+            $rows = $db->loadObjectList();
           }else{
-                $rows = array();  
+                $rows = array();
           }
-                      
+
           return $rows;
-       }   
+       }
 
        //Inserta el evento
        public function insertarEvento($datoProspectoId, $ev_comentario, $opcionId, $ev_fechahora, $ev_tiempo, $ev_tipoevento, $usuarioId, $fechaCreacion){
-           $db = JFactory::getDBO();                                        
+           $db = JFactory::getDBO();
            $tbl_sasfe_movimientosprospecto = $db->getPrefix().'sasfe_movimientosprospecto';
            $ev_fechahora = ($ev_fechahora!="") ?"'".$ev_fechahora."'" :"NULL";
 
            $query = "INSERT INTO $tbl_sasfe_movimientosprospecto (
                                  datoProspectoId, comentario, opcionId, fechaHora, tiempoRecordatorioId, tipoEventoId,
                                  usuarioId, fechaCreacion
-                                 ) 
+                                 )
                           VALUES ($datoProspectoId, '$ev_comentario', $opcionId, $ev_fechahora, $ev_tiempo, $ev_tipoevento,
                                   $usuarioId, '$fechaCreacion'
                                  )";
@@ -104,21 +104,21 @@ class SasfeModelProspecto extends JModelLegacy{
            // exit();
            $db->setQuery($query);
            $db->query();
-           $id = $db->insertid();                
-           
+           $id = $db->insertid();
+
            return $id;
        }
 
       //Verificar el rfc en db del prospectador
       public function comprobarRFCDB($rfc, $idGte){
-        $db = JFactory::getDBO();                                        
+        $db = JFactory::getDBO();
         $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
 
         //$query = "SELECT * FROM $tbl_sasfe_datos_prospectos WHERE RFC='$rfc' ";
         $query = "SELECT * FROM $tbl_sasfe_datos_prospectos WHERE RFC  LIKE '%$rfc%' AND (gteVentasId IS NOT NULL OR gteProspeccionId IS NOT NULL) ";
         $db->setQuery($query);
         $db->query();
-        $rows = $db->loadObjectList(); 
+        $rows = $db->loadObjectList();
         $options = array();
         $valor = array();
         if(count($rows) > 0){
@@ -145,14 +145,14 @@ class SasfeModelProspecto extends JModelLegacy{
           $gteId = 0;
           foreach ($rows as $valuerows) {
             if(count($options) == 0){
-              $options[] = $valuerows->gteVentasId;            
+              $options[] = $valuerows->gteVentasId;
             }else{
               if (!in_array($valuerows->gteVentasId, $options)){
-                $options[] = $valuerows->gteVentasId; 
+                $options[] = $valuerows->gteVentasId;
                 break;
                     }
                   }
-            
+
               }
 
           if(count($options) > 1){
@@ -161,10 +161,10 @@ class SasfeModelProspecto extends JModelLegacy{
             $options = array();
             foreach ($rows as $valuerows) {
               if(count($options) == 0){
-                $options[] = $valuerows->gteProspeccionId;            
+                $options[] = $valuerows->gteProspeccionId;
               }else{
                 if (!in_array($valuerows->gteProspeccionId, $options)){
-                  $options[] = $valuerows->gteProspeccionId; 
+                  $options[] = $valuerows->gteProspeccionId;
                   break;
                 }
               }
@@ -182,52 +182,52 @@ class SasfeModelProspecto extends JModelLegacy{
 
       //Actualizar el asesor o agente de ventas y cambiar estatus
       public function agregarAgtVentasOAsesor($agtVentasId, $estatusId, $comentarioAsignar, $periodoAsignacion, $usuarioIdActualizacion, $gteProspeccionId, $duplicado, $fechaAsignacionAgt, $idDatoProspecto){
-         $db = JFactory::getDBO(); 
+         $db = JFactory::getDBO();
          $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
-         
+
          $query = "UPDATE $tbl_sasfe_datos_prospectos SET agtVentasId=$agtVentasId, estatusId=$estatusId, comentarioAsignar='$comentarioAsignar',
-                   periodoAsignacion=$periodoAsignacion, usuarioIdActualizacion=$usuarioIdActualizacion, gteProspeccionId=$gteProspeccionId, 
+                   periodoAsignacion=$periodoAsignacion, usuarioIdActualizacion=$usuarioIdActualizacion, gteProspeccionId=$gteProspeccionId,
                    duplicado='$duplicado', fechaAsignacionAgt=$fechaAsignacionAgt
                    WHERE idDatoProspecto=$idDatoProspecto ";
          // echo $query;
-         $db->setQuery($query);                     
-         $db->query();           
+         $db->setQuery($query);
+         $db->query();
       }
 
       //Asignar un gerente de ventas a prospectos
       public function asignarGteVentaAProspectos($usuarioIdActualizacion, $gteProspeccionId, $gteVentasId, $duplicado, $periodoAsignacion, $comentarioAsignar, $idDatoProspecto){
-         $db = JFactory::getDBO(); 
+         $db = JFactory::getDBO();
          $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
-         
+
          $query = "UPDATE $tbl_sasfe_datos_prospectos SET usuarioIdActualizacion=$usuarioIdActualizacion, gteProspeccionId=$gteProspeccionId, gteVentasId=$gteVentasId,
-                   duplicado='$duplicado', periodoAsignacion=$periodoAsignacion, comentarioAsignar='$comentarioAsignar' 
+                   duplicado='$duplicado', periodoAsignacion=$periodoAsignacion, comentarioAsignar='$comentarioAsignar'
                    WHERE idDatoProspecto=$idDatoProspecto ";
-         // echo $query;                   
-         $db->setQuery($query);                     
+         // echo $query;
+         $db->setQuery($query);
          $db->query();
       }
 
       //Salvar la fecha e id de la proteccion
       public function actFechaProteccionProspecto($idTiempoProteccion, $fechaProteccion, $idDatoProspecto){
-         $db = JFactory::getDBO(); 
+         $db = JFactory::getDBO();
          $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
-         
+
          $query = "UPDATE $tbl_sasfe_datos_prospectos SET idTiempoProteccion=$idTiempoProteccion, fechaProteccion='$fechaProteccion'
                    WHERE idDatoProspecto=$idDatoProspecto ";
-         // echo $query; 
-         $db->setQuery($query);                     
+         // echo $query;
+         $db->setQuery($query);
          $db->query();
       }
 
       //Salvar la fecha limite de apartado y el id del departamento
       public function apartarDepartamento($departamentoId, $fechaLimiteApartado, $idDatoProspecto){
-         $db = JFactory::getDBO(); 
+         $db = JFactory::getDBO();
          $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
-         
+
          $query = "UPDATE $tbl_sasfe_datos_prospectos SET departamentoId=$departamentoId, fechaLimiteApartado='$fechaLimiteApartado'
                    WHERE idDatoProspecto=$idDatoProspecto ";
-         // echo $query; 
-         $db->setQuery($query);                     
+         // echo $query;
+         $db->setQuery($query);
          $db->query();
       }
 
@@ -236,18 +236,18 @@ class SasfeModelProspecto extends JModelLegacy{
       public function resetProspectadorPorIdProspecto($idDatoProspecto){
         $db = JFactory::getDbo();
         $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
-        
+
         $query = "
                  UPDATE $tbl_sasfe_datos_prospectos SET departamentoId=NULL, fechaLimiteApartado=NULL
                  WHERE idDatoProspecto=$idDatoProspecto";
         $db->setQuery($query);
         $db->query();
         $row = $db->getAffectedRows();
-        $result = ($row>0) ? 1 : 0;  
-        
+        $result = ($row>0) ? 1 : 0;
+
         return $result;
       }
-      
+
       //Metodo para salvar los ids departamentos asigandos previamente
       public function agregarIdsDptosPorIdProspecto($objDatosProspecto, $departamentoId, $idDatoProspecto){
         $db = JFactory::getDbo();
@@ -258,8 +258,8 @@ class SasfeModelProspecto extends JModelLegacy{
           $arrIdsDptos = explode(",", $deptosPreasignaron);
           array_push($arrIdsDptos, $departamentoId);
           $arrIdsDptos = array_filter($arrIdsDptos);
-          // sort($arrIdsDptos);          
-        }                
+          // sort($arrIdsDptos);
+        }
         if(count($arrIdsDptos)>0){
           $idsDptos = implode(",",$arrIdsDptos);
           $query = "
@@ -267,7 +267,7 @@ class SasfeModelProspecto extends JModelLegacy{
           $db->setQuery($query);
           $db->query();
           // $row = $db->getAffectedRows();
-          // $result = ($row>0) ? 1 : 0;  
+          // $result = ($row>0) ? 1 : 0;
           // return $result;
         }
       }
@@ -281,7 +281,7 @@ class SasfeModelProspecto extends JModelLegacy{
         $db->setQuery($query);
         $db->query();
         $row = $db->getAffectedRows();
-        $result = ($row>0) ? 1 : 0;  
+        $result = ($row>0) ? 1 : 0;
         return $result;
       }
 
@@ -295,28 +295,28 @@ class SasfeModelProspecto extends JModelLegacy{
         $db->setQuery($query);
         $db->query();
         $row = $db->getAffectedRows();
-        $result = ($row>0) ? 1 : 0;  
+        $result = ($row>0) ? 1 : 0;
         return $result;
       }
 
       /*
-      //Obtener departamentos que ya uso el prospectador anteriormente      
+      //Obtener departamentos que ya uso el prospectador anteriormente
       public function obtDeptosSelProspectador($idDatoProspecto){
         $db = JFactory::getDbo();
         $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
-        
+
         $query = "SELECT * FROM $tbl_sasfe_datos_prospectos WHERE 1358
-                 
+
                  WHERE idDatoProspecto=$idDatoProspecto";
         $db->setQuery($query);
         $db->query();
         $row = $db->getAffectedRows();
-        $result = ($row>0) ? 1 : 0;  
-        
+        $result = ($row>0) ? 1 : 0;
+
         return $result;
       }
       */
-              
+
 }
 
 ?>

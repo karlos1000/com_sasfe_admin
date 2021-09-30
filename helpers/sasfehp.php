@@ -67,6 +67,16 @@ class SasfehpHelper
     }
 
     /***
+     * Imp. 29/09/21, Carlos => Obtiene informacion del departamento pr su id
+    */
+    public static function obtInfoDptPorId($idDpt=0){
+        $model = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
+        $collElemCat =  $model->obtInfoDptPorIdDB($idDpt);
+
+        return $collElemCat;
+    }
+
+    /***
      * Obtiene la coleccion de los elementos de los catalogos dependiendo de su id catalago
      */
     public static function obtColElemPorIdCatalogo($idCat){
@@ -1845,7 +1855,28 @@ class SasfehpHelper
     */
     public static function obtenerDepartamentosDisponibles($idFracc, $idProspectado, $idGteV){
        $model = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
-       $col =  $model->obtenerDepartamentosDisponiblesDB($idFracc, $idProspectado, $idGteV);
+       // $col =  $model->obtenerDepartamentosDisponiblesDB($idFracc, $idProspectado, $idGteV);
+       $col =  $model->obtenerDepartamentosDisponiblesDB2($idFracc, $idProspectado, $idGteV);
+
+       return $col;
+    }
+
+    /**
+     *  Imp. 29/09/21, Carlos, Setear departamento a ocupado
+    */
+    public static function actDepartamentoOcupado($idDepartamento, $opc=0){
+       $model = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
+       $col =  $model->actDepartamentoOcupadoDB($idDepartamento, $opc);
+
+       return $col;
+    }
+
+    /**
+     * Imp. 29/09/21, Carlos, Obtener id de sasfe_datos_generales
+    */
+    public static function actEstatusPorDeptoProspecto($departamentoId, $idDatoProspecto){
+       $model = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
+       $col =  $model->actEstatusPorDeptoProspectoDB($departamentoId, $idDatoProspecto);
 
        return $col;
     }
