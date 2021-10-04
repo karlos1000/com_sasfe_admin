@@ -146,7 +146,18 @@ defined('_JEXEC') or die('Restricted Access');
                         <span>Historial SMS</span>
                     </a>
                 </div>
-        </div>
+            </div>
+            <?php } ?>
+
+            <?php if(in_array("8", $this->groups) || in_array("10", $this->groups)){ ?>
+            <div class="icon-wrapper">
+                <div class="icon">
+                    <a href="index.php?option=com_sasfe&amp;view=expdigitales" style="text-decoration:none;" title="Expedientes Digitales">
+                        <img src="../media/com_sasfe/images/hist-mensajes.png" align="middle" border="0">
+                        <span>Expediente Digital</span>
+                    </a>
+                </div>
+            </div>
             <?php } ?>
         </div>
          <!--?php } ?>-->
