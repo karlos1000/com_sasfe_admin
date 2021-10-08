@@ -16,3 +16,29 @@ LEFT JOIN adr9x_sasfe_fraccionamientos AS c ON c.idFraccionamiento=b.fraccionami
 WHERE a.fechaDTU!="" AND a.fechaDTU!="0000-00-00"
 #a.fechaDTU!="" AND a.fechaDTU!="0000-00-00"
 #a.idEstatus!="" AND a.idEstatus IN (90, )
+
+
+CREATE TABLE IF NOT EXISTS `#__sasfe_enlaces_digitales` (
+  `idEnlace` int(11) NOT NULL AUTO_INCREMENT,
+  `datoProspectoId` int(11) DEFAULT NULL COMMENT 'Identificador del prospecto',
+  `datoGeneralId` int(11) DEFAULT NULL COMMENT 'Identificador de datos general CRM',
+  `linkGeneral` text,
+  `linkContrato` text,
+  `linkEscrituras` text,
+  `linkEntregas` text,
+
+   PRIMARY KEY  (`idEnlace`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (departamentoId);
+ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (gteProspeccionId);
+ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (gteVentasId);
+ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (prospectadorId);
+ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (agtVentasId);
+ALTER TABLE `adr9x_sasfe_datos_clientes` ADD KEY (datoGeneralId);
+
+#ALTER TABLE adr9x_sasfe_datos_prospectos DROP KEY idDatoProspecto;
+#ALTER TABLE adr9x_sasfe_datos_prospectos DROP INDEX (idDatoProspecto);
+#DROP INDEX idDatoProspecto FROM TABLE adr9x_sasfe_datos_prospectos;
+

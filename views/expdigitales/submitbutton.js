@@ -1,49 +1,110 @@
 JQ(document).ready(function(){
-	console.log(JQ("#estatusId").val());
-	/*
-	if(JQ("#estatusId").val() == 2){
-		document.getElementById("filter_estatus").selectedIndex=2;
-		JQ("#filter_estatus option[value=]").hide();
-		JQ("#filter_estatus option[value=0]").hide();
-		JQ("#filter_estatus option[value=2]").hide();
-	}else if(JQ("#estatusId").val() == 1){
-		document.getElementById("filter_estatus").Index=3;
-	}
-	*/
-	JQ('.button-delete').attr('onclick','').unbind('click');
-	JQ('.button-delete').click(function(){
-	   if (document.adminForm.boxchecked.value==0){
-           alert('Please first make a selection from the list');
-       }else{
-       	   	var r = confirm("Esta seguro de borrar los registros seleccionados");
-			if(r==true) {
-				Joomla.submitbutton('prospectos.borrarProsRepetidos');
-			}else{
-				return false;
-			}
-       }
+
+	JQ(".selLinkAbrir").click(function(){
+		let id = JQ(this).attr("id");
+		showLoading("#"+id); //mostrar loading
+		JQ(this).attr("href", "javascript:void(0);");
+		let idProspecto = accounting.unformat(JQ(this).attr("idProspecto"));
+		let idDatoGeneral = accounting.unformat(JQ(this).attr("idDatoGeneral"));
+		let tipoEnlace = accounting.unformat(JQ(this).attr("tipoEnlace"));
+
+		// Buscar si tiene enlace
+		let params = {
+	        idProspecto:idProspecto,
+	        idDatoGeneral:idDatoGeneral,
+	        tipoEnlace:tipoEnlace,
+      	};
+      	// console.log(params);
+      	// return false;
+    	fAjax("buscarenlacedigital", params, function(data){
+    		console.log(data);
+    		hideLoading("#"+id);
+    		let enlace = "";
+    		if(data.result==true){
+    			switch(tipoEnlace) {
+					case 1: enlace = checkNulo(data.datosEnlace.linkGeneral); break;
+			      	case 2: enlace = checkNulo(data.datosEnlace.linkContrato); break;
+				    case 3: enlace = checkNulo(data.datosEnlace.linkEscrituras); break;
+				    case 4: enlace = checkNulo(data.datosEnlace.linkEntregas); break;
+				}
+
+				if(enlace!=""){
+					window.open(enlace, '_blank');
+				}else{
+					alertify.error("No existe enlace para abrir");
+				}
+    		}else{
+    			alertify.error("No existe enlace para abrir");
+    		}
+    	});
 	});
 
-    // Reemplazar evento onclick
-   //  JQ('#toolbar-delete a').attr('onclick','').unbind('click');
-   //  JQ('#toolbar-delete a').click(function(){
-   //     if (document.adminForm.boxchecked.value==0){
-   //         alert('Please first make a selection from the list');
-   //     }else{
-   //     	   	var r = confirm("Esta seguro de borrar los registros seleccionados");
-			// if(r==true) {
-			// 	JQ("#borrar_prosp").val(idPros);
-			// 	Joomla.submitbutton('prospectos.borrarProsRepetidos');
-			// }
-   //         // var r=confirm('No es posible eliminar el elemento, al hacerlo se borrara los deparatamentos vinculados, ¿Realmente estás seguro?');
-   //         // if (r==true){
-   //         //     Joomla.submitbutton('catfraccionamientos.delete');
-   //         // }else{
-   //         //     return false;
-   //         // }
-   //     }
-   //  });
+	JQ(".selLink").click(function(){
+		JQ('#popup_links').css('position','fixed');
+		JQ("#enlaceDigital").val("");
+		let idProspecto = accounting.unformat(JQ(this).attr("idProspecto"));
+		let idDatoGeneral = accounting.unformat(JQ(this).attr("idDatoGeneral"));
+		let tipoEnlace = accounting.unformat(JQ(this).attr("tipoEnlace"));
 
+		JQ("#hIdProspecto").val(idProspecto);
+		JQ("#hIdDatoGeneral").val(idDatoGeneral);
+		JQ("#hTipoEnlace").val(tipoEnlace);
+		// console.log(idProspecto, idDatoGeneral, tipoEnlace);
+
+		// Buscar si tiene enlace
+		let params = {
+	        idProspecto:idProspecto,
+	        idDatoGeneral:idDatoGeneral,
+	        tipoEnlace:tipoEnlace,
+      	};
+      	// console.log(params);
+      	// return false;
+    	fAjax("buscarenlacedigital", params, function(data){
+    		// console.log(data);
+    		let enlace = "";
+    		let idEnlace = 0;
+    		if(data.result==true){
+    			idEnlace = data.datosEnlace.idEnlace;
+    			switch(tipoEnlace) {
+					case 1: enlace = data.datosEnlace.linkGeneral; break;
+			      	case 2: enlace = data.datosEnlace.linkContrato; break;
+				    case 3: enlace = data.datosEnlace.linkEscrituras; break;
+				    case 4: enlace = data.datosEnlace.linkEntregas; break;
+				}
+    		}
+    		JQ("#enlaceDigital").val(enlace);
+    		JQ("#idEnlace").val(idEnlace);
+    	});
+	});
+	JQ("#form_agregarenlace").validate({
+        submitHandler: function(form) {
+        	showLoading("#btn_aceptar_enlace"); //mostrar loading
+
+        	let params = {
+        		idEnlace:JQ("#idEnlace").val(),
+		        idProspecto:JQ("#hIdProspecto").val(),
+		        idDatoGeneral:JQ("#hIdDatoGeneral").val(),
+		        tipoEnlace:JQ("#hTipoEnlace").val(),
+		        link:JQ("#enlaceDigital").val()
+	      	};
+	      	// console.log(params);
+	      	// return false;
+
+        	fAjax("agregarenlace", params, function(data){
+        		console.log(data);
+        		jQuery('#popup_links').modal('hide');
+
+        		hideLoading("#btn_aceptar_enlace");
+	            if(data.result){
+	              alertify.success("El registro fue actualizado");
+	            }else{
+	              alertify.error("No fue posible editar en registro");
+	            }
+	        });
+    	}
+    });
+
+/*
 	//Para los eventos
 	JQ('input[name=\"ev_optrecordatorio\"]').click(function() {
         var v = JQ(this).val();
@@ -427,8 +488,9 @@ JQ(document).ready(function(){
 	if(idGteVentas>0){
 		selectorAsesores(idGteVentas);
 	}
+*/
 
- });
+});
 
 
 var format = function(num){
@@ -455,9 +517,16 @@ var format = function(num){
 function showLoading(target){
   var loading = JQ('#loading_img').val(); //obtener imagen del loading
   addInfo = JQ(target).parent();
-  addInfo.html('<div class="addInfo" style="display:inline-block;">'+loading+'</div>'); //Agregar loading
+  addInfo.append('<div class="addInfo" style="display:inline-block;">'+loading+'</div>'); //Agregar loading
   JQ(target).hide();
 }
+
+//Metodo para ocultar loading al presionar sobre el boton enviar de formulario
+function hideLoading(target){
+  JQ(".addInfo").remove();
+  JQ(target).show();
+}
+
 
 
 // Imp. 24/08/21, Carga de asesores o agentes
@@ -489,4 +558,31 @@ function selectorAsesores(idGteVentas){
 	JQ("#filter_asesores").html(html);
 	JQ("#filter_asesores").val( (exiteAsesor)?JQ("#f_asesores_id").val():"" );
 	// JQ("#filter_asesores").val("");
+}
+
+
+//comprobar si es nulo o vacio una cadena
+function checkNulo(cadena){
+    if(cadena==null || cadena==""){
+        return "";
+    }else{
+        return cadena;
+    }
+}
+
+//Imp. 07/10/21, Carlos Metodo que se implemento para pasar los parametros por ajax
+function fAjax(ctr, data, response){
+  var path = JQ('#path').val()+ctr;
+  // var loading = JQ('#loading_img').val();
+  JQ.ajax({
+    type: 'POST',
+    url: path,
+    data: data,
+    beforeSend: function(){
+      // JQ('#transmitter').html(loading);
+    },
+    success: function(html){
+      response(html);
+    }
+  });
 }

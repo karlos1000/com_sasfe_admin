@@ -125,6 +125,8 @@ class  SasfeViewExpdigitales extends JViewLegacy
             $document->addStyleSheet(JURI::root().'media/com_sasfe/css/style.css');
             $document->addScript(JURI::root().'media/com_sasfe/js/jquery.js');
             $document->addScript(JURI::root().'media/com_sasfe/js/jquery.validate.js');
+            $document->addStyleSheet(JURI::root().'media/com_sasfe/css/alertify.min.css');
+            $document->addScript(JURI::root().'media/com_sasfe/js/alertify.js');
 
             //jquery ui datepicker
             // $document->addStyleSheet('http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');

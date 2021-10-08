@@ -17,6 +17,7 @@ $opcionEstatus = $this->state->get('filter.opcionEstatus');
 $opcionGerentes = $this->state->get('filter.opcionGerentes');
 $opcionAsesores = $this->state->get('filter.opcionAsesores');
 $timeZone = SasfehpHelper::obtDateTimeZone();
+$modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
 
 // echo "<pre>";
 // print_r($this->items);
@@ -28,7 +29,7 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
 <form action="<?php echo JRoute::_('index.php?option=com_sasfe&view=expdigitales'); ?>" method="post" name="adminForm" id="adminForm">
 
     <div id="filter-bar" class="btn-toolbar">
-        <div class="fila_filtro">
+        <!-- <div class="fila_filtro">
             <div class="filter-search btn-group pull-left">
                 <label for="filter_search" class="element-invisible"><?php echo JText::_('Nombre(s)');?></label>
                 <input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('Nombre(s)'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('Nombre(s)'); ?>" style="width:170px;" />
@@ -41,17 +42,15 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
                 <label for="filter_email" class="element-invisible"><?php echo JText::_('Email');?></label>
                 <input type="text" name="filter_email" id="filter_email" placeholder="<?php echo JText::_('Email'); ?>" value="<?php echo $this->escape($this->state->get('filter.email')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('Email'); ?>" style="width:170px;" />
             </div>
-        </div>
+        </div> -->
 
         <div class="fila_filtro">
-            <div class="filter-search btn-group pull-left">
+            <!-- <div class="filter-search btn-group pull-left">
                 <label for="filter_estatus" class="element-invisible"><?php echo JText::_('Estatus');?></label>
                 <select name="filter_estatus" id="filter_estatus" class="hasTooltip" title="<?php echo JHtml::tooltipText('Estatus'); ?>" style="width:170px;">
-                    <!-- <option value=""><?php echo JText::_('-Estatus-');?></option> -->
                     <?php echo JHtml::_('select.options', JHtml::_('modules.opcionEstatus'), 'value', 'text', $opcionEstatus, true);?>
                 </select>
             </div>
-            <!-- Imp. 23/08/21, Carlos -->
             <?php if(in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups)){ ?>
                 <div class="filter-search btn-group pull-left">
                     <label for="filter_gerentes" class="element-invisible"><?php echo JText::_('Gerentes');?></label>
@@ -73,21 +72,21 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
             <div class="btn-group pull-left">
                 <button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('Search'); ?>"><i class="icon-search"></i></button>
                 <button type="button" id="limpiarFiltros" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('Clear'); ?>" ><i class="icon-remove"></i></button>
-            </div>
+            </div> -->
             <div class="btn-group pull-right hidden-phone">
                 <label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
                 <?php echo $this->pagination->getLimitBox(); ?>
             </div>
         </div>
     </div>
-    <br/><br/><br/>
+    <!-- <br/><br/><br/> -->
 
     <table class="table table-striped">
         <thead>
             <tr>
-                <th width="5" class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'ID', 'idDatoProspecto', $direction, $ordering); ?>
-                </th>
+                <!-- <th width="5" class="nowrap center">
+                    <?php echo "idDatoProspecto"; ?>
+                </th> -->
                 <!-- <th width="20" class="nowrap center">
                     <?php echo JText::_('Sel'); ?>
                 </th> -->
@@ -95,21 +94,26 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
                     <?php echo JHtml::_('grid.sort', 'Fecha Alta', 'fechaAlta', $direction, $ordering); ?>
                 </th> -->
                 <th class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'Nombre', 'nombre', $direction, $ordering); ?>
+                    <!-- <?php echo JHtml::_('grid.sort', 'Nombre', 'nombre', $direction, $ordering); ?> -->
+                    <?php echo "Nombre"; ?>
                 </th>
                 <th class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'Email', 'email', $direction, $ordering); ?>
+                    <!-- <?php echo JHtml::_('grid.sort', 'Email', 'email', $direction, $ordering); ?> -->
+                    <?php echo "Email"; ?>
                 </th>
-                <?php if(in_array("19", $this->groups) || in_array("11", $this->groups) || in_array("17", $this->groups) || in_array("18", $this->groups) || in_array("10", $this->groups) || in_array("8", $this->groups)){ ?>
+                <?php //if(in_array("19", $this->groups) || in_array("11", $this->groups) || in_array("17", $this->groups) || in_array("18", $this->groups) || in_array("10", $this->groups) || in_array("8", $this->groups)){ ?>
                 <th class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'Estatus', 'agtVentasId2', $direction, $ordering); ?>
+                    <!-- <?php echo JHtml::_('grid.sort', 'Estatus', 'agtVentasId2', $direction, $ordering); ?> -->
+                    <?php echo "Estatus"; ?>
                 </th>
-                <?php } ?>
+                <?php //} ?>
                 <th class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'Gerente', 'gteVentasId', $direction, $ordering); ?>
+                    <!-- <?php echo JHtml::_('grid.sort', 'Gerente', 'gteVentasId', $direction, $ordering); ?> -->
+                    <?php echo "Gerente"; ?>
                 </th>
                 <th class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'Agente', 'agtVentasId', $direction, $ordering); ?>
+                    <!-- <?php echo JHtml::_('grid.sort', 'Agente', 'agtVentasId', $direction, $ordering); ?> -->
+                    <?php echo "Agente"; ?>
                 </th>
                 <th class="nowrap center">
                     <?php echo "Generales"; ?>
@@ -123,31 +127,18 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
                 <th class="nowrap center">
                     <?php echo "Entregas"; ?>
                 </th>
-
-                <!-- <th class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'Celular', 'celular', $direction, $ordering); ?>
-                </th> -->
-                <!-- <?php if(in_array("19", $this->groups) || in_array("11", $this->groups) || in_array("17", $this->groups) || in_array("18", $this->groups) || in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups)){ ?>
-                <th class="nowrap center">
-                    <?php echo "Acciones"; ?>
-                </th>
-                <?php } ?> -->
             </tr>
         </thead>
         <tbody>
             <?php //echo "------: ".count($this->items); ?>
             <?php foreach ($this->items as $i => $item): ?>
                 <?php
-                    $link = JRoute::_('index.php?option=com_sasfe&view=expdigital&layout=edit&id=' . $item->idDatoProspecto);
-                    $linksl = JRoute::_('index.php?option=com_sasfe&view=expdigital&layout=sololectura&id=' . $item->idDatoProspecto. '&opc=1');
-                    $links2 = JRoute::_('index.php?option=com_sasfe&view=historialprospecto&id=' . $item->idDatoProspecto);
-                    // Obtener el historial de expdigital por su id
-                    $colHistPros = SasfehpHelper::obtHistorialProspecto($item->idDatoProspecto);
+                    // $link = JRoute::_('index.php?option=com_sasfe&view=expdigital&layout=edit&id=' . $item->idDatoProspecto);
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
-                    <td>
+                    <!-- <td>
                         <?php echo $item->idDatoProspecto; ?>
-                    </td>
+                    </td> -->
                     <!-- <td>
                         <?php echo JHtml::_('grid.id', $i, $item->idDatoProspecto); ?>
                     </td>
@@ -161,10 +152,12 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
                         <?php echo $item->email; ?>
                     </td>
                     <!-- gerentes de prospeccion y gerentes ventas -->
-                    <?php if(in_array("19", $this->groups) || in_array("11", $this->groups) || in_array("17", $this->groups) || in_array("18", $this->groups) || in_array("10", $this->groups) || in_array("8", $this->groups)){ ?>
+                    <!-- <?php if(in_array("19", $this->groups) || in_array("11", $this->groups) || in_array("17", $this->groups) || in_array("18", $this->groups) || in_array("10", $this->groups) || in_array("8", $this->groups)){ ?> -->
                     <td class="center">
                         <?php
-                            if($item->departamentoId!="" && $item->fechaDptoAsignado==""){
+                            // echo $item->estatus;
+                            echo $item->estatusNombre;
+                            /*if($item->departamentoId!="" && $item->fechaDptoAsignado==""){
                                 $asigText = "Apartado provisional";
                             }
                             elseif($item->departamentoId!="" && $item->fechaDptoAsignado!=""){
@@ -173,19 +166,19 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
                             else{
                                 $asigText = ($item->agtVentasId!="") ?"Agt. Asignado" :"Por Asignar Agt.";
                             }
-                            echo $asigText;
+                            echo $asigText;*/
                         ?>
                     </td>
-                    <?php } ?>
+                    <!-- <?php } ?> -->
                     <td class="center">
                         <?php
                             if($item->gteVentasId!=""){
                                 $datosGteUsrJoomla = SasfehpHelper::obtInfoUsuariosJoomla($item->gteVentasId);
-                                echo $datosGteUsrJoomla->name;
+                                echo isset($datosGteUsrJoomla->name) ?$datosGteUsrJoomla->name :"";
                             }
                             if($item->gteProspeccionId!=""){
                                 $datosGteUsrJoomla = SasfehpHelper::obtInfoUsuariosJoomla($item->gteProspeccionId);
-                                echo $datosGteUsrJoomla->name;
+                                echo isset($datosGteUsrJoomla->name) ?$datosGteUsrJoomla->name :"";
                             }
                         ?>
                     </td>
@@ -193,74 +186,77 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
                         <?php
                             if($item->agtVentasId!=""){
                                 $datosUsrJoomla = SasfehpHelper::obtInfoUsuariosJoomla($item->agtVentasId);
-                                echo $datosUsrJoomla->name;
+                                // print_r($datosUsrJoomla);
+                                echo isset($datosUsrJoomla->name) ?$datosUsrJoomla->name :"";
                             }
                         ?>
                     </td>
                     <td class="center">
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
+                        <a href="javascript:void(0);"
+                            idProspecto="<?php echo $item->idDatoProspecto;?>"
+                            idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                            tipoEnlace="1"
+                            class="selLinkAbrir"
+                            id="lgeneral_<?php echo $i;?>">
+                            <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
+                        <a href="#" data-toggle="modal" data-target="#popup_links"
+                            idProspecto="<?php echo $item->idDatoProspecto;?>"
+                            idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                            tipoEnlace="1"
+                            class="selLink">
+                            <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
                     </td>
                     <td class="center">
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
+                        <?php if($item->consulta==1){ ?>
+                            <a href="javascript:void(0);"
+                                idProspecto="<?php echo $item->idDatoProspecto;?>"
+                                idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                                tipoEnlace="2"
+                                class="selLinkAbrir"
+                                id="lcontrato_<?php echo $i;?>">
+                                <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
+                            <a href="#" data-toggle="modal" data-target="#popup_links"
+                                idProspecto="<?php echo $item->idDatoProspecto;?>"
+                                idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                                tipoEnlace="2"
+                                class="selLink">
+                                <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
+                        <?php } ?>
                     </td>
                     <td class="center">
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
+                        <?php if($item->consulta==1){ ?>
+                            <a href="javascript:void(0);"
+                                idProspecto="<?php echo $item->idDatoProspecto;?>"
+                                idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                                tipoEnlace="3"
+                                class="selLinkAbrir"
+                                id="lescritura_<?php echo $i;?>">
+                                <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
+                            <a href="#" data-toggle="modal" data-target="#popup_links"
+                                idProspecto="<?php echo $item->idDatoProspecto;?>"
+                                idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                                tipoEnlace="3"
+                                class="selLink">
+                                <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
+                        <?php } ?>
                     </td>
                     <td class="center">
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
-                        <a href="javascript:void(0);"><img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
-                    </td>
-                    <!-- <td class="center">
-                        <?php echo $item->celular; ?>
-                    </td> -->
-
-                   <!--  <?php if(in_array("19", $this->groups) || in_array("11", $this->groups) || in_array("17", $this->groups) || in_array("18", $this->groups) || in_array("20", $this->groups)){ ?>
-                    <td class="center">
-                        <?php if(in_array("19", $this->groups) || in_array("11", $this->groups) || in_array("20", $this->groups)){ ?>
-                            <a href="<?php echo $linksl; ?>">Ver detalle</a>
-                            <?php if(in_array("11", $this->groups) && ($item->departamentoId=="" && $item->fechaDptoAsignado=="") ){ ?>
-                                  | <a href="#" data-toggle="modal" data-target="#popup_asignar" idPros="<?php echo $item->idDatoProspecto;?>" class="selAsigAgteVentasLink">Re/Asignar</a>
-                            <?php } ?>
-                            <?php if(in_array("19", $this->groups)){ ?>
-                                  <a href="#" data-toggle="modal" data-target="#popup_asignargteventas" idPros="<?php echo $item->idDatoProspecto;?>" class="selAsigGteVentasLink">Re/Asignar</a>
-                            <?php } ?>
-                        <?php }else{ ?>
-                            <?php if($item->fechaDptoAsignado!=""){ ?>
-                                <a href="<?php echo $link; ?>">Editar</a>
-                            <?php }else{ ?>
-                                <?php if(in_array("17", $this->groups)){ ?>
-                                <a href="<?php echo $linksl; ?>">Ver detalle</a>
-                                <?php }else{ ?>
-                                <a href="<?php echo $link; ?>">Editar</a>
-                                | <a href="#" data-toggle="modal" data-target="#popup_agregarevento" class="selProspecto" idPros="<?php echo $item->idDatoProspecto;?>">Evento</a>
-                                <?php } ?>
-                            <?php } ?>
-                        <?php } ?>
-                        <?php if(count($colHistPros)>0){ ?>
-                            |
-                                <a href="<?php echo $links2; ?>">Historial</a>
+                        <?php if($item->consulta==1){ ?>
+                            <a href="javascript:void(0);"
+                                idProspecto="<?php echo $item->idDatoProspecto;?>"
+                                idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                                tipoEnlace="4"
+                                class="selLinkAbrir"
+                                id="lentrega_<?php echo $i;?>">
+                                <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
+                            <a href="#" data-toggle="modal" data-target="#popup_links"
+                                idProspecto="<?php echo $item->idDatoProspecto;?>"
+                                idDatoGeneral="<?php echo $item->idDatoGeneral;?>"
+                                tipoEnlace="4"
+                                class="selLink">
+                                <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
                         <?php } ?>
                     </td>
-                    <?php } ?>
-                    <?php if(in_array("8", $this->groups) || in_array("10", $this->groups)){ ?>
-                    <td class="center">
-                        <?php if($item->departamentoId!="" && $item->fechaDptoAsignado!=""){ ?>
-                            <a href="<?php echo $linksl; ?>">Ver detalle</a> |
-                        <?php }else{ ?>
-                            <a href="index.php?option=com_sasfe&view=expdigital&layout=editsu&id=<?php echo $item->idDatoProspecto; ?>">Editar</a> |
-                        <?php } ?>
-                        <a href="#" data-toggle="modal" data-target="#popup_agregarevento" class="selProspecto" idPros="<?php echo $item->idDatoProspecto;?>">Evento</a>
-                        <?php if(count($colHistPros)>0){ ?>
-                            | <a href="<?php echo $links2; ?>">Historial</a>
-                        <?php } ?>
-                        <?php if($item->departamentoId=="" && $item->fechaDptoAsignado==""){ ?>
-                              | <a href="#" data-toggle="modal" data-target="#popup_asignar" idPros="<?php echo $item->idDatoProspecto;?>" class="selAsigAgteVentasLink">Re/Asignar</a>
-                        <?php } ?>
-                    </td>
-                    <?php } ?> -->
                 </tr>
             <?php endforeach; ?>
 
@@ -301,11 +297,44 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
     </div>
 
     <input type="hidden" id="loading_img" value="<?php echo $this->imgLoading; ?>" />
+    <input type="hidden" id="path" value="index.php?option=com_sasfe&task=expdigitales." />
 </form>
 
-<!-- <button type="button" data-toggle="modal" data-target="#popup_asignar" class="btn btn-small button-new selAsignar">
-    </span>Re/Asignar
-</button> -->
+<!-- Modal enlaces link -->
+<div class="modal fade" id="popup_links" role="dialog" style="width:700px;position:relative !important;display:none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Agregar o editar enlace</h4>
+          </div>
+          <div class="modal-body cont_form_popup">
+            <form id="form_agregarenlace" class="form-horizontal">
+                <div class="control-group ctrgr_popup">
+                    <div class="control-label">
+                        <label for="enlace">Enlace:</label>
+                    </div>
+                    <div class="controls">
+                        <textarea name="enlaceDigital" id="enlaceDigital" class="form-control url required" style="min-width:90%;min-height:70px;"></textarea>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_aceptar_enlace">Aceptar</button>
+                </div>
+
+
+                <!--<input type="hidden" name="hIdPC" id="hIdPC" value="" />-->
+                <input type="hidden" name="hIdProspecto" id="hIdProspecto" value="0" />
+                <input type="hidden" name="hIdDatoGeneral" id="hIdDatoGeneral" value="0" />
+                <input type="hidden" name="hTipoEnlace" id="hTipoEnlace" value="0" />
+                <input type="hidden" name="idEnlace" id="idEnlace" value="0" />
+
+                <input type="hidden" name="hConsulta" id="hConsulta" value="-1" />
+            </form>
+          </div>
+      </div>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="popup_agregarevento" role="dialog" style="width:500px;height:600px;position:relative !important;display:none;">
@@ -385,53 +414,6 @@ $timeZone = SasfehpHelper::obtDateTimeZone();
 
                 <input type="hidden" name="ev_idPros" id="ev_idPros" value="0" />
                 <input type="hidden" name="edit_evpros" value="0" />
-            </form>
-          </div>
-      </div>
-    </div>
-</div>
-
-<!-- Modal gerente de ventas (asignar a otros agentes de venta) -->
-<div class="modal fade" id="popup_asignar" role="dialog" style="width:400px;position:relative !important;display:none;">
-    <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <!-- <h4 class="modal-title">Asignar expdigital(s)</h4> -->
-            <h4 class="modal-title">Asignar agente(s) de venta(s) a expdigital(s)</h4>
-          </div>
-          <!-- <div style="padding:10px 0 0 40px;">Asignar a expdigital(s) seleccionado(s)</div> -->
-          <div class="modal-body cont_form_popup">
-            <form id="form_asignarprospecto" class="form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=expdigitales&task=expdigital.asignarprospecto'); ?>" method="post">
-                <div class="control-group ctrgr_popup">
-                    <div class="control-label">
-                        <label for="asig_agtventas">Agente Venta:</label>
-                    </div>
-                    <div class="controls">
-                        <select name="asig_agtventas" id="asig_agtventas" class="required">
-                            <option value="">--Seleccionar--</option>
-                            <?php
-                            foreach ($this->ColAsesores as $itemAse) {
-                                echo '<option value="' . $itemAse->idDato . '">' . $itemAse->nombre . '</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group ctrgr_popup">
-                    <div class="control-label">
-                        <label for="asig_comentario">Comentario:</label>
-                    </div>
-                    <div class="controls">
-                        <textarea name="asig_comentario" id="asig_comentario" class="form-control required" style="min-width:90%;"></textarea>
-                    </div>
-                </div>
-
-                <div>
-                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_asignar">Aceptar</button>
-                </div>
-
-                <input type="hidden" name="arrIdPros" id="arrIdPros" value="" />
             </form>
           </div>
       </div>

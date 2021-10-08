@@ -79,6 +79,60 @@ class SasfeControllerExpdigitales extends JControllerForm {
         $this->setRedirect( 'index.php?option=com_sasfe&view=expdigitales&layout=noprocesados');
     }
 
+    // Imp. Buscar enlace
+    public function buscarenlacedigital(){
+        jimport('joomla.filesystem.file');
+        require_once(JPATH_COMPONENT.'/helpers/sasfehp.php' );
+        $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel'); //leer el modelo correspondiente
+
+        $idProspecto = (isset($_POST['idProspecto']) && $_POST['idProspecto']>0) ?$_POST['idProspecto'] :0;
+        $idDatoGeneral = (isset($_POST['idDatoGeneral']) && $_POST['idDatoGeneral']>0) ?$_POST['idDatoGeneral'] :0;
+        $arr = array("result"=>false);
+        // print_r($_POST);
+        // exit();
+
+        $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($idProspecto, $idDatoGeneral);
+        if($datosEnlace){
+            $arr = array("result"=>true, "datosEnlace"=>$datosEnlace);
+        }
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        echo json_encode($arr);
+        exit();
+    }
+
+    public function agregarenlace(){
+        jimport('joomla.filesystem.file');
+        require_once(JPATH_COMPONENT.'/helpers/sasfehp.php' );
+        $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel'); //leer el modelo correspondiente
+        // $dTZone = SoulapphpHelper::obtDateTimeZone();
+        $idEnlace = (isset($_POST['idEnlace']) && $_POST['idEnlace']>0) ?$_POST['idEnlace'] :0;
+        $idProspecto = (isset($_POST['idProspecto']) && $_POST['idProspecto']>0) ?$_POST['idProspecto'] :0;
+        $idDatoGeneral = (isset($_POST['idDatoGeneral']) && $_POST['idDatoGeneral']>0) ?$_POST['idDatoGeneral'] :0;
+        $tipoEnlace = (isset($_POST['tipoEnlace']) && $_POST['tipoEnlace']>0) ?$_POST['tipoEnlace'] :0;
+        $link = (isset($_POST['link']) && $_POST['link']!="") ?$_POST['link'] :"";
+        $arr = array("result"=>false);
+        // print_r($_POST);
+        // exit();
+
+        if($idEnlace>0){ //Actualiza
+            $res = $modelGM->actEnlaceDigitatDB($idEnlace, $idProspecto, $idDatoGeneral, $tipoEnlace, $link);
+        }else{ //Crear
+            $res = $modelGM->insEnlaceDigitatDB($idProspecto, $idDatoGeneral, $tipoEnlace, $link);
+        }
+
+        if($res){
+            $arr = array("result"=>true);
+        }
+        // exit();
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        echo json_encode($arr);
+        exit();
+    }
+
 }
 
 ?>

@@ -3677,5 +3677,164 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
     return $rows;
   }
 
+  // >>>>>
+  // >>>>>Inicio Expedientes digitales
+  // >>>>>
+  public function obtEnlaceDigitalPorIdPCDB($idProspecto, $idDatoGeneral){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+    $query = array();
+    $strQuery = "";
+
+    if($idProspecto>0){
+      $query[] = " datoProspectoId=$idProspecto ";
+    }
+    if($idDatoGeneral>0){
+      $query[] = " datoGeneralId=$idDatoGeneral ";
+    }
+
+    if(count($query) > 0){
+      $wordWhere = " WHERE ";
+      $setWhere = implode(" OR ", $query);
+      $strQuery = $wordWhere.$setWhere;
+      // echo $strQuery;
+    }else{
+      return array();
+    }
+
+    $query = "
+         SELECT * FROM $tbl_sasfe_enlaces_digitales $strQuery
+       ";
+    // echo $query;
+    $db->setQuery($query);
+    $db->query();
+    $rows = $db->loadObject();
+
+    return $rows;
+  }
+
+  public function insEnlaceDigitatDB($idProspecto, $idDatoGeneral, $tipoEnlace, $link){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+
+    $campo = "";
+    $tmpLink = "";
+    switch ($tipoEnlace) {
+      case 1:
+        $campo = ", linkGeneral ";
+        break;
+      case 2:
+        $campo = ", linkContrato ";
+        break;
+      case 3:
+        $campo = ", linkEscrituras ";
+        break;
+      case 4:
+        $campo = ", linkEntregas ";
+        break;
+    }
+
+    if($campo!=""){
+      $tmpLink = ", '$link' ";
+    }
+    // echo "campo: ".$campo ."<br/>";
+    // echo "tmpLink: ".$tmpLink ."<br/>";
+
+    $query = "INSERT INTO $tbl_sasfe_enlaces_digitales (datoProspectoId, datoGeneralId  $campo)
+              VALUES ($idProspecto, $idDatoGeneral  $tmpLink)";
+    // echo $query;
+    // exit();
+    $db->setQuery($query);
+    $db->query();
+    $id = $db->insertid();
+
+    return $id;
+  }
+
+  public function actEnlaceDigitatDB($idEnlace, $idProspecto, $idDatoGeneral, $tipoEnlace, $link){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+
+    $tmpLink = "";
+    switch ($tipoEnlace) {
+      case 1: $tmpLink = ", linkGeneral='$link' "; break;
+      case 2: $tmpLink = ", linkContrato='$link' "; break;
+      case 3: $tmpLink = ", linkEscrituras='$link' "; break;
+      case 4: $tmpLink = ", linkEntregas='$link' "; break;
+    }
+    // echo "tmpLink: ".$tmpLink ."<br/>";
+
+    $query = "UPDATE $tbl_sasfe_enlaces_digitales SET datoProspectoId=$idProspecto, datoGeneralId=$idDatoGeneral  $tmpLink
+              WHERE idEnlace=$idEnlace
+              ";
+    // echo $query;
+    // exit();
+    $db->setQuery($query);
+    $db->query();
+    $row = $db->getAffectedRows();
+    $result = ($row>0) ? 1 : 0;
+
+    return $result;
+  }
+
+  public function obtPorIdEnlaceDB($id){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+
+    $query = "
+         SELECT * FROM $tbl_sasfe_enlaces_digitales WHERE idEnlace=$id
+       ";
+    $db->setQuery($query);
+    $db->query();
+    $rows = $db->loadObject();
+
+    return $rows;
+  }
+
+
+  /*// Imp. 07/01/21, Carlos
+  public function buscarEnlaceDB($consulta, $idPC){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+    // $tbl_sasfe_datos_prospectos = $db->getPrefix().'sasfe_datos_prospectos';
+    // $tbl_sasfe_datos_generales = $db->getPrefix().'sasfe_datos_generales';
+
+    if($consulta==0){
+      $where = " WHERE datoProspectoId=$idPC ";
+    }else{
+      $where = " WHERE datoGeneralId=$idPC ";
+    }
+    $query = "
+         SELECT * FROM $tbl_sasfe_enlaces_digitales $where
+       ";
+    $db->setQuery($query);
+    $db->query();
+    $rows = $db->loadObject();
+
+    return $rows;
+  }
+
+  public function crearEnlaceVacioDB($consulta, $idPC){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+
+    if($consulta==0){
+      $query = "INSERT INTO $tbl_sasfe_enlaces_digitales (datoProspectoId)
+                    VALUES ($idPC)";
+    }else{
+      $query = "INSERT INTO $tbl_sasfe_enlaces_digitales (datoGeneralId)
+                    VALUES ($idPC)";
+    }
+    //echo $query;
+    //exit();
+    $db->setQuery($query);
+    $db->query();
+    $id = $db->insertid();
+
+    return $id;
+  }*/
+
+  // >>>>>Fin Expedientes digitales
+
 }
 ?>
