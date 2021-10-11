@@ -3777,6 +3777,49 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
     return $result;
   }
 
+  // Actualiza desde las vistas internas de edicion de prospectos o CRM
+  public function actEnlaceDigitalInternoDB($idEnlace, $idProspecto, $idDatoGeneral, $tipoEnlace, $link){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+    $query = array();
+    $strQuery = "";
+
+    $tmpLink = "";
+    switch ($tipoEnlace) {
+      case 1: $tmpLink = ", linkGeneral='$link' "; break;
+      case 2: $tmpLink = ", linkContrato='$link' "; break;
+      case 3: $tmpLink = ", linkEscrituras='$link' "; break;
+      case 4: $tmpLink = ", linkEntregas='$link' "; break;
+    }
+    // echo "tmpLink: ".$tmpLink ."<br/>";
+
+    if($idProspecto>0){
+      $query[] = " datoProspectoId=$idProspecto ";
+    }
+    if($idDatoGeneral>0){
+      $query[] = " datoGeneralId=$idDatoGeneral ";
+    }
+
+    if(count($query) > 0){
+      $strQuery = implode(" , ", $query);
+      // echo $strQuery;
+    }else{
+      return array();
+    }
+
+    $query = "UPDATE $tbl_sasfe_enlaces_digitales SET $strQuery $tmpLink
+              WHERE idEnlace=$idEnlace
+              ";
+    // echo $query;
+    // exit();
+    $db->setQuery($query);
+    $db->query();
+    $row = $db->getAffectedRows();
+    $result = ($row>0) ? 1 : 0;
+
+    return $result;
+  }
+
   public function obtPorIdEnlaceDB($id){
     $db = JFactory::getDbo();
     $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';

@@ -18,7 +18,7 @@ WHERE a.fechaDTU!="" AND a.fechaDTU!="0000-00-00"
 #a.idEstatus!="" AND a.idEstatus IN (90, )
 
 
-CREATE TABLE IF NOT EXISTS `#__sasfe_enlaces_digitales` (
+CREATE TABLE IF NOT EXISTS `adr9x_sasfe_enlaces_digitales` (
   `idEnlace` int(11) NOT NULL AUTO_INCREMENT,
   `datoProspectoId` int(11) DEFAULT NULL COMMENT 'Identificador del prospecto',
   `datoGeneralId` int(11) DEFAULT NULL COMMENT 'Identificador de datos general CRM',
@@ -37,6 +37,8 @@ ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (gteVentasId);
 ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (prospectadorId);
 ALTER TABLE `adr9x_sasfe_datos_prospectos` ADD KEY (agtVentasId);
 ALTER TABLE `adr9x_sasfe_datos_clientes` ADD KEY (datoGeneralId);
+ALTER TABLE `adr9x_sasfe_datos_generales` ADD KEY (departamentoId);
+
 
 #ALTER TABLE adr9x_sasfe_datos_prospectos DROP KEY idDatoProspecto;
 #ALTER TABLE adr9x_sasfe_datos_prospectos DROP INDEX (idDatoProspecto);

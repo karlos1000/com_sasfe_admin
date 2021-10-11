@@ -112,18 +112,40 @@ class SasfeControllerExpdigitales extends JControllerForm {
         $idDatoGeneral = (isset($_POST['idDatoGeneral']) && $_POST['idDatoGeneral']>0) ?$_POST['idDatoGeneral'] :0;
         $tipoEnlace = (isset($_POST['tipoEnlace']) && $_POST['tipoEnlace']>0) ?$_POST['tipoEnlace'] :0;
         $link = (isset($_POST['link']) && $_POST['link']!="") ?$_POST['link'] :"";
+        $vistaInterna = (isset($_POST['vistaInterna']) && $_POST['vistaInterna']!="") ?$_POST['vistaInterna'] :0;
         $arr = array("result"=>false);
+        $datosEnlace = array();
         // print_r($_POST);
         // exit();
 
         if($idEnlace>0){ //Actualiza
-            $res = $modelGM->actEnlaceDigitatDB($idEnlace, $idProspecto, $idDatoGeneral, $tipoEnlace, $link);
+            if($vistaInterna>0){ // Si se invoca desde la edicion de prospectos o CRM
+                $res = $modelGM->actEnlaceDigitalInternoDB($idEnlace, $idProspecto, $idDatoGeneral, $tipoEnlace, $link);
+
+                if($vistaInterna==1 && $res>0){ // Si se invoca desde la edicion de prospectos
+                    $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($idProspecto, 0);
+                }
+                if($vistaInterna==2 && $res>0){ // Si se invoca desde la edicion de CRM
+                    $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($idProspecto, $idDatoGeneral);
+                }
+            }else{
+                $res = $modelGM->actEnlaceDigitatDB($idEnlace, $idProspecto, $idDatoGeneral, $tipoEnlace, $link);
+            }
         }else{ //Crear
             $res = $modelGM->insEnlaceDigitatDB($idProspecto, $idDatoGeneral, $tipoEnlace, $link);
+
+            if($vistaInterna>0){ // Si se invoca desde la edicion de prospectos o CRM
+                if($vistaInterna==1 && $res>0){ // Si se invoca desde la edicion de prospectos o CRM
+                    $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($idProspecto, 0);
+                }
+                if($vistaInterna==2 && $res>0){ // Si se invoca desde la edicion de CRM
+                    $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($idProspecto, $idDatoGeneral);
+                }
+            }
         }
 
         if($res){
-            $arr = array("result"=>true);
+            $arr = array("result"=>true, "datosEnlace"=>$datosEnlace);
         }
         // exit();
 

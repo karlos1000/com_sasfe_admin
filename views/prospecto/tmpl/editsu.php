@@ -7,14 +7,14 @@ jimport('joomla.filesystem.folder');
 JHtml::_('behavior.tooltip');
 JHTML::_('behavior.modal');
 JHTML::_('behavior.formvalidation');
-include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolAjax' . DIRECTORY_SEPARATOR . 'koolajax.php';                                                      
-include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolGrid' . DIRECTORY_SEPARATOR . 'koolgrid.php';            
+include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolAjax' . DIRECTORY_SEPARATOR . 'koolajax.php';
+include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolGrid' . DIRECTORY_SEPARATOR . 'koolgrid.php';
 include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolTabs' . DIRECTORY_SEPARATOR . 'kooltabs.php';
-include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolCalendar' . DIRECTORY_SEPARATOR . 'koolcalendar.php';        
+include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolCalendar' . DIRECTORY_SEPARATOR . 'koolcalendar.php';
 include_once JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_sasfe' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'KoolControls' . DIRECTORY_SEPARATOR . 'KoolGrid' . DIRECTORY_SEPARATOR . 'ext'. DIRECTORY_SEPARATOR .'datasources'. DIRECTORY_SEPARATOR .'MySQLiDataSource.php';
-$base = JPATH_SITE.'/administrator/components/com_sasfe/common/KoolControls/KoolGrid/localization/es.xml';     
-$calLangueaje = JPATH_SITE.'/administrator/components/com_sasfe/common/KoolControls/KoolCalendar/localization/es.xml';  
-$timeZone = SasfehpHelper::obtDateTimeZone();   
+$base = JPATH_SITE.'/administrator/components/com_sasfe/common/KoolControls/KoolGrid/localization/es.xml';
+$calLangueaje = JPATH_SITE.'/administrator/components/com_sasfe/common/KoolControls/KoolCalendar/localization/es.xml';
+$timeZone = SasfehpHelper::obtDateTimeZone();
 
 $idDatoProspecto = (isset($this->data[0]->idDatoProspecto))?$this->data[0]->idDatoProspecto:'';
 $fechaAlta = (isset($this->data[0]->fechaAlta))? SasfehpHelper::conversionFechaF2($this->data[0]->fechaAlta) :$this->arrDateTime->fechaF2;
@@ -48,9 +48,9 @@ $desarrolloId = (isset($this->data[0]->desarrolloId))?$this->data[0]->desarrollo
 $estatusDpto = "";
 
 if($fechaDptoAsignado!=""){
-    $estatusDpto = "Asignado";    
+    $estatusDpto = "Asignado";
 }else{
-    if($fechaLimiteApartado!=""){        
+    if($fechaLimiteApartado!=""){
         $datetime1 = new DateTime($fechaLimiteApartado);
         $datetime2 = new DateTime($timeZone->fecha);
         $interval = date_diff($datetime1, $datetime2);
@@ -83,49 +83,49 @@ $this->opc = 1000;
 $noSegEdit = false;
 $nombreGteJoomla = "";
 //Saber si esta creando o editando
-if($this->id==0){    
+if($this->id==0){
 }else{
-    //Esta editando    
+    //Esta editando
     //Tiene asociado un gerente de prospeccion
     if($this->data[0]->gteProspeccionId!="" && $this->data[0]->gteProspeccionId>0){
-        $userGte = JFactory::getUser($this->data[0]->gteProspeccionId);        
+        $userGte = JFactory::getUser($this->data[0]->gteProspeccionId);
         $idGteJoomla =  $userGte->get('id');  //id del gerente
         $this->opcGerente = "gteprospeccion";
-        
+
         $colProspectadores = SasfehpHelper::obtColProspectadoresXIdGte($idGteJoomla); //Obtener coleccion de usuarios Prospectador  por gerente de ventas
         $idUsuarioJoomla = $altaProspectadorId;
-        $this->opcUsuario = "prospectador";                
+        $this->opcUsuario = "prospectador";
     }
     //Tiene asociado un gerente de ventas
     if($this->data[0]->gteVentasId!="" && $this->data[0]->gteVentasId>0){
-        $userGte = JFactory::getUser($this->data[0]->gteVentasId);        
-        $idGteJoomla =  $userGte->get('id');  //id del gerente 
-        $nombreGteJoomla = $userGte->get('name'); //Nombre del gerente joomla       
+        $userGte = JFactory::getUser($this->data[0]->gteVentasId);
+        $idGteJoomla =  $userGte->get('id');  //id del gerente
+        $nombreGteJoomla = $userGte->get('name'); //Nombre del gerente joomla
         $this->opcGerente = "gteventas";
 
-        // $this->groupsgte = array(11);        
-        $colAsesores = SasfehpHelper::obtColAsesoresAgtVentaXIdGteVentas($idGteJoomla); //Obtener coleccion de usuarios Agentes venta por gerente de ventas        
-        $colProspectadores = SasfehpHelper::obtColProspectadoresXIdGte($idGteJoomla); //Obtener coleccion de usuarios Prospectador  por gerente de ventas    
-       
+        // $this->groupsgte = array(11);
+        $colAsesores = SasfehpHelper::obtColAsesoresAgtVentaXIdGteVentas($idGteJoomla); //Obtener coleccion de usuarios Agentes venta por gerente de ventas
+        $colProspectadores = SasfehpHelper::obtColProspectadoresXIdGte($idGteJoomla); //Obtener coleccion de usuarios Prospectador  por gerente de ventas
+
         //comprobar si es un agente de ventas (asesor) o un prospectador
         if($altaProspectadorId!="" && $altaProspectadorId>0){
             $idUsuarioJoomla = $altaProspectadorId;
-            $this->opcUsuario = "prospectador";    
+            $this->opcUsuario = "prospectador";
             $noSegEdit = true;
 
             $userLogJoomla = JFactory::getUser($idUsuarioJoomla);
-            $nombreUsrJoomla = $userLogJoomla->get('name'); //Nombre del usuario joomla que creo el prospecto 
+            $nombreUsrJoomla = $userLogJoomla->get('name'); //Nombre del usuario joomla que creo el prospecto
         }else{
             $idUsuarioJoomla = $agtVentasId;
-            $this->opcUsuario = "agenteventas";                        
-        }        
+            $this->opcUsuario = "agenteventas";
+        }
     }
 }
 
 
 //Si esta en edicion agregar grid de eventos y comentarios
 if( $this->id>0 && (in_array("8", $this->groups) || in_array("10", $this->groups)) ){
-    $tipoOpc = "";   
+    $tipoOpc = "";
     if(isset($_POST['filter_tipo'])){
         $tipoOpc = $_POST['filter_tipo'];
         $gridEvCom = SasfehpHelper::ObtEventosComentariosGrid($this->id, $tipoOpc);
@@ -136,11 +136,11 @@ if( $this->id>0 && (in_array("8", $this->groups) || in_array("10", $this->groups
 }
 
 
-// //Saber a que agente esta asociado 
+// //Saber a que agente esta asociado
 // if(in_array("11", $this->groupsgte)){
 // }
 // if(in_array("19", $this->groupsgte)){
-// }                
+// }
 // echo "<pre>"; print_r($this->groupsgte); echo "</pre>";
 
 /**
@@ -161,52 +161,52 @@ function obtProspectadorSu($gteId){
 }
 //Permisos para mostrar u ocultar los usuario de la parte derecha (gerentes, agentes, prospectador)
 $permisosUsrGteAgtPro = SasfehpHelper::obtPermisoABCProspectoSu();
-//Obtener los fraccionamientos 
+//Obtener los fraccionamientos
 $colFracc = SasfehpHelper::obtTodosFraccionamientos();
 //Recorrer bucle para obtener coleccion mandando la opcion cambaceo en otro lugar
 $colCaptadosRand = array();
-foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){  
+foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
     if($keyCaptado!=0){
         if($keyCaptado==5){
-            $colCaptadosRand[] = (object)array("idTipoCaptado"=>$this->arrTiposCaptados[0]->idTipoCaptado, "tipoCaptado"=>$this->arrTiposCaptados[0]->tipoCaptado, "activo"=>$this->arrTiposCaptados[0]->activo);                
-            $colCaptadosRand[] = (object)array("idTipoCaptado"=>$valCaptado->idTipoCaptado, "tipoCaptado"=>$valCaptado->tipoCaptado, "activo"=>$valCaptado->activo);        
+            $colCaptadosRand[] = (object)array("idTipoCaptado"=>$this->arrTiposCaptados[0]->idTipoCaptado, "tipoCaptado"=>$this->arrTiposCaptados[0]->tipoCaptado, "activo"=>$this->arrTiposCaptados[0]->activo);
+            $colCaptadosRand[] = (object)array("idTipoCaptado"=>$valCaptado->idTipoCaptado, "tipoCaptado"=>$valCaptado->tipoCaptado, "activo"=>$valCaptado->activo);
         }else{
-            $colCaptadosRand[] = (object)array("idTipoCaptado"=>$valCaptado->idTipoCaptado, "tipoCaptado"=>$valCaptado->tipoCaptado, "activo"=>$valCaptado->activo);        
-        }        
+            $colCaptadosRand[] = (object)array("idTipoCaptado"=>$valCaptado->idTipoCaptado, "tipoCaptado"=>$valCaptado->tipoCaptado, "activo"=>$valCaptado->activo);
+        }
     }
 }
 ?>
 <style>
-.defaultKCD{ position: absolute;margin: 0px;padding: 0px;} label{ width: 170px; } 
+.defaultKCD{ position: absolute;margin: 0px;padding: 0px;} label{ width: 170px; }
 .adminform label{ min-width: 170px; padding: 0 5px 0 0; }
 /*.mayuscula{text-transform: uppercase;}*/
 </style>
-<form class="form-validate form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&task=prospecto'); ?>" method="post" name="adminForm" id="adminForm">    
+<form class="form-validate form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&task=prospecto'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="notesUlEsphabit">
     </div>
-    
+
     <?php if($verBtnGuardar==0){ ?>
         <div class="alert alert-danger">
           No es posible crear el prospecto ya que no tienes un gerente asociado, comunicate con tu superior para que te lo asocien y puedas continuar el proceso.
         </div>
-    <?php } ?>    
+    <?php } ?>
     <div style="">
-        <fieldset class="adminform" style="display:inline-block;width:35%;float:right;">            
+        <fieldset class="adminform" style="display:inline-block;width:35%;float:right;">
             <div class="control-group">
                 <div class="control-label">
                     <label for="fechaAlta"><span class="star">&nbsp;*</span> Fecha Alta:</label>
                 </div>
                 <div class="controls">
-                    <input type="text" name="fechaAlta" id="fechaAlta" value="<?php echo $fechaAlta; ?>" class="required" style="width:100px;" readonly/>                        
+                    <input type="text" name="fechaAlta" id="fechaAlta" value="<?php echo $fechaAlta; ?>" class="required" style="width:100px;" readonly/>
                 </div>
             </div>
-            <?php if($noSegEdit==false){ ?>            
+            <?php if($noSegEdit==false){ ?>
                 <?php if($permisosUsrGteAgtPro->usrGteVentas==true){ ?>
                 <div class="control-group">
                     <div class="control-label">
                         <label for="nombreGteJoomlaVentas"><span class="star">&nbsp;*</span> Gerente Ventas:</label>
                     </div>
-                    <div class="controls">                    
+                    <div class="controls">
                         <select id="nombreGteJoomlaVentas" name="nombreGteJoomlaVentas" class="opcGteSel <?php echo ($this->id==0) ?"required" :($this->opcGerente=="gteventas") ?"required" :""; ?> ">
                             <option value="">--Seleccione--</option>
                             <?php
@@ -215,10 +215,10 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                                     $sel = 'selected';
                                 else
                                     $sel = '';
-                                echo '<option ' . $sel . ' value="' . $itemGteV->id . '">' . $itemGteV->name . '</option>';                        
+                                echo '<option ' . $sel . ' value="' . $itemGteV->id . '">' . $itemGteV->name . '</option>';
                             }
                             ?>
-                        </select>                    
+                        </select>
                     </div>
                 </div>
                 <?php } ?>
@@ -234,14 +234,14 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                             foreach ($colUsrGtesProspeccion as $itemGteP) {
                                 if ($idGteJoomla == $itemGteP->id)
                                     $sel = 'selected';
-                                else                                
+                                else
                                     $sel = '';
-                                echo '<option ' . $sel . ' value="' . $itemGteP->id . '">' . $itemGteP->name . '</option>';                        
+                                echo '<option ' . $sel . ' value="' . $itemGteP->id . '">' . $itemGteP->name . '</option>';
                             }
                             ?>
-                        </select>                    
+                        </select>
                     </div>
-                </div>   
+                </div>
                 <?php } ?>
                 <?php if($permisosUsrGteAgtPro->usrAgtVentas==true){ ?>
                 <div class="control-group">
@@ -255,9 +255,9 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                                     foreach ($colAsesores as $elemAgtV) {
                                         if ($idUsuarioJoomla == $elemAgtV->usuarioIdJoomla)
                                             $sel = 'selected';
-                                        else                                
+                                        else
                                             $sel = '';
-                                        echo '<option ' . $sel . ' value="' . $elemAgtV->usuarioIdJoomla . '">' . $elemAgtV->nombre . '</option>';                        
+                                        echo '<option ' . $sel . ' value="' . $elemAgtV->usuarioIdJoomla . '">' . $elemAgtV->nombre . '</option>';
                                     }
                                 } ?>
                         </select>
@@ -276,9 +276,9 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                                     foreach ($colProspectadores as $elemProspec) {
                                         if ($idUsuarioJoomla == $elemProspec->usuarioIdJoomla)
                                             $sel = 'selected';
-                                        else                                
+                                        else
                                             $sel = '';
-                                        echo '<option ' . $sel . ' value="' . $elemProspec->usuarioIdJoomla . '">' . $elemProspec->nombre . '</option>';                        
+                                        echo '<option ' . $sel . ' value="' . $elemProspec->usuarioIdJoomla . '">' . $elemProspec->nombre . '</option>';
                                     }
                                 } ?>
                         </select>
@@ -291,7 +291,7 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                         <label for="nombreGteJoomla"><span class="star">&nbsp;*</span> Gerente:</label>
                     </div>
                     <div class="controls">
-                        <input type="text" name="nombreGteJoomla" id="nombreGteJoomla" value="<?php echo $nombreGteJoomla; ?>" class="required" style="width:180px;" readonly/>                    
+                        <input type="text" name="nombreGteJoomla" id="nombreGteJoomla" value="<?php echo $nombreGteJoomla; ?>" class="required" style="width:180px;" readonly/>
                     </div>
                 </div>
                 <div class="control-group">
@@ -299,7 +299,7 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                         <label for="nombreUsrJoomla"><span class="star">&nbsp;*</span> Usuario:</label>
                     </div>
                     <div class="controls">
-                        <input type="text" name="nombreUsrJoomla" id="nombreUsrJoomla" value="<?php echo $nombreUsrJoomla; ?>" class="required" style="width:180px;" readonly/>                    
+                        <input type="text" name="nombreUsrJoomla" id="nombreUsrJoomla" value="<?php echo $nombreUsrJoomla; ?>" class="required" style="width:180px;" readonly/>
                     </div>
                 </div>
             <?php } ?>
@@ -328,7 +328,42 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                 <div class="controls">
                     <input type="text" name="estatusCasa" id="estatusCasa" value="<?php echo $estatusDpto; ?>" style="width:180px;" readonly/>
                 </div>
-            </div>                
+            </div>
+
+            <?php if( $this->id>0 && (in_array("8", $this->groups) || in_array("10", $this->groups)) ){
+                // Imp. 11/10/21, Carlos => Obt. Enlace general
+                $linkGeneral = "";
+                if($idDatoProspecto!=""){
+                    $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel'); //leer el modelo correspondiente
+                    $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($idDatoProspecto, 0);
+                    if($datosEnlace){
+                        $linkGeneral = ($datosEnlace->linkGeneral!="") ?$datosEnlace->linkGeneral :$linkGeneral;
+                    }
+                }
+            ?>
+            <div class="control-group">
+                <div class="control-label">
+                    <label for="expGeneral">Expediente General:</label>
+                </div>
+                <div class="controls">
+                    <input type="text" name="expGeneral" id="expGeneral" value="<?php echo $linkGeneral; ?>" style="width:180px;" readonly/>
+                    <a href="javascript:void(0);"
+                            idProspecto="<?php echo $idDatoProspecto;?>"
+                            idDatoGeneral="0"
+                            tipoEnlace="1"
+                            class="selLinkAbrir"
+                            id="lgeneral_0">
+                            <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_enlace.png'; ?>" style="width:25px;"></a>
+                        <a href="#" data-toggle="modal" data-target="#popup_links"
+                            idProspecto="<?php echo $idDatoProspecto;?>"
+                            idDatoGeneral="0"
+                            tipoEnlace="1"
+                            class="selLink">
+                            <img src="<?php echo JURI::root().'media/com_sasfe/images/btn_editar.png'; ?>" style="width:25px;"></a>
+                </div>
+            </div>
+            <?php } ?>
+
                 <div>
                     <?php if($departamentoId=="" || $departamentoId==0){ ?>
                         <?php if($agtVentasId!="" && $agtVentasId>0){ ?>
@@ -340,16 +375,16 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                     <button type="button" class="btn btn-small button-new" id="selLiberarCasa">Liberar</button>
                     <input type="hidden" name="dptId" value="<?php echo $departamentoId;?>">
                     <?php } ?>
-                </div>                    
+                </div>
             <?php } ?>
 
             <input type="hidden" name="idUsrJoomla" value="<?php echo $idUsuarioJoomla;?>">
             <input type="hidden" name="opcUsuario" value="<?php echo $this->opcUsuario;?>">
 
-            <input type="hidden" name="idGte" value="<?php echo $idGteJoomla;?>">            
+            <input type="hidden" name="idGte" value="<?php echo $idGteJoomla;?>">
             <input type="hidden" name="opcGerente" value="<?php echo $this->opcGerente;?>">
-            
-        </fieldset>    
+
+        </fieldset>
 
         <fieldset class="adminform">
             <div class="control-group">
@@ -357,9 +392,9 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                     <label for="nombre">Nombre:</label>
                 </div>
                 <div class="controls">
-                    <input type="text" name="nombre" id="nombre" value="<?php echo $nombre; ?>" class="required mayuscula" style="width:180px;"/>                        
+                    <input type="text" name="nombre" id="nombre" value="<?php echo $nombre; ?>" class="required mayuscula" style="width:180px;"/>
                 </div>
-            </div>                                    
+            </div>
             <div class="control-group">
                 <div class="control-label">
                     <label for="aPaterno">Apellido Paterno:</label>
@@ -382,8 +417,8 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                 </div>
                 <div class="controls">
                     <!--<div id="contFechaNac"></div>-->
-                    <!-- <input type="text" name="fechaNac" id="fechaNac" value="<?php echo $fechaNac; ?>" class="required" style="width:100px;" readonly/> -->                    
-                    <!--<input type="hidden" name="fechaNac" id="fechaNac" value="<?php echo $fechaNac; ?>" />-->                    
+                    <!-- <input type="text" name="fechaNac" id="fechaNac" value="<?php echo $fechaNac; ?>" class="required" style="width:100px;" readonly/> -->
+                    <!--<input type="hidden" name="fechaNac" id="fechaNac" value="<?php echo $fechaNac; ?>" />-->
                     <input type="date" name="fechaNac" id="fechaNac" data-date-format="dd/mm/yyyy" value="<?php echo $fechaNac; ?>">
                 </div>
             </div>
@@ -419,17 +454,17 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                 <div class="controls">
                     <input type="text" name="celular" id="celular" value="<?php echo $celular; ?>" class="" style="width:180px;"/>
                 </div>
-            </div>            
+            </div>
             <div class="control-group">
                 <div class="control-label">
                     <label for="genero">G&eacute;nero:</label>
                 </div>
                 <div class="controls">
-                    <div style="clear:both;">                             
+                    <div style="clear:both;">
                         <div><label for="genero1" style="display:inline-block;min-width:10px !important;width:10px;">M</label> <input type="radio" name="genero" id="genero1" value="1" <?php echo ($genero==1) ? 'checked': '' ?> class="required" required></div>
-                        <div><label for="genero2" style="display:inline-block;min-width:10px !important;width:10px;">F</label> <input type="radio" name="genero" id="genero2" value="2" <?php echo ($genero==2) ? 'checked': '' ?> class="required" required></div>                        
+                        <div><label for="genero2" style="display:inline-block;min-width:10px !important;width:10px;">F</label> <input type="radio" name="genero" id="genero2" value="2" <?php echo ($genero==2) ? 'checked': '' ?> class="required" required></div>
                     </div>
-                </div> 
+                </div>
             </div>
             <div class="control-group">
                 <div class="control-label">
@@ -449,10 +484,10 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <label for="tipoCreditoId">Tipo Cr&eacute;dito:</label>                
+                    <label for="tipoCreditoId">Tipo Cr&eacute;dito:</label>
                 </div>
                 <div class="controls">
-                    <select id="tipoCreditoId" name="tipoCreditoId" class="">                  
+                    <select id="tipoCreditoId" name="tipoCreditoId" class="">
                         <option value="">--Seleccione--</option>
                         <?php
                         foreach ($this->ColTiposCto as $item) {
@@ -460,13 +495,13 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                                 $sel = 'selected';
                             else
                                 $sel = '';
-                            echo '<option ' . $sel . ' value="' . $item->idDato . '">' . $item->nombre . '</option>';                        
+                            echo '<option ' . $sel . ' value="' . $item->idDato . '">' . $item->nombre . '</option>';
                         }
                         ?>
-                    </select>               
+                    </select>
                 </div>
             </div>
-            
+
             <div class="control-group">
                 <div class="control-label">
                     <label for="subsidio">Subsidio:</label>
@@ -477,7 +512,7 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
             </div>
             <div class="control-group">
                 <div class="control-label">
-                    <label for="puntosHasta">Puntos Hasta:</label>                
+                    <label for="puntosHasta">Puntos Hasta:</label>
                 </div>
                 <div class="controls">
                     <div id="contPuntosHasta"></div>
@@ -489,7 +524,7 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                     <label for="comentario">Comentario:</label>
                 </div>
                 <div class="controls">
-                    <textarea name="comentario" id="comentario" rows="5" class="mayuscula" style="width:350px;"><?php echo $comentario; ?></textarea>                    
+                    <textarea name="comentario" id="comentario" rows="5" class="mayuscula" style="width:350px;"><?php echo $comentario; ?></textarea>
                 </div>
             </div>
             <div class="control-group">
@@ -499,13 +534,13 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                 <div class="controls">
                     <input type="text" name="empresa" id="empresa" value="<?php echo $empresa; ?>" class="mayuscula" style="width:180px;" />
                 </div>
-            </div>            
+            </div>
             <div class="control-group">
                 <div class="control-label">
                     <label for="captadoen">Captado en:</label>
                 </div>
                 <div class="controls">
-                    <select id="captadoen" name="captadoen" class="">                  
+                    <select id="captadoen" name="captadoen" class="">
                         <option value="">--Seleccione--</option>
                         <?php
                         // foreach ($this->arrTiposCaptados as $item) {
@@ -514,12 +549,12 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                                 $sel = 'selected';
                             else
                                 $sel = '';
-                            
-                            echo '<option ' . $sel . ' value="' . $item->idTipoCaptado . '">' . $item->tipoCaptado . '</option>';                        
+
+                            echo '<option ' . $sel . ' value="' . $item->idTipoCaptado . '">' . $item->tipoCaptado . '</option>';
                         }
                         ?>
                     </select>
-                </div>                
+                </div>
             </div>
             <div class="control-group">
                 <div class="control-label">
@@ -540,35 +575,38 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                         foreach ($colFracc as $itemFra) {
                             if ($desarrolloId == $itemFra->idFraccionamiento)
                                     $sel = 'selected';
-                                else                                
+                                else
                                     $sel = '';
                             echo '<option ' . $sel . ' value="' . $itemFra->idFraccionamiento . '">' . $itemFra->nombre . '</option>';
                         }
-                        ?>                    
+                        ?>
                     </select>
                 </div>
             </div>
         </fieldset>
     </div>
-        
+
     <input type="hidden" name="task" value="prospecto.edit" />
     <input type="hidden" id="check_un" name="check_un" value="<?php echo $this->id; ?>" />
     <input type="hidden" id="rutaCalendario" value="<?php echo JURI::root().'media/com_sasfe/images/calendar.gif'; ?>" />
     <input type="hidden" id="path" value="<?php echo $this->pathUrl;?>" />
-    <input type="hidden" id="loading_img" value="<?php echo $this->imgLoading; ?>" /> 
+    <input type="hidden" id="loading_img" value="<?php echo $this->imgLoading; ?>" />
     <input type="hidden" name="rfc_duplicado" id="rfc_duplicado" value="0" />
     <input type="hidden" id="verBtnGuardar" value="<?php echo $verBtnGuardar; ?>" />
     <input type="hidden" name="vistaCtr" value="1" />
-    <input type="hidden" name="opcDatosProsp" value="<?php echo $this->opc;?>" />    
-    <input type="hidden" name="gtvId_rfc" id="gtvId_rfc" value="0" />    
-    <input type="hidden" id="msg_duplicado" value="El prospecto ya existe en la base de datos, se enviar&aacute; a revisi&oacute;n y de confirmarse la duplicidad se dar&aacute; de baja." />        
-    
+    <input type="hidden" name="opcDatosProsp" value="<?php echo $this->opc;?>" />
+    <input type="hidden" name="gtvId_rfc" id="gtvId_rfc" value="0" />
+    <input type="hidden" id="msg_duplicado" value="El prospecto ya existe en la base de datos, se enviar&aacute; a revisi&oacute;n y de confirmarse la duplicidad se dar&aacute; de baja." />
+
+    <!-- Imp. 11/10/21, Carlos => Expedientes digitales -->
+    <input type="hidden" id="pathExpDig" value="index.php?option=com_sasfe&task=expdigitales." />
+
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
 <?php if( $this->id>0  && (in_array("8", $this->groups) || in_array("10", $this->groups)) ){ ?>
     <hr>
-    <div style="display:block;width:70%;">        
+    <div style="display:block;width:70%;">
         <div style="display:inline-block;width:40%;">
             <form action="" method="post" name="formgrid_evcom" id="formgrid_evcom">
                 <label for="filter_tipo" style="display:inline-block;width:30px;">Ver: </label>
@@ -591,7 +629,7 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
 
 <!-- Modal -->
 <div class="modal fade" id="popup_agregrarcomentario" role="dialog" style="width:500px;position:relative !important;display:none;">
-    <div class="modal-dialog">          
+    <div class="modal-dialog">
       <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -606,22 +644,22 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                     <div class="controls">
                         <textarea name="ev_comentario" id="ev_comentario" class="form-control required" style="min-width:90%;"></textarea>
                     </div>
-                </div> 
-                
+                </div>
+
                 <div>
-                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_agregrarcomentario">Agregar comentario</button>                    
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_agregrarcomentario">Agregar comentario</button>
                 </div>
 
                 <input type="hidden" name="com_idPros" id="com_idPros" value="<?php echo $this->id; ?>" />
                 <input type="hidden" name="opcDatosProsp" value="<?php echo $this->opc;?>" />
             </form>
-          </div>              
+          </div>
       </div>
     </div>
 </div>
 <!-- Modal agregar evento -->
 <div class="modal fade" id="popup_agregarevento" role="dialog" style="width:500px;height:600px;position:relative !important;display:none;">
-    <div class="modal-dialog">          
+    <div class="modal-dialog">
       <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -630,23 +668,23 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
           <div class="modal-body cont_form_popup">
             <form id="form_agregar_evento" class="form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=prospectos&task=prospecto.addevento'); ?>" method="post">
                 <div class="control-group ctrgr_popup">
-                    <div class="control-label">                            
+                    <div class="control-label">
                         <label for="ev_tipoevento">Evento:</label>
                     </div>
                     <div class="controls">
                         <select name="ev_tipoevento" id="ev_tipoevento" class="required">
                             <option value="">--Seleccionar--</option>
                             <?php
-                            foreach ($this->arrTipoEventos as $itemTE) {                                    
-                                echo '<option value="' . $itemTE->idTipoEvento . '">' . $itemTE->tipoEvento . '</option>';                        
+                            foreach ($this->arrTipoEventos as $itemTE) {
+                                echo '<option value="' . $itemTE->idTipoEvento . '">' . $itemTE->tipoEvento . '</option>';
                             }
                             ?>
-                        </select>                            
+                        </select>
                     </div>
-                </div>                
+                </div>
 
                 <div class="control-group ctrgr_popup">
-                    <div class="control-label">                            
+                    <div class="control-label">
                         <label for="ev_fecha">Fecha y hora:</label>
                     </div>
                     <div class="controls">
@@ -655,10 +693,10 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                         <input type="hidden" name="ev_fecha" id="ev_fecha" value="<?php echo $timeZone->fechaF2; ?>" />
                         <div style="display:inline-block;"><input class="timepicker timepicker-with-dropdown text-center" name="ev_hora" id="ev_hora" value="7:00" style="width:50px;cursor:pointer;" readonly></div>
                     </div>
-                </div>                                        
-               
+                </div>
+
                 <div class="control-group ctrgr_popup">
-                    <div class="control-label">                            
+                    <div class="control-label">
                         <label for="ev_optrecordatorio">Recordatorio:</label>
                     </div>
                     <div class="controls">
@@ -666,20 +704,20 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                     </div>
                 </div>
                 <div class="control-group ctrgr_popup" style="display:none;" id="cont_ev_tiempo">
-                    <div class="control-label">                            
+                    <div class="control-label">
                         <label for="ev_tiempo">Tiempo:</label>
                     </div>
                     <div class="controls">
                         <select name="ev_tiempo" id="ev_tiempo" class="">
                             <option value="">--Selecciona--</option>
                             <?php
-                            foreach ($this->arrTiempoRecordatorios as $itemTR) {                                    
-                                echo '<option value="' . $itemTR->idTiempoRecordatorio . '">' . $itemTR->texto . '</option>';                        
+                            foreach ($this->arrTiempoRecordatorios as $itemTR) {
+                                echo '<option value="' . $itemTR->idTiempoRecordatorio . '">' . $itemTR->texto . '</option>';
                             }
-                            ?>                                
-                        </select>                            
+                            ?>
+                        </select>
                     </div>
-                </div>                    
+                </div>
                 <div class="control-group ctrgr_popup">
                     <div class="control-label">
                         <label for="ev_comentario">Comentario:</label>
@@ -687,17 +725,17 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                     <div class="controls">
                         <textarea name="ev_comentario" id="ev_comentario" class="form-control required" style="min-width:90%;"></textarea>
                     </div>
-                </div> 
-                
+                </div>
+
                 <div>
-                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_agregarevento">Agregar evento</button>                    
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_agregarevento">Agregar evento</button>
                 </div>
 
                 <input type="hidden" name="ev_idPros" id="ev_idPros" value="<?php echo $this->id; ?>" />
                 <input type="hidden" name="edit_evpros" value="1" />
                 <input type="hidden" name="opcDatosProsp" value="<?php echo $this->opc;?>" />
             </form>
-          </div>              
+          </div>
       </div>
     </div>
 </div>
@@ -723,43 +761,43 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                                     echo '<option ' . $sel . ' value="' . $item->idFraccionamiento . '">' . $item->nombre . '</option>';
                                 }
                             ?>
-                        </select>                            
+                        </select>
                     </div>
                 </div>
                 <!-- style="display:none;" id="cont_asigcasa_casadpto" -->
                 <div class="control-group ctrgr_popup">
-                    <div class="control-label">                            
+                    <div class="control-label">
                         <label for="asigcasa_casadpto">Casa/Dpto:</label>
                     </div>
-                    <div class="controls" id="edit_cont_dptos">                        
+                    <div class="controls" id="edit_cont_dptos">
                         <select name="asigcasa_casadpto" id="asigcasa_casadpto" class="required custom-select">
-                            <option value="">--Seleccionar--</option>                         
-                        </select>                        
-                        
+                            <option value="">--Seleccionar--</option>
+                        </select>
+
                         <div id="edit_cont_dptos_loading"><div class="addInfo" style="display:inline-block;"></div></div>
-                    </div>                     
+                    </div>
                 </div>
 
-                <div>    
-                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_asignarcasa">Aceptar</button>                    
+                <div>
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_asignarcasa">Aceptar</button>
                 </div>
 
                 <input type="hidden" name="asigcasa_idPros" id="asigcasa_idPros" value="<?php echo $this->id; ?>" />
                 <input type="hidden" name="opcDatosProsp" value="<?php echo $this->opc;?>" />
             </form>
-          </div>              
+          </div>
       </div>
     </div>
 </div>
 
  <!-- Modal popup noprocede -->
 <div class="modal fade" id="popup_noprocede" role="dialog" style="width:400px;position:relative !important;display:none;">
-    <div class="modal-dialog">          
+    <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title"><!-- No proceder -->No interesados</h4>
-          </div>                          
+          </div>
           <div class="modal-body cont_form_popup">
             <form id="form_noprocede" class="form-horizontal" action="<?php echo JRoute::_('index.php?option=com_sasfe&view=prospectos&task=prospecto.noprocede'); ?>" method="post">
                 <div class="control-group ctrgr_popup">
@@ -770,15 +808,48 @@ foreach ($this->arrTiposCaptados as $keyCaptado=>$valCaptado){
                         <textarea name="noprocede_comentario" id="noprocede_comentario" class="form-control required" style="min-width:90%;"></textarea>
                     </div>
                 </div>
-                
+
                 <div>
-                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_noprocede">Aceptar</button>                    
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_noprocede">Aceptar</button>
                 </div>
 
                 <input type="hidden" name="noprocede_idPros" value="<?php echo $this->id; ?>" />
                 <input type="hidden" name="opcDatosProsp" value="<?php echo $this->opc;?>" />
             </form>
-          </div>              
+          </div>
+      </div>
+    </div>
+</div>
+
+
+<!-- Modal enlaces link -->
+<div class="modal fade" id="popup_links" role="dialog" style="width:700px;position:relative !important;display:none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Agregar o editar enlace</h4>
+          </div>
+          <div class="modal-body cont_form_popup">
+            <form id="form_agregarenlace" class="form-horizontal">
+                <div class="control-group ctrgr_popup">
+                    <div class="control-label">
+                        <label for="enlace">Enlace:</label>
+                    </div>
+                    <div class="controls">
+                        <textarea name="enlaceDigital" id="enlaceDigital" class="form-control url required" style="min-width:90%;min-height:70px;"></textarea>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-small button-new btn-success" id="btn_aceptar_enlace">Aceptar</button>
+                </div>
+
+                <input type="hidden" name="hIdProspecto" id="hIdProspecto" value="0" />
+                <input type="hidden" name="hIdDatoGeneral" id="hIdDatoGeneral" value="0" />
+                <input type="hidden" name="hTipoEnlace" id="hTipoEnlace" value="0" />
+                <input type="hidden" name="idEnlace" id="idEnlace" value="0" />
+            </form>
+          </div>
       </div>
     </div>
 </div>

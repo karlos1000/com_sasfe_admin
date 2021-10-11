@@ -149,7 +149,8 @@ defined('_JEXEC') or die('Restricted Access');
             </div>
             <?php } ?>
 
-            <?php if(in_array("8", $this->groups) || in_array("10", $this->groups)){ ?>
+            <!-- ?php if(in_array("8", $this->groups) || in_array("10", $this->groups)){ ?> -->
+            <?php if(in_array("8", $this->groups)){ ?>
             <div class="icon-wrapper">
                 <div class="icon">
                     <a href="index.php?option=com_sasfe&amp;view=expdigitales" style="text-decoration:none;" title="Expedientes Digitales">

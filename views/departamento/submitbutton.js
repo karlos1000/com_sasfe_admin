@@ -343,6 +343,127 @@ JQ(document).ready(function(){
     JQ('#fPagoEscPros').attr('readonly', true);
     JQ('#fdtu').attr('readonly', true);
     JQ('#fNacimiento').attr('readonly', true);
+
+
+    // Imp. 11/10/21, Carlos => Inicio expediente digital
+    JQ(".selLinkAbrir").click(function(){
+      let id = JQ(this).attr("id");
+      showLoading2("#"+id); //mostrar loading
+      JQ(this).attr("href", "javascript:void(0);");
+      let idProspecto = accounting.unformat(JQ(this).attr("idProspecto"));
+      let idDatoGeneral = accounting.unformat(JQ(this).attr("idDatoGeneral"));
+      let tipoEnlace = accounting.unformat(JQ(this).attr("tipoEnlace"));
+
+      // Buscar si tiene enlace
+      let params = {
+            idProspecto:idProspecto,
+            idDatoGeneral:idDatoGeneral,
+            tipoEnlace:tipoEnlace,
+          };
+          // console.log(params);
+          // return false;
+        fAjax("buscarenlacedigital", params, function(data){
+          console.log(data);
+          hideLoading("#"+id);
+          let enlace = "";
+          if(data.result==true){
+            switch(tipoEnlace) {
+            case 1: enlace = checkNulo(data.datosEnlace.linkGeneral); break;
+            case 2: enlace = checkNulo(data.datosEnlace.linkContrato); break;
+            case 3: enlace = checkNulo(data.datosEnlace.linkEscrituras); break;
+            case 4: enlace = checkNulo(data.datosEnlace.linkEntregas); break;
+          }
+
+          if(enlace!=""){
+            window.open(enlace, '_blank');
+          }else{
+            alertify.error("No existe enlace para abrir");
+          }
+          }else{
+            alertify.error("No existe enlace para abrir");
+          }
+        });
+    });
+
+    JQ(".selLink").click(function(){
+      JQ('#popup_links').css('position','fixed');
+      JQ("#enlaceDigital").val("");
+      let idProspecto = accounting.unformat(JQ(this).attr("idProspecto"));
+      let idDatoGeneral = accounting.unformat(JQ(this).attr("idDatoGeneral"));
+      let tipoEnlace = accounting.unformat(JQ(this).attr("tipoEnlace"));
+
+      JQ("#hIdProspecto").val(idProspecto);
+      JQ("#hIdDatoGeneral").val(idDatoGeneral);
+      JQ("#hTipoEnlace").val(tipoEnlace);
+      // console.log(idProspecto, idDatoGeneral, tipoEnlace);
+      // return false;
+
+      // Buscar si tiene enlace
+      let params = {
+            idProspecto:idProspecto,
+            idDatoGeneral:idDatoGeneral,
+            tipoEnlace:tipoEnlace,
+          };
+          // console.log(params);
+          // return false;
+      fAjax("buscarenlacedigital", params, function(data){
+        // console.log(data);
+        let enlace = "";
+        let idEnlace = 0;
+        if(data.result==true){
+          idEnlace = data.datosEnlace.idEnlace;
+            switch(tipoEnlace) {
+                case 1: enlace = data.datosEnlace.linkGeneral; break;
+                case 2: enlace = data.datosEnlace.linkContrato; break;
+                case 3: enlace = data.datosEnlace.linkEscrituras; break;
+                case 4: enlace = data.datosEnlace.linkEntregas; break;
+            }
+        }
+        JQ("#enlaceDigital").val(enlace);
+        JQ("#idEnlace").val(idEnlace);
+      });
+    });
+
+    JQ("#form_agregarenlace").validate({
+        submitHandler: function(form) {
+          showLoading2("#btn_aceptar_enlace"); //mostrar loading
+
+          let params = {
+            idEnlace:JQ("#idEnlace").val(),
+            idProspecto:JQ("#hIdProspecto").val(),
+            idDatoGeneral:JQ("#hIdDatoGeneral").val(),
+            tipoEnlace:JQ("#hTipoEnlace").val(),
+            link:JQ("#enlaceDigital").val(),
+            vistaInterna:2 //Solo aplica cuando se actualiza desde la edicion de (prospectos o CRM)
+          };
+          console.log(params);
+          // return false;
+
+          tipoEnlace = accounting.unformat( params.tipoEnlace );
+          fAjax("agregarenlace", params, function(data){
+            console.log(data);
+            jQuery('#popup_links').modal('hide');
+
+            hideLoading("#btn_aceptar_enlace");
+            if(data.result){
+                alertify.success("El registro fue actualizado");
+
+                if(typeof(data.datosEnlace.idEnlace) != "undefined"){
+                    switch(tipoEnlace) {
+                        case 1: JQ("#expGeneral").val(checkNulo(data.datosEnlace.linkGeneral)); break;
+                        case 2: JQ("#expContrato").val(checkNulo(data.datosEnlace.linkContrato)); break;
+                        case 3: JQ("#expEscrituras").val(checkNulo(data.datosEnlace.linkEscrituras)); break;
+                        case 4: JQ("#expEntrega").val(checkNulo(data.datosEnlace.linkEntregas)); break;
+                    }
+                }
+            }else{
+              alertify.error("No fue posible editar en registro");
+            }
+          });
+      }
+    });
+    // Fin expediente digital
+
 });
 //>>>
 //>>>Evento de fecha cierre
@@ -784,4 +905,48 @@ function jSelectCustomerlp(idDepartamento, fraccionamientoId, numero) {
 // Imp. 07/09/21, Carlos, Al cambiar fecha se selecciona la opcion DTU en SI
 function dtuOnSelect(sender,args){
     JQ("#dtu_dg").val(1);
+}
+
+
+
+//Metodo para mostrar loading al presionar sobre el boton enviar de formulario
+function showLoading2(target){
+  var loading = JQ('#loading_img').val(); //obtener imagen del loading
+  addInfo = JQ(target).parent();
+  addInfo.append('<div class="addInfo" style="display:inline-block;">'+loading+'</div>'); //Agregar loading
+  JQ(target).hide();
+}
+
+//Metodo para ocultar loading al presionar sobre el boton enviar de formulario
+function hideLoading(target){
+  JQ(".addInfo").remove();
+  JQ(target).show();
+}
+
+//comprobar si es nulo o vacio una cadena
+function checkNulo(cadena){
+    if(cadena==null || cadena==""){
+        return "";
+    }else{
+        return cadena;
+    }
+}
+
+//Imp. 07/10/21, Carlos Metodo que se implemento para pasar los parametros por ajax
+function fAjax(ctr, data, response){
+  var path = JQ('#pathExpDig').val()+ctr;
+  // console.log(path);
+  // return false;
+  // var loading = JQ('#loading_img').val();
+  JQ.ajax({
+    type: 'POST',
+    url: path,
+    data: data,
+    beforeSend: function(){
+      // JQ('#transmitter').html(loading);
+    },
+    success: function(html){
+      response(html);
+    }
+  });
 }

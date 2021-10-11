@@ -167,9 +167,36 @@ abstract class JHtmlModules
             $options[] = JHtml::_('select.option', '0', "Todos");
             $options[] = JHtml::_('select.option', '1', "Asignados");
             $options[] = JHtml::_('select.option', '2', "Por asignar");
+            $options[] = JHtml::_('select.option', '3', "Apartado provisional");
+            $options[] = JHtml::_('select.option', '4', "Apartado definitivo");
+        }
+
+        //Si el usuario pertenece al grupo agentes o asesor
+        if(in_array("18", $groups)){
+            //$options[] = JHtml::_('select.option', '1', "Todos");
+            $options[] = JHtml::_('select.option', '0', "Todos");
+            $options[] = JHtml::_('select.option', '1', "Asignados");
+            $options[] = JHtml::_('select.option', '3', "Apartado provisional");
+            $options[] = JHtml::_('select.option', '4', "Apartado definitivo");
+        }
+
+
+        return $options;
+    }
+
+    // Imp. 11/10/21, Carlos => Obtener los status de la vista expedientes digitales
+    static public function opcionEstatusExpDig(){
+        $options = array();
+        $userC = JFactory::getUser();
+        $groups = JAccess::getGroupsByUser($userC->id, false);
+
+        //Todos los filtros
+        if(in_array("8", $groups) || in_array("10", $groups) || in_array("19", $groups) || in_array("11", $groups) || in_array("17", $groups)){
+            $options[] = JHtml::_('select.option', '0', "Todos");
+            $options[] = JHtml::_('select.option', '1', "Asignados");
+            $options[] = JHtml::_('select.option', '2', "Por asignar");
             // $options[] = JHtml::_('select.option', '3', "Apartado provisional");
             // $options[] = JHtml::_('select.option', '4', "Apartado definitivo");
-
             $options[] = JHtml::_('select.option', '86', "Disponible");
             $options[] = JHtml::_('select.option', '87', "Escriturado");
             $options[] = JHtml::_('select.option', '88', "Cancelado");
@@ -196,6 +223,7 @@ abstract class JHtmlModules
 
         return $options;
     }
+
     //>>>>Para los SMS
     //tipo de envio
     static public function opcionTipoEnvio(){

@@ -48,7 +48,7 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
             <!-- <div class="filter-search btn-group pull-left">
                 <label for="filter_estatus" class="element-invisible"><?php echo JText::_('Estatus');?></label>
                 <select name="filter_estatus" id="filter_estatus" class="hasTooltip" title="<?php echo JHtml::tooltipText('Estatus'); ?>" style="width:170px;">
-                    <?php echo JHtml::_('select.options', JHtml::_('modules.opcionEstatus'), 'value', 'text', $opcionEstatus, true);?>
+                    <?php echo JHtml::_('select.options', JHtml::_('modules.opcionEstatusExpDig'), 'value', 'text', $opcionEstatus, true);?>
                 </select>
             </div>
             <?php if(in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups)){ ?>
