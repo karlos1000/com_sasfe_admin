@@ -330,20 +330,6 @@ JQ(document).ready(function(){
             JQ("#filter_puntoshasta").val(JQ(this).val());
           }
     });
-    JQ("#limpiarFiltros").click(function(){
-      JQ("#filter_search").val("");
-      JQ("#filter_montocto1").val("");
-      JQ("#filter_montocto2").val("");
-      JQ("#filter_puntoshasta").val("");
-      JQ("#filter_tipocto").val("");
-      JQ("#filter_estatus").val("0");
-      JQ("#filter_apellidos").val("");
-      JQ("#filter_rfc").val("");
-      JQ("#filter_cel").val("");
-      JQ("#filter_gerentes").val(""); //Imp. 23/08/21, Carlos
-      JQ("#filter_asesores").val(""); //Imp. 24/08/21, Carlos
-      this.form.submit();
-    });
     JQ("input#filter_montocto1").keyup(function(e){
     	JQ(this).val(format(JQ(this).val()));
     });
@@ -473,6 +459,18 @@ JQ(document).ready(function(){
 	 	  }
 	 	}
 	}
+*/
+
+	// Imp. 12/10/21, Carlos => Limpiar campos
+	JQ("#limpiarFiltros").click(function(){
+      JQ("#filter_search").val("");
+      JQ("#filter_apellidos").val("");
+      JQ("#filter_email").val("");
+      JQ("#filter_estatus").val("0");
+      JQ("#filter_gerentes").val("");
+      JQ("#filter_asesores").val("");
+      this.form.submit();
+    });
 
 	// Imp. 23/08/21, Carlos, Obt. los agentes dependiendo de la seleccion de los gerentes
 	if(typeof JQ('#filter_gerentes').val() != 'undefined'){
@@ -488,7 +486,7 @@ JQ(document).ready(function(){
 	if(idGteVentas>0){
 		selectorAsesores(idGteVentas);
 	}
-*/
+
 
 });
 

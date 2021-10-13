@@ -195,8 +195,6 @@ abstract class JHtmlModules
             $options[] = JHtml::_('select.option', '0', "Todos");
             $options[] = JHtml::_('select.option', '1', "Asignados");
             $options[] = JHtml::_('select.option', '2', "Por asignar");
-            // $options[] = JHtml::_('select.option', '3', "Apartado provisional");
-            // $options[] = JHtml::_('select.option', '4', "Apartado definitivo");
             $options[] = JHtml::_('select.option', '86', "Disponible");
             $options[] = JHtml::_('select.option', '87', "Escriturado");
             $options[] = JHtml::_('select.option', '88', "Cancelado");
@@ -204,22 +202,17 @@ abstract class JHtmlModules
             $options[] = JHtml::_('select.option', '91', "Incompleto");
             $options[] = JHtml::_('select.option', '92', "Diferencia");
             $options[] = JHtml::_('select.option', '93', "Inscrito");
-            $options[] = JHtml::_('select.option', '94', "Aviso de retención");
+            $options[] = JHtml::_('select.option', '94', "Aviso de retenci&oacute;n");
             $options[] = JHtml::_('select.option', '95', "Con problema");
             $options[] = JHtml::_('select.option', '128', "Bloqueada");
-            $options[] = JHtml::_('select.option', '387', "Corrección de datos");
+            $options[] = JHtml::_('select.option', '387', "Correcci&oacute;n de datos");
             $options[] = JHtml::_('select.option', '388', "Folio");
             $options[] = JHtml::_('select.option', '389', "Ahorro voluntario");
-            $options[] = JHtml::_('select.option', '390', "Instalación de acabados");
+            $options[] = JHtml::_('select.option', '390', "Instalaci&oacute;n de acabados");
             $options[] = JHtml::_('select.option', '400', "Apartado definitivo");
             $options[] = JHtml::_('select.option', '401', "Apartado provisional");
             $options[] = JHtml::_('select.option', '402', "Regresar Asesor");
         }
-
-        // //Si el usuario pertenece al grupo agentes o asesor
-        // if(in_array("18", $groups)){
-        //     //$options[] = JHtml::_('select.option', '1', "Todos");
-        // }
 
         return $options;
     }

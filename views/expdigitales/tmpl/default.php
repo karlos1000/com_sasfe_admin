@@ -29,7 +29,7 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
 <form action="<?php echo JRoute::_('index.php?option=com_sasfe&view=expdigitales'); ?>" method="post" name="adminForm" id="adminForm">
 
     <div id="filter-bar" class="btn-toolbar">
-        <!-- <div class="fila_filtro">
+        <div class="fila_filtro">
             <div class="filter-search btn-group pull-left">
                 <label for="filter_search" class="element-invisible"><?php echo JText::_('Nombre(s)');?></label>
                 <input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('Nombre(s)'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('Nombre(s)'); ?>" style="width:170px;" />
@@ -42,10 +42,10 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
                 <label for="filter_email" class="element-invisible"><?php echo JText::_('Email');?></label>
                 <input type="text" name="filter_email" id="filter_email" placeholder="<?php echo JText::_('Email'); ?>" value="<?php echo $this->escape($this->state->get('filter.email')); ?>" class="hasTooltip" title="<?php echo JHtml::tooltipText('Email'); ?>" style="width:170px;" />
             </div>
-        </div> -->
+        </div>
 
         <div class="fila_filtro">
-            <!-- <div class="filter-search btn-group pull-left">
+            <div class="filter-search btn-group pull-left">
                 <label for="filter_estatus" class="element-invisible"><?php echo JText::_('Estatus');?></label>
                 <select name="filter_estatus" id="filter_estatus" class="hasTooltip" title="<?php echo JHtml::tooltipText('Estatus'); ?>" style="width:170px;">
                     <?php echo JHtml::_('select.options', JHtml::_('modules.opcionEstatusExpDig'), 'value', 'text', $opcionEstatus, true);?>
@@ -72,7 +72,7 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
             <div class="btn-group pull-left">
                 <button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('Search'); ?>"><i class="icon-search"></i></button>
                 <button type="button" id="limpiarFiltros" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('Clear'); ?>" ><i class="icon-remove"></i></button>
-            </div> -->
+            </div>
             <div class="btn-group pull-right hidden-phone">
                 <label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
                 <?php echo $this->pagination->getLimitBox(); ?>

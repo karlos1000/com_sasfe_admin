@@ -43,13 +43,17 @@ class SasfeModelExpdigitales extends JModelList{
         //Busqueda por apellido
         $apellidos = $this->getUserStateFromRequest($this->context.'.filter.apellidos', 'filter_apellidos');
         $this->setState('filter.apellidos', $apellidos);
-        //Busqueda por rfc
+
+        //Busqueda por email
+        $email = $this->getUserStateFromRequest($this->context.'.filter.email', 'filter_email');
+        $this->setState('filter.email', $email);
+
+        /*//Busqueda por rfc
         $rfc = $this->getUserStateFromRequest($this->context.'.filter.rfc', 'filter_rfc');
         $this->setState('filter.rfc', $rfc);
         //Busqueda por celular
         $celular = $this->getUserStateFromRequest($this->context.'.filter.celular', 'filter_cel');
         $this->setState('filter.celular', $celular);
-
         //Rango de montos de credito
         $montocto1 = $this->getUserStateFromRequest($this->context.'.filter.montocto1', 'filter_montocto1');
         $this->setState('filter.montocto1', $montocto1);
@@ -61,6 +65,7 @@ class SasfeModelExpdigitales extends JModelList{
 
         $idTipoCto = $this->getUserStateFromRequest($this->context.'.filter.opcionTipoCreditos', 'filter_tipocto');
         $this->setState('filter.opcionTipoCreditos', $idTipoCto);
+        */
 
         $estatus = $this->getUserStateFromRequest($this->context.'.filter.opcionEstatus', 'filter_estatus');
         $this->setState('filter.opcionEstatus', $estatus);
@@ -114,11 +119,13 @@ class SasfeModelExpdigitales extends JModelList{
 
             // $idEstatus = $this->getState('filter.opcionEstatusProspecto'); //Buscar por el estatus personalizados
             $this->layout = JRequest::getVar('layout'); //obtiene el nombre del layout
-            $opcFiltro = false;
-            if( $search!="" || $apellidos!="" || $apellidos!="" || ($estatus!="" && $estatus>0) || ($gerente!="" && $gerente>0) || ($asesor!="" && $asesor>0) ){
-                $opcFiltro = true;
-            }
+            // $opcFiltro = false;
+            // if( $search!="" || $apellidos!="" || $apellidos!="" || ($estatus!="" && $estatus>0) || ($gerente!="" && $gerente>0) || ($asesor!="" && $asesor>0) ){
+            //     $opcFiltro = true;
+            // }
             // echo "opcFiltro: ".$opcFiltro.'<br/>';
+
+        /*
 
             //Solo ocurre para el gerente de ventas
             $queryIdAgtV = "";
@@ -194,7 +201,7 @@ class SasfeModelExpdigitales extends JModelList{
             $searchQuery = '';
             // Busqueda por nombre
             if($search){
-                 //Compile the different search clauses.
+                //Compile the different search clauses.
                 $search = str_replace("'","",$search);  //limpia el caracter ' de la cadena
 
                 //si es fecha valida entonces entra
@@ -247,8 +254,78 @@ class SasfeModelExpdigitales extends JModelList{
                 }
             }
             // echo "queryOpt: ".$queryOpt."<br/>";
+        */
+
+            $queryPro = array();
+            $queryCRM = array();
+
+            //Buscar por nombre
+            if($search!=""){
+                $search = str_replace("'","",$search);  //limpia el caracter ' de la cadena
+                $queryPro[] = "a.nombre LIKE '%$search%' ";
+                $queryCRM[] = "b.nombre LIKE '%$search%' ";
+            }
+
+            //Buscar por apellidos
+            if($apellidos!=""){
+                $apellidos = str_replace("'","",$apellidos);  //limpia el caracter ' de la cadena
+                $queryPro[] = "( a.aPaterno LIKE '%$apellidos%' OR a.aManterno LIKE '%$apellidos%' )"; //Buscar por apellido paterno
+                $queryCRM[] = "( b.aPaterno LIKE '%$apellidos%' OR b.aManterno LIKE '%$apellidos%' )"; //Buscar por apellido materno
+            }
+
+            //Buscar por email
+            if($email){
+                $email = str_replace("'","",$email);  //limpia el caracter ' de la cadena
+                $queryPro[] = "a.email LIKE '%$email%' ";
+                $queryCRM[] = "b.email LIKE '%$email%' ";
+            }
+
+            //Buscar por gerente
+            if($gerente!="" && $gerente>0){
+                $queryPro[] = "a.gteVentasId=".$gerente;
+                $queryCRM[] = "c.usuarioIdJoomla=".$gerente;
+            }
+
+            //Buscar por agente o asesor
+            if($asesor!="" && $asesor>0){
+                $queryPro[] = "a.agtVentasId=".$asesor;
+                $queryCRM[] = "d.usuarioIdJoomla=".$asesor;
+            }
+
+            // Buscar por estatus
+            if($estatus!="" && $estatus>0){
+                if($estatus==1 || $estatus==2){ //Asignados
+                    if($estatus==1){
+                        $queryPro[] = "(a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL)";
+                    }
+                    if($estatus==2){
+                        $queryPro[] = "a.agtVentasId IS NULL";
+                    }
+                    $queryCRM[] = "a.idEstatus=0";
+                }else{
+                    $queryPro[] = "a.departamentoId IS NOT NULL";
+                    $queryCRM[] = "a.idEstatus=".$estatus;
+                }
+            }
+
+            $searchPro = "";
+            $searchCRM = "";
+            if( count($queryPro)>0 ){
+                $searchPro = " AND ". implode(' AND ', $queryPro);
+            }
+            if( count($queryPro)>0 ){
+                $searchCRM = " AND ".implode(' AND ', $queryCRM);
+            }
+            // echo $searchPro."<br/>";
+            // echo $searchCRM."<br/>";
+
+            // echo "<pre>";
+            // print_r($queryPro);
+            // print_r($queryCRM);
+            // echo "</pre>";
 
 
+            $queryOpt = '';
             $soloProspectos = " "; // Mostrar solo los prospectos del estatus (Asignados y por asiganar)
             $soloCRM = " "; // Mostrar solo los CRM
 
@@ -261,35 +338,34 @@ class SasfeModelExpdigitales extends JModelList{
                     $soloProspectos .= ' AND a.departamentoId IS NULL AND a.fechaDptoAsignado IS NULL ';
                     $soloCRM .= ' AND a.esHistorico=0 AND a.esReasignado=0 AND a.obsoleto=0 ';
                 }
-                /*//Gerente ventas
-                    elseif(in_array("11", $this->groups)){
-                        $queryOpt .= ' AND a.gteVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                    //Gerente de prospeccion
-                    elseif(in_array("19", $this->groups)){
-                        $queryOpt .= ' AND a.gteProspeccionId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                    //Prospectador
-                    elseif(in_array("17", $this->groups)){
-                        //$queryOpt .= ' AND a.prospectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                        $queryOpt .= ' AND a.altaProspectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                    //Direccion
-                    elseif(in_array("10", $this->groups)){
-                        // $queryOpt .= ' AND a.idRepDir=1 '.$queryDuplicado;
-                        $queryOpt .= ' AND (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
-                    }
-                    // Redes
-                    elseif(in_array("20", $this->groups)){
-                        // echo "REDES con Filtro";
-                        // $queryOpt .= ' AND a.idRepDir=1 '.$queryDuplicado;
-                        $queryOpt .= ' AND (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
-                    }
-                    //Agentes de venta
-                    else{
-                        $queryOpt .= ' AND a.agtVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                */
+                // //Gerente ventas
+                //     elseif(in_array("11", $this->groups)){
+                //         $queryOpt .= ' AND a.gteVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                //     }
+                //     //Gerente de prospeccion
+                //     elseif(in_array("19", $this->groups)){
+                //         $queryOpt .= ' AND a.gteProspeccionId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                //     }
+                //     //Prospectador
+                //     elseif(in_array("17", $this->groups)){
+                //         //$queryOpt .= ' AND a.prospectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                //         $queryOpt .= ' AND a.altaProspectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                //     }
+                //     //Direccion
+                //     elseif(in_array("10", $this->groups)){
+                //         // $queryOpt .= ' AND a.idRepDir=1 '.$queryDuplicado;
+                //         $queryOpt .= ' AND (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
+                //     }
+                //     // Redes
+                //     elseif(in_array("20", $this->groups)){
+                //         // echo "REDES con Filtro";
+                //         // $queryOpt .= ' AND a.idRepDir=1 '.$queryDuplicado;
+                //         $queryOpt .= ' AND (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
+                //     }
+                //     //Agentes de venta
+                //     else{
+                //         $queryOpt .= ' AND a.agtVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                //     }
             }else{
                 //ACCIONA CUANDO NO SE HACE NINGUN FILTRO
                 //Super usuario
@@ -299,44 +375,42 @@ class SasfeModelExpdigitales extends JModelList{
                     $soloProspectos .= ' WHERE a.departamentoId IS NULL AND a.fechaDptoAsignado IS NULL ';
                     $soloCRM .= ' WHERE a.esHistorico=0 AND a.esReasignado=0 AND a.obsoleto=0 ';
                 }
-                /*  //Gerente ventas
-                    elseif(in_array("11", $this->groups)){
-                        $queryOpt .= ' WHERE a.gteVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                    //Gerente de prospeccion
-                    elseif(in_array("19", $this->groups)){
-                        // $queryOpt .= ' WHERE a.agtVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                        $queryOpt .= ' WHERE a.gteProspeccionId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                    //Prospectador
-                    elseif(in_array("17", $this->groups)){
-                        // $queryOpt .= ' WHERE a.prospectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                        $queryOpt .= ' WHERE a.altaProspectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                    //Direccion
-                    elseif(in_array("10", $this->groups)){
-                        if($this->layout=="repetidos"){
-                            // $queryOpt .= ' WHERE a.idRepDir=1 '.$queryDuplicado;
-                            $queryOpt .= ' WHERE (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
-                        }else{
-                            $queryOpt .= ' WHERE a.idRepDir=0 '.$queryDuplicado;
-                        }
-                    }
-                    // Redes
-                    elseif(in_array("20", $this->groups)){
-                        // echo "REDES Sin Filtro";
-                        // $queryOpt .= ' AND a.idRepDir=1 '.$queryDuplicado;
-                        $queryOpt .= ' AND (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
-                    }
-                    //Agentes de venta
-                    else{
-                        $queryOpt .= ' WHERE a.agtVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
-                    }
-                */
+                  // //Gerente ventas
+                  //   elseif(in_array("11", $this->groups)){
+                  //       $queryOpt .= ' WHERE a.gteVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                  //   }
+                  //   //Gerente de prospeccion
+                  //   elseif(in_array("19", $this->groups)){
+                  //       // $queryOpt .= ' WHERE a.agtVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                  //       $queryOpt .= ' WHERE a.gteProspeccionId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                  //   }
+                  //   //Prospectador
+                  //   elseif(in_array("17", $this->groups)){
+                  //       // $queryOpt .= ' WHERE a.prospectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                  //       $queryOpt .= ' WHERE a.altaProspectadorId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                  //   }
+                  //   //Direccion
+                  //   elseif(in_array("10", $this->groups)){
+                  //       if($this->layout=="repetidos"){
+                  //           // $queryOpt .= ' WHERE a.idRepDir=1 '.$queryDuplicado;
+                  //           $queryOpt .= ' WHERE (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
+                  //       }else{
+                  //           $queryOpt .= ' WHERE a.idRepDir=0 '.$queryDuplicado;
+                  //       }
+                  //   }
+                  //   // Redes
+                  //   elseif(in_array("20", $this->groups)){
+                  //       // echo "REDES Sin Filtro";
+                  //       // $queryOpt .= ' AND a.idRepDir=1 '.$queryDuplicado;
+                  //       $queryOpt .= ' AND (a.gteVentasId IS NULL OR a.gteVentasId IS NOT NULL) '.$queryDuplicado;
+                  //   }
+                  //   //Agentes de venta
+                  //   else{
+                  //       $queryOpt .= ' WHERE a.agtVentasId IN ('.$idUsuarioJoomla.') '.$queryDuplicado;
+                  //   }
             }
 
-
-            // echo $queryOpt.'<br/>';
+            // echo "queryOpt: ".$queryOpt.'<br/>';
             // echo "es: ".$tipoEstatus.'<br/>';
             /*$query = "
                     SELECT a.*, b.nombre as tipoCredito
@@ -345,13 +419,15 @@ class SasfeModelExpdigitales extends JModelList{
                     $queryOpt $tipoEstatus $idGerenteVentas $idAsesorVentas
                   ";*/
 
+            // $queryOpt $soloProspectos  $tipoEstatus $idGerenteVentas $idAsesorVentas
+
             $query = "
                     SELECT a.idDatoProspecto, '0' AS idDatoGeneral, a.nombre, a.aPaterno, a.aManterno, a.email, a.departamentoId, a.fechaDptoAsignado,
                     a.agtVentasId, a.gteVentasId, a.gteProspeccionId, '0' AS consulta, (CASE WHEN a.agtVentasId!='' THEN 'Asignado' ELSE 'Por asignar' END) AS estatusNombre,
                     (CASE WHEN a.agtVentasId!='' THEN '1' ELSE '2' END) AS estatus
                     FROM #__sasfe_datos_prospectos as a
                     LEFT JOIN #__sasfe_datos_catalogos as b ON b.idDato=a.tipoCreditoId
-                    $queryOpt $soloProspectos  $tipoEstatus $idGerenteVentas $idAsesorVentas
+                    $soloProspectos $searchPro
                   ";
             $queryCRM = "
                     SELECT (CASE WHEN a.datoProspectoId!='' THEN a.datoProspectoId ELSE '0' END) AS idDatoProspecto, a.idDatoGeneral, b.nombre, b.aPaterno, b.aManterno, b.email, a.departamentoId, a.fechaApartado AS fechaDptoAsignado,
@@ -381,7 +457,7 @@ class SasfeModelExpdigitales extends JModelList{
                     LEFT JOIN #__sasfe_datos_clientes AS b ON b.datoGeneralId=a.idDatoGeneral
                     LEFT JOIN #__sasfe_datos_catalogos AS c ON c.idDato=a.idGerenteVentas
                     LEFT JOIN #__sasfe_datos_catalogos AS d ON d.idDato=a.idAsesor
-                    $queryOpt $soloCRM
+                    $soloCRM $searchCRM
             ";
             // $query = $query;// ." UNION ". $queryCRM;
             $query = $query ." UNION ". $queryCRM;
