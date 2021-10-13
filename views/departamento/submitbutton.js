@@ -925,6 +925,7 @@ function hideLoading(target){
 
 //comprobar si es nulo o vacio una cadena
 function checkNulo(cadena){
+    cadena = JQ.trim(cadena);
     if(cadena==null || cadena==""){
         return "";
     }else{

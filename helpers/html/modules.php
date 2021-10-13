@@ -217,6 +217,27 @@ abstract class JHtmlModules
         return $options;
     }
 
+    // Imp. 13/10/21, Carlos => Obtener los fraccionamientos de la vista expedientes digitales
+    static public function opcionFraccionamientosExpDig(){
+        $options = array();
+        $db = JFactory::getDbo();
+        $options[] = JHtml::_('select.option', '', "Fraccionamientos (Todos)");
+
+        $tbl_sasfe_fraccionamientos = $db->getPrefix().'sasfe_fraccionamientos';
+        $query = "
+                SELECT * FROM $tbl_sasfe_fraccionamientos
+            ";
+        $db->setQuery($query);
+        $db->query();
+        $rows = $db->loadObjectList();
+
+        foreach($rows as $item){
+            $options[] = JHtml::_('select.option', $item->idFraccionamiento, "$item->nombre");
+        }
+
+        return $options;
+    }
+
     //>>>>Para los SMS
     //tipo de envio
     static public function opcionTipoEnvio(){
@@ -485,5 +506,6 @@ abstract class JHtmlModules
 
         return $options;
     }
+
 
 }

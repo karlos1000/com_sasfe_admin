@@ -102,6 +102,8 @@ class SasfeControllerExpdigitales extends JControllerForm {
         exit();
     }
 
+    // Imp. 13/10/21, Carlos
+    // Nota: Todos los idClientes del CRM antes del modulo prospectos no tendran el dato "datoProspectoId" en la tabla sasfe_enlaces_digitales
     public function agregarenlace(){
         jimport('joomla.filesystem.file');
         require_once(JPATH_COMPONENT.'/helpers/sasfehp.php' );

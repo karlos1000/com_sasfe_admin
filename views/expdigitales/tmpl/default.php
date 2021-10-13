@@ -16,6 +16,7 @@ $opcionEstatusProspecto = $this->state->get('filter.opcionEstatusProspecto');
 $opcionEstatus = $this->state->get('filter.opcionEstatus');
 $opcionGerentes = $this->state->get('filter.opcionGerentes');
 $opcionAsesores = $this->state->get('filter.opcionAsesores');
+$opcionFraccionamientos = $this->state->get('filter.opcionFraccionamientos');
 $timeZone = SasfehpHelper::obtDateTimeZone();
 $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
 
@@ -67,6 +68,14 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
                     </select>
                 </div>
             <?php } ?>
+            <?php if(in_array("8", $this->groups) || in_array("10", $this->groups) || in_array("20", $this->groups)){ ?>
+                <div class="filter-search btn-group pull-left">
+                    <label for="filter_fraccionamientos" class="element-invisible"><?php echo JText::_('Fraccionamientos');?></label>
+                    <select name="filter_fraccionamientos" id="filter_fraccionamientos" class="hasTooltip" title="<?php echo JHtml::tooltipText('Fraccionamientos'); ?>" style="width:190px;">
+                        <?php echo JHtml::_('select.options', JHtml::_('modules.opcionFraccionamientosExpDig'), 'value', 'text', $opcionFraccionamientos, true);?>
+                    </select>
+                </div>
+            <?php } ?>
 
 
             <div class="btn-group pull-left">
@@ -84,9 +93,12 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
     <table class="table table-striped">
         <thead>
             <tr>
-                <!-- <th width="5" class="nowrap center">
-                    <?php echo "idDatoProspecto"; ?>
-                </th> -->
+                <th width="5" class="nowrap center">
+                    <?php echo "idProspecto"; ?>
+                </th>
+                <th width="5" class="nowrap center">
+                    <?php echo "idCRM"; ?>
+                </th>
                 <!-- <th width="20" class="nowrap center">
                     <?php echo JText::_('Sel'); ?>
                 </th> -->
@@ -116,6 +128,9 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
                     <?php echo "Agente"; ?>
                 </th>
                 <th class="nowrap center">
+                    <?php echo "Fraccionamiento"; ?>
+                </th>
+                <th class="nowrap center">
                     <?php echo "Generales"; ?>
                 </th>
                 <th class="nowrap center">
@@ -136,9 +151,12 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
                     // $link = JRoute::_('index.php?option=com_sasfe&view=expdigital&layout=edit&id=' . $item->idDatoProspecto);
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
-                    <!-- <td>
-                        <?php echo $item->idDatoProspecto; ?>
-                    </td> -->
+                    <td>
+                        <?php echo ($item->idDatoProspecto>0)?$item->idDatoProspecto:"-"; ?>
+                    </td>
+                    <td>
+                        <?php echo ($item->idDatoGeneral>0)?$item->idDatoGeneral:"-"; ?>
+                    </td>
                     <!-- <td>
                         <?php echo JHtml::_('grid.id', $i, $item->idDatoProspecto); ?>
                     </td>
@@ -190,6 +208,9 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
                                 echo isset($datosUsrJoomla->name) ?$datosUsrJoomla->name :"";
                             }
                         ?>
+                    </td>
+                    <td class="center">
+                        <?php echo $item->fraccionamiento; ?>
                     </td>
                     <td class="center">
                         <a href="javascript:void(0);"
@@ -315,7 +336,7 @@ $modelGM = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
                         <label for="enlace">Enlace:</label>
                     </div>
                     <div class="controls">
-                        <textarea name="enlaceDigital" id="enlaceDigital" class="form-control url required" style="min-width:90%;min-height:70px;"></textarea>
+                        <textarea name="enlaceDigital" id="enlaceDigital" class="form-control url" style="min-width:90%;min-height:70px;"></textarea>
                     </div>
                 </div>
                 <div>

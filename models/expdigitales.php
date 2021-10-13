@@ -48,25 +48,6 @@ class SasfeModelExpdigitales extends JModelList{
         $email = $this->getUserStateFromRequest($this->context.'.filter.email', 'filter_email');
         $this->setState('filter.email', $email);
 
-        /*//Busqueda por rfc
-        $rfc = $this->getUserStateFromRequest($this->context.'.filter.rfc', 'filter_rfc');
-        $this->setState('filter.rfc', $rfc);
-        //Busqueda por celular
-        $celular = $this->getUserStateFromRequest($this->context.'.filter.celular', 'filter_cel');
-        $this->setState('filter.celular', $celular);
-        //Rango de montos de credito
-        $montocto1 = $this->getUserStateFromRequest($this->context.'.filter.montocto1', 'filter_montocto1');
-        $this->setState('filter.montocto1', $montocto1);
-        $montocto2 = $this->getUserStateFromRequest($this->context.'.filter.montocto2', 'filter_montocto2');
-        $this->setState('filter.montocto2', $montocto2);
-
-        $puntoshasta = $this->getUserStateFromRequest($this->context.'.filter.puntoshasta', 'filter_puntoshasta');
-        $this->setState('filter.puntoshasta', $puntoshasta);
-
-        $idTipoCto = $this->getUserStateFromRequest($this->context.'.filter.opcionTipoCreditos', 'filter_tipocto');
-        $this->setState('filter.opcionTipoCreditos', $idTipoCto);
-        */
-
         $estatus = $this->getUserStateFromRequest($this->context.'.filter.opcionEstatus', 'filter_estatus');
         $this->setState('filter.opcionEstatus', $estatus);
 
@@ -78,14 +59,15 @@ class SasfeModelExpdigitales extends JModelList{
         $asesor = $this->getUserStateFromRequest($this->context.'.filter.opcionAsesores', 'filter_asesores');
         $this->setState('filter.opcionAsesores', $gerente);
 
-        // $idEstatus = $this->getUserStateFromRequest($this->context.'.filter.opcionEstatusProspecto', 'filter_estatus2');
-        // $this->setState('filter.opcionEstatusProspecto', $idEstatus);
+        // Buscar por fraccionamiento
+        $fraccionamiento = $this->getUserStateFromRequest($this->context.'.filter.opcionFraccionamientos', 'filter_fraccionamientos');
+        $this->setState('filter.opcionFraccionamientos', $fraccionamiento);
 
         $this->layout = JRequest::getVar('layout'); //obtiene el nombre del layout
-        if($this->layout=="repetidos"){
-            $idAgtVentas = $this->getUserStateFromRequest($this->context.'.filter.opcionAgentesVenta', 'filter_agtev');
-            $this->setState('filter.opcionAgentesVenta', $idAgtVentas);
-        }
+        // if($this->layout=="repetidos"){
+        //     $idAgtVentas = $this->getUserStateFromRequest($this->context.'.filter.opcionAgentesVenta', 'filter_agtev');
+        //     $this->setState('filter.opcionAgentesVenta', $idAgtVentas);
+        // }
 
         //Load the parameters.
         $params = JComponentHelper::getParams('com_sasfe');
@@ -116,145 +98,141 @@ class SasfeModelExpdigitales extends JModelList{
             $estatus = $this->getState('filter.opcionEstatus'); //Buscar por estatus
             $gerente = $this->getState('filter.opcionGerentes'); //Buscar por gerente, Imp. 23/08/21, Carlos
             $asesor = $this->getState('filter.opcionAsesores'); //Buscar por asesor, Imp. 24/08/21, Carlos
+            $fraccionamiento = $this->getState('filter.opcionFraccionamientos'); //Buscar por fraccionamiento, Imp. 13/10/21, Carlos
 
             // $idEstatus = $this->getState('filter.opcionEstatusProspecto'); //Buscar por el estatus personalizados
             $this->layout = JRequest::getVar('layout'); //obtiene el nombre del layout
-            // $opcFiltro = false;
-            // if( $search!="" || $apellidos!="" || $apellidos!="" || ($estatus!="" && $estatus>0) || ($gerente!="" && $gerente>0) || ($asesor!="" && $asesor>0) ){
-            //     $opcFiltro = true;
-            // }
-            // echo "opcFiltro: ".$opcFiltro.'<br/>';
 
-        /*
+            /*
 
-            //Solo ocurre para el gerente de ventas
-            $queryIdAgtV = "";
-            // if($this->layout=="repetidos"){
-            //     $idAgtVentas = $this->getState('filter.opcionAgentesVenta'); //Buscar por el id del agente de ventas
-            //     if($idAgtVentas!=""){
-            //         $queryIdAgtV = " AND a.agtVentasId=".$idAgtVentas;
-            //     }
-            // }
+                //Solo ocurre para el gerente de ventas
+                $queryIdAgtV = "";
+                // if($this->layout=="repetidos"){
+                //     $idAgtVentas = $this->getState('filter.opcionAgentesVenta'); //Buscar por el id del agente de ventas
+                //     if($idAgtVentas!=""){
+                //         $queryIdAgtV = " AND a.agtVentasId=".$idAgtVentas;
+                //     }
+                // }
 
-            $tipoEstatus = "";
-            //Si el usuario pertenece al grupo gerentes prospeccion y gerentes ventas
-            if(in_array("11", $this->groups) || in_array("19", $this->groups) || in_array("17", $this->groups)){
-                $idUsuarioJoomla=$this->userC->id;
-                if(!in_array("11", $this->groups)){
-                $tipoEstatus = "AND a.agtVentasId IS NULL";
-                }
-            }else if(in_array("18", $this->groups)){
-                $idUsuarioJoomla=$this->userC->id;
-                // $tipoEstatus = "AND a.agtVentasId != '' ";
-                $tipoEstatus = " AND (a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL) ";
-            }else if(in_array("10", $this->groups)){
-                $idUsuarioJoomla=$this->userC->id;
-                //$tipoEstatus = "AND (a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL) ";
-            }
-            // elseif(in_array("10", $this->groups)){
-            //     $idUsuarioJoomla=$this->userC->id;
-            //     $tipoEstatus = "AND (a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL) ";
-             // }
-            else{
-                //Filtrar los prospectos por el id del usuario que lo creo solo (agentes de venta)
-                $idUsuarioJoomla=$this->userC->id;
-            }
-            //echo $idUsuarioJoomla.'<br/>';
-             //Filtro por estatus
-            // echo "estatus: ".$estatus.'<br/>';
-
-            // Estatus
-            // 1=Asignados, 2=Por asignar
-
-            if($estatus!=""){
-                if($estatus == '0'){
-                    $tipoEstatus = "";
-                }
-                else if($estatus == '1'){ //Asignados
+                $tipoEstatus = "";
+                //Si el usuario pertenece al grupo gerentes prospeccion y gerentes ventas
+                if(in_array("11", $this->groups) || in_array("19", $this->groups) || in_array("17", $this->groups)){
+                    $idUsuarioJoomla=$this->userC->id;
+                    if(!in_array("11", $this->groups)){
+                    $tipoEstatus = "AND a.agtVentasId IS NULL";
+                    }
+                }else if(in_array("18", $this->groups)){
+                    $idUsuarioJoomla=$this->userC->id;
+                    // $tipoEstatus = "AND a.agtVentasId != '' ";
                     $tipoEstatus = " AND (a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL) ";
-                }else if($estatus == '2'){ //Por asignar
-                    $tipoEstatus = " AND a.agtVentasId IS NULL ";
-                }else if($estatus == '3'){
-                    $tipoEstatus = " AND a.departamentoId != '' AND a.fechaDptoAsignado IS NULL ";
-                }else if($estatus == '4'){
-                    $tipoEstatus = " AND a.departamentoId != '' AND a.fechaDptoAsignado != '' ";
+                }else if(in_array("10", $this->groups)){
+                    $idUsuarioJoomla=$this->userC->id;
+                    //$tipoEstatus = "AND (a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL) ";
                 }
-            }
-            //Finaliza filtros para los estatus
-
-            // Imp. 23/08/21, Carlos => Inicia filtro de gerentes
-            $idGerenteVentas = "";
-            if($gerente!=""){
-                $idGerenteVentas = " AND a.gteVentasId=".$gerente." ";
-            }
-            // Finaliza filtro de gerentes
-
-            // Imp. 24/08/21, Carlos => Inicia filtro de asesores
-            $idAsesorVentas = "";
-            if($asesor!=""){
-                $idAsesorVentas = " AND a.agtVentasId=".$asesor." ";
-            }
-            // Finaliza filtro de gerentes
-
-            //Inicializa arreglo
-            $searches = array();
-            $searchQuery = '';
-            // Busqueda por nombre
-            if($search){
-                //Compile the different search clauses.
-                $search = str_replace("'","",$search);  //limpia el caracter ' de la cadena
-
-                //si es fecha valida entonces entra
-                if(preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $search)) {
-                    list($d,$m,$y) = explode('/', $search);
-                    $search = $y.'-'.$m.'-'.$d;
+                // elseif(in_array("10", $this->groups)){
+                //     $idUsuarioJoomla=$this->userC->id;
+                //     $tipoEstatus = "AND (a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL) ";
+                 // }
+                else{
+                    //Filtrar los prospectos por el id del usuario que lo creo solo (agentes de venta)
+                    $idUsuarioJoomla=$this->userC->id;
                 }
-                $searches[] = "a.nombre LIKE '%$search%' "; //Buscar por nombre prospectador
-                $searchQuery = implode(' OR ', $searches);
+                //echo $idUsuarioJoomla.'<br/>';
+                 //Filtro por estatus
+                // echo "estatus: ".$estatus.'<br/>';
 
-                // $searchesCRM[] = "b.nombre LIKE '%$search%' "; //Buscar por nombre prospectador
-                // $searchQueryCRM = implode(' OR ', $searches);
-            }
+                // Estatus
+                // 1=Asignados, 2=Por asignar
 
-            //Busqueda por apellidos
-            if($apellidos){
-                 //Compile the different search clauses.
-                $apellidos = str_replace("'","",$apellidos);  //limpia el caracter ' de la cadena
-                //si es fecha valida entonces entra
-                if(preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $apellidos)) {
-                    list($d,$m,$y) = explode('/', $apellidos);
-                    $apellidos = $y.'-'.$m.'-'.$d;
+                if($estatus!=""){
+                    if($estatus == '0'){
+                        $tipoEstatus = "";
+                    }
+                    else if($estatus == '1'){ //Asignados
+                        $tipoEstatus = " AND (a.agtVentasId IS NOT NULL AND a.departamentoId IS NULL) ";
+                    }else if($estatus == '2'){ //Por asignar
+                        $tipoEstatus = " AND a.agtVentasId IS NULL ";
+                    }else if($estatus == '3'){
+                        $tipoEstatus = " AND a.departamentoId != '' AND a.fechaDptoAsignado IS NULL ";
+                    }else if($estatus == '4'){
+                        $tipoEstatus = " AND a.departamentoId != '' AND a.fechaDptoAsignado != '' ";
+                    }
                 }
-                $searches[] = "a.aPaterno LIKE '%$apellidos%' "; //Buscar por apellido paterno prospectador
-                $searches[] = "a.aManterno LIKE '%$apellidos%' "; //Buscar por apellido materno prospectador
-                $searchQuery = implode(' OR ', $searches);
-            }
+                //Finaliza filtros para los estatus
 
-            //Busqueda por email
-            if($email){
-                 //Compile the different search clauses.
-                $email = str_replace("'","",$email);  //limpia el caracter ' de la cadena
-                //si es fecha valida entonces entra
-                if(preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $email)) {
-                    list($d,$m,$y) = explode('/', $email);
-                    $email = $y.'-'.$m.'-'.$d;
+                // Imp. 23/08/21, Carlos => Inicia filtro de gerentes
+                $idGerenteVentas = "";
+                if($gerente!=""){
+                    $idGerenteVentas = " AND a.gteVentasId=".$gerente." ";
                 }
-                $searches[] = "a.email LIKE '%$email%' "; //Buscar por email prospectador
-                $searchQuery = implode(' OR ', $searches);
-            }
+                // Finaliza filtro de gerentes
+
+                // Imp. 24/08/21, Carlos => Inicia filtro de asesores
+                $idAsesorVentas = "";
+                if($asesor!=""){
+                    $idAsesorVentas = " AND a.agtVentasId=".$asesor." ";
+                }
+                // Finaliza filtro de gerentes
+
+                //Inicializa arreglo
+                $searches = array();
+                $searchQuery = '';
+                // Busqueda por nombre
+                if($search){
+                    //Compile the different search clauses.
+                    $search = str_replace("'","",$search);  //limpia el caracter ' de la cadena
+
+                    //si es fecha valida entonces entra
+                    if(preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $search)) {
+                        list($d,$m,$y) = explode('/', $search);
+                        $search = $y.'-'.$m.'-'.$d;
+                    }
+                    $searches[] = "a.nombre LIKE '%$search%' "; //Buscar por nombre prospectador
+                    $searchQuery = implode(' OR ', $searches);
+
+                    // $searchesCRM[] = "b.nombre LIKE '%$search%' "; //Buscar por nombre prospectador
+                    // $searchQueryCRM = implode(' OR ', $searches);
+                }
+
+                //Busqueda por apellidos
+                if($apellidos){
+                     //Compile the different search clauses.
+                    $apellidos = str_replace("'","",$apellidos);  //limpia el caracter ' de la cadena
+                    //si es fecha valida entonces entra
+                    if(preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $apellidos)) {
+                        list($d,$m,$y) = explode('/', $apellidos);
+                        $apellidos = $y.'-'.$m.'-'.$d;
+                    }
+                    $searches[] = "a.aPaterno LIKE '%$apellidos%' "; //Buscar por apellido paterno prospectador
+                    $searches[] = "a.aManterno LIKE '%$apellidos%' "; //Buscar por apellido materno prospectador
+                    $searchQuery = implode(' OR ', $searches);
+                }
+
+                //Busqueda por email
+                if($email){
+                     //Compile the different search clauses.
+                    $email = str_replace("'","",$email);  //limpia el caracter ' de la cadena
+                    //si es fecha valida entonces entra
+                    if(preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $email)) {
+                        list($d,$m,$y) = explode('/', $email);
+                        $email = $y.'-'.$m.'-'.$d;
+                    }
+                    $searches[] = "a.email LIKE '%$email%' "; //Buscar por email prospectador
+                    $searchQuery = implode(' OR ', $searches);
+                }
 
 
-            if($searchQuery){
-                $queryOpt = ' WHERE ' .' ( '.$searchQuery .' ) ';
-            }else{
                 if($searchQuery){
                     $queryOpt = ' WHERE ' .' ( '.$searchQuery .' ) ';
                 }else{
-                    $queryOpt = '';
+                    if($searchQuery){
+                        $queryOpt = ' WHERE ' .' ( '.$searchQuery .' ) ';
+                    }else{
+                        $queryOpt = '';
+                    }
                 }
-            }
-            // echo "queryOpt: ".$queryOpt."<br/>";
-        */
+                // echo "queryOpt: ".$queryOpt."<br/>";
+            */
 
             $queryPro = array();
             $queryCRM = array();
@@ -308,12 +286,18 @@ class SasfeModelExpdigitales extends JModelList{
                 }
             }
 
+            // Buscar por fraccionamiento
+            if($fraccionamiento!="" && $fraccionamiento>0){
+                $queryPro[] = "0=".$fraccionamiento;
+                $queryCRM[] = "f.idFraccionamiento=".$fraccionamiento;
+            }
+
             $searchPro = "";
             $searchCRM = "";
             if( count($queryPro)>0 ){
                 $searchPro = " AND ". implode(' AND ', $queryPro);
             }
-            if( count($queryPro)>0 ){
+            if( count($queryCRM)>0 ){
                 $searchCRM = " AND ".implode(' AND ', $queryCRM);
             }
             // echo $searchPro."<br/>";
@@ -424,7 +408,7 @@ class SasfeModelExpdigitales extends JModelList{
             $query = "
                     SELECT a.idDatoProspecto, '0' AS idDatoGeneral, a.nombre, a.aPaterno, a.aManterno, a.email, a.departamentoId, a.fechaDptoAsignado,
                     a.agtVentasId, a.gteVentasId, a.gteProspeccionId, '0' AS consulta, (CASE WHEN a.agtVentasId!='' THEN 'Asignado' ELSE 'Por asignar' END) AS estatusNombre,
-                    (CASE WHEN a.agtVentasId!='' THEN '1' ELSE '2' END) AS estatus
+                    (CASE WHEN a.agtVentasId!='' THEN '1' ELSE '2' END) AS estatus, '0' AS idFraccionamiento, '' AS fraccionamiento
                     FROM #__sasfe_datos_prospectos as a
                     LEFT JOIN #__sasfe_datos_catalogos as b ON b.idDato=a.tipoCreditoId
                     $soloProspectos $searchPro
@@ -451,17 +435,19 @@ class SasfeModelExpdigitales extends JModelList{
                         WHEN a.idEstatus='401' THEN 'Apartado provisional'
                         WHEN a.idEstatus='402' THEN 'Regresar Asesor'
                         ELSE '0' END) AS estatusNombre,
-                    a.idEstatus AS estatus
+                    a.idEstatus AS estatus, f.idFraccionamiento, f.nombre AS fraccionamiento
 
                     FROM #__sasfe_datos_generales AS a
                     LEFT JOIN #__sasfe_datos_clientes AS b ON b.datoGeneralId=a.idDatoGeneral
                     LEFT JOIN #__sasfe_datos_catalogos AS c ON c.idDato=a.idGerenteVentas
                     LEFT JOIN #__sasfe_datos_catalogos AS d ON d.idDato=a.idAsesor
+                    LEFT JOIN #__sasfe_departamentos AS e ON e.idDepartamento=a.departamentoId
+                    LEFT JOIN #__sasfe_fraccionamientos AS f ON f.idFraccionamiento=e.fraccionamientoId
                     $soloCRM $searchCRM
             ";
             // $query = $query;// ." UNION ". $queryCRM;
             $query = $query ." UNION ". $queryCRM;
-            // echo $query;
+            // echo $query;exit();
             // echo self::cambiarPrefijo($query);
             $db->setQuery($query);
             $db->query();

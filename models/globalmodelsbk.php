@@ -1878,9 +1878,8 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
           $queryInfoGral = "
                     SELECT DISTINCT departamentoId, esReasignado, obsoleto
                     FROM $tbl_sasfe_datos_generales
-                    WHERE departamentoId IN ($idsAllDpts)
-                    AND esHistorico=0
-                    -- AND idEstatus NOT IN (400, 401, 87)
+                    WHERE departamentoId IN ($idsAllDpts) AND esHistorico=0  
+                    AND idEstatus NOT IN (400, 401, 87)
                    ";
           // echo $queryInfoGral."<br/>"; exit();
 

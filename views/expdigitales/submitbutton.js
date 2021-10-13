@@ -469,6 +469,7 @@ JQ(document).ready(function(){
       JQ("#filter_estatus").val("0");
       JQ("#filter_gerentes").val("");
       JQ("#filter_asesores").val("");
+      JQ("#filter_fraccionamientos").val("");
       this.form.submit();
     });
 
@@ -561,6 +562,7 @@ function selectorAsesores(idGteVentas){
 
 //comprobar si es nulo o vacio una cadena
 function checkNulo(cadena){
+	cadena = JQ.trim(cadena);
     if(cadena==null || cadena==""){
         return "";
     }else{

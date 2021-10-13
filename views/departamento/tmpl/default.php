@@ -1725,7 +1725,7 @@ $kts->addTab("root","postventa","Post Venta","javascript:showPage(\"pag_postvent
                         <label for="enlace">Enlace:</label>
                     </div>
                     <div class="controls">
-                        <textarea name="enlaceDigital" id="enlaceDigital" class="form-control url required" style="min-width:90%;min-height:70px;"></textarea>
+                        <textarea name="enlaceDigital" id="enlaceDigital" class="form-control url" style="min-width:90%;min-height:70px;"></textarea>
                     </div>
                 </div>
                 <div>
