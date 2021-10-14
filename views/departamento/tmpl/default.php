@@ -295,9 +295,9 @@ foreach ($arrAncla as $keyA => $item){
     }
 }
 
-echo '<pre>';
+// echo '<pre>';
     //print_r($arrFinal);
-echo '</pre>';
+// echo '</pre>';
 
 $this->permisos = $arrFinal;
 

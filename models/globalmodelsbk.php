@@ -2011,6 +2011,7 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
                     WHERE fraccionamientoId IN ($idFracc)
                     AND ocupado=0 AND fechaDTU!=''
                   ";
+       // echo $queryDpts; exit();
        $db->setQuery($queryDpts);
        $db->query();
        $rowsDpts = $db->loadObject();
@@ -3833,6 +3834,28 @@ class SasfeModelGlobalmodelsbk extends JModelLegacy{
     return $rows;
   }
 
+  // Imp. 14/10/21, Carlos => Actualiza idDatoGeneral ya sea desde la vista de edicion de prospecto o CRM (departamento)
+  // Esto ocurre al apartar un departamento como provisional y cancelar o regresar al prospecto
+  // $idProspecto, $idDatoGeneral, $tipoEnlace, $link
+  public function actIdDatoGeneralInternoDB($idEnlace, $idDatoGeneral){
+    $db = JFactory::getDbo();
+    $tbl_sasfe_enlaces_digitales = $db->getPrefix().'sasfe_enlaces_digitales';
+    $query = array();
+    $strQuery = "";
+    $idDatoGeneral = ($idDatoGeneral!="")?$idDatoGeneral :"NULL";
+
+    $query = "UPDATE $tbl_sasfe_enlaces_digitales SET datoGeneralId=$idDatoGeneral
+              WHERE idEnlace=$idEnlace
+              ";
+    // echo $query;
+    // exit();
+    $db->setQuery($query);
+    $db->query();
+    $row = $db->getAffectedRows();
+    $result = ($row>0) ? 1 : 0;
+
+    return $result;
+  }
 
   /*// Imp. 07/01/21, Carlos
   public function buscarEnlaceDB($consulta, $idPC){

@@ -1881,6 +1881,17 @@ class SasfehpHelper
        return $col;
     }
 
+    /**
+     *  Imp. 14/10/21, Carlos, Actualiza idDatoGeneral ya sea desde la vista de edicion de prospecto o CRM (departamento)
+    */
+    public static function actIdDatoGeneralInterno($idEnlace=0, $idDatoGeneral=""){
+       $model = JModelLegacy::getInstance('Globalmodelsbk', 'SasfeModel');
+       $col =  $model->actIdDatoGeneralInternoDB($idEnlace, $idDatoGeneral);
+
+       return $col;
+    }
+
+
     /***
      * Obtiene la coleccion de los tipos de captados
      */

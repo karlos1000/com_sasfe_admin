@@ -936,6 +936,12 @@ class SasfeControllerProspecto extends JControllerForm {
 
                 //Actualizar el estatus de la tabla sasfe_datos_generales por el id del prospecto
                 SasfehpHelper::actEstatusPorDeptoProspecto($departamentoId, $idDatoProspecto);
+
+                // Imp. 14/10/21, Carlos => Buscar si el $idDatoGral en la tabla enlaces digitales para ser limpiado
+                $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($idDatoProspecto, 0);
+                if($datosEnlace){
+                    SasfehpHelper::actIdDatoGeneralInterno($datosEnlace->idEnlace, "");
+                }
             }else{
                 $msg = JText::sprintf('No es posible liberar el departamente/casa, intentar de nuevo.');
             }

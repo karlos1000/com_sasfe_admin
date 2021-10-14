@@ -298,6 +298,12 @@ class SasfeControllerDepartamento extends JControllerForm {
                     // Imp. 29/09/21, Carlos, Setear el departamento a disponible en tabla departamentos
                     SasfehpHelper::actDepartamentoOcupado($id_Dpt, 0);
 
+                    // Imp. 14/10/21, Carlos => Buscar si el $idDatoGral en la tabla enlaces digitales para ser limpiado
+                    $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB(0, $idDatoGral);
+                    if($datosEnlace){
+                        SasfehpHelper::actIdDatoGeneralInterno($datosEnlace->idEnlace, "");
+                    }
+
                     //>>>Salvar el motivo de liberacion por mesa de control en el historial
                     //Obtener datos del departamento
                     $datosDpto = $model->obtDatosDptoPorId($id_Dpt); //Obtener datos de la propiedad
@@ -896,6 +902,14 @@ class SasfeControllerDepartamento extends JControllerForm {
 
                     // Imp. 29/09/21, Carlos, Setear el departamento a ocupado en tabla departamentos
                     SasfehpHelper::actDepartamentoOcupado($id_Dpt, 1);
+
+                    // Imp. 14/10/21, Carlos => Buscar si el $idDatoGral en la tabla enlaces digitales para ser limpiado
+                    $datosEnlace = $modelGM->obtEnlaceDigitalPorIdPCDB($datoProspectoId, 0);
+                    if($datosEnlace){
+                        SasfehpHelper::actIdDatoGeneralInterno($datosEnlace->idEnlace, $id);
+                    }else{
+                        $modelGM->insEnlaceDigitatDB($datoProspectoId, $id, 0, "");
+                    }
                 }
                 $idDatoGral = $id;
             }
